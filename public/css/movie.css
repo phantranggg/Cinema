@@ -1,0 +1,184 @@
+.btn-like {
+    background-color: #274F91;
+    color: white;
+    border-radius: 4px;
+    border: 1px solid #274F91;
+    padding: 5px 10px 5px 10px;
+    max-width: 120px;
+    margin: 15px 2px 15px 30px;
+    float: left;
+    box-shadow: 1px 1px 3px #4F6367;
+}
+
+.btn-auth {
+    background-color: #274F91;
+    color: white;
+    border-radius: 4px;
+    border: 1px solid #274F91;
+    padding: 5px 10px 5px 10px;
+    max-width: 120px;
+    margin: 15px 2px 15px 30px;
+    float: left;
+    box-shadow: 1px 1px 3px #4F6367;
+}
+
+.btn-like-1 {
+    background-color: #274F91;
+    color: white;
+    border-radius: 4px;
+    border: 1px solid #274F91;
+    padding: 5px 10px 5px 10px;
+    max-width: 120px;
+    margin: 15px 2px 15px 70px;
+    float: left;
+    box-shadow: 1px 1px 3px #4F6367;
+}
+
+/*Like button*/
+.liked {
+    background-color: #446fb7;
+}
+
+.unlike {
+    background-color: #1c3969;
+}
+
+.ico-like-but {
+    width: 20px;
+    height: auto;
+    float: left;
+    margin-right: 5px;
+}
+
+.txt-like-but {
+    float: left;
+    margin-right: 5px;
+    color: white;
+}
+
+.rate-like-but {
+    float: right;
+    color: white;
+}
+
+.clear {
+    clear: both;
+}
+
+.thumb-off {
+    display: none;
+}
+
+.thumb-on {
+}
+
+.buy-ticket-button {
+    background-color: #FE5F55;
+    border: 1px solid #FE5F55;
+    padding: 5px;
+    width: 80px;
+    border-radius: 4px;
+    text-align: center;
+    float: left;
+    color: white;
+    box-shadow: 1px 1px 3px #4F6367;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.buy-ticket-button:hover {
+    background-color: #fe2f22;
+}
+
+.buy-ticket-button:pressed {
+    background-color: #fe2f22;
+}
+
+
+
+.movie-info-home {
+    position: relative;
+    min-width: 250px;
+    padding: 4px;
+    background-color: white;
+    box-shadow: 0 0 8px #c4c4c4;
+    border-radius: 4px;
+    /*    margin-bottom: 30px;*/
+    width: 255px;
+    height: 375px;
+}
+
+.movie-info {
+    position: relative;
+    min-width: 250px;
+    padding: 4px;
+    background-color: white;
+    box-shadow: 0 0 8px #c4c4c4;
+    border-radius: 4px;
+}
+
+.movie-list:hover .movie-info-detail {
+    display: block;
+}
+
+.movie-image {
+}
+
+.movie-info-detail {
+    display: none;
+    background-color: white;
+    width: 200px;
+    border: 1px solid #BFBFBF;
+    border-radius: 4px;
+    position: absolute;
+    left: 270px;
+    top: 20px;
+    z-index: 999;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.movie-info-detail-1 {
+    padding-left: 10px;
+}
+
+.movie-rating {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    padding: 4px 8px 4px 8px;
+    color: #fcedd9;
+    background-color: #F2A541;
+    border: 2px solid #f4b766;
+    border-radius: 4px;
+}
+
+.category-title {
+    text-align: center;
+}
+
+.category-product {
+    /*    background-color: #E7ECEF;*/
+    margin-bottom: 10px;
+}
+
+.movie-name {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-left: 5px;
+    font-size: 18px;
+    color: #274C77;
+}
+
+.extra-movie-info {
+    font-size: 14px;
+}
+
+.info-bold {
+    font-weight: bold;
+}
+
+.img-url-movie {
+    width: 247px;
+    height: 365px;
+}

@@ -1,0 +1,42 @@
+.container {
+    padding-top: 40px;
+}
+
+.img-allmovie {
+    width: 60px;
+}
+
+.movie-info-admin {
+    margin-left: 30px;
+}
+
+.movie-info-admin .row {
+    margin-bottom: 10px;
+}
+
+.row-title {
+    border-bottom: 1px solid gray;
+}
+
+.img-movie-update {
+    width: 200px;
+}
+
+#select-theater {
+    margin-top: 30px;
+    padding: 7px;
+}
+
+#select-theater-nowplay {
+    margin-top: 30px;
+    padding: 7px;
+}
+
+#select-theater-comesoon {
+    margin-top: 30px;
+    padding: 7px;
+}
+
+.insert-user {
+    margin-top: 30px;
+}

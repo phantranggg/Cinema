@@ -1,0 +1,60 @@
+.schedule-item {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.right-side {
+    margin-left: 40px;
+}
+
+.clear {
+    clear: both;
+}
+
+.inline-left {
+    float: left;
+}
+
+.movie-title-schedule {
+    font-size: 28px;
+    color: #33658A;
+}
+
+.schedule-detail-info {
+    margin: 10px;
+    padding: 5px;
+    background-color: white;
+    border: 1px solid #BFBFBF;
+    border-radius: 3px;
+}
+
+
+/* Thong tin rap chieu phim */
+.theater-info-detail {
+    background-color: white;
+    border: 1px solid #BFBFBF;
+    border-radius: 4px;
+}
+
+.theater-info-detail p {
+    margin-top: 10px;
+    padding-left: 5px;
+    color: #1ab188;
+}
+
+.theater {
+    margin-top: 50px;
+    margin-bottom: 40px;
+}
+
+.theater-name {
+    border: 1px solid #BFBFBF;
+    background-color: white;
+    padding: 8px;
+    color: #1ab188;
+    border-radius: 2px;
+}
+
+.img-schedule {
+    width: 200px;
+}
