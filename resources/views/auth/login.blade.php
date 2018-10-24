@@ -4,13 +4,13 @@
 <div class="form">
 
     <ul class="tab-group">
-        <li class="tab"><a href="#signup">Sign Up</a></li>
-        <li class="tab active"><a href="#login">Log In</a></li>
+        <li class="active"><a data-toggle="tab" href="#login">Log In</a></li>
+        <li ><a data-toggle="tab" href="#signup">Sign Up</a></li>
     </ul>
 
     <div class="tab-content">
 
-        <div id="login">
+        <div class="tab-pane fade active in" id="login">
             <h1 class="login-h1-text">Welcome Back!</h1>
             <form method="POST" action="{{ route('login') }}">
                 <input type='hidden' value="{!! csrf_token() !!}" name='_token' />
@@ -20,7 +20,7 @@
                     </label>
                     <input id="email" type="email" name="email" required>
                     @if ($errors->has('email'))
-                    <span class="help-block">
+                        <span class="help-block">
                         <strong>{{ $errors->first('email') }}</strong>
                     </span>
                     @endif
@@ -31,7 +31,7 @@
                     </label>
                     <input id="password" type="password" name="password" required>
                     @if ($errors->has('password'))
-                    <span class="help-block">
+                        <span class="help-block">
                         <strong>{{ $errors->first('password') }}</strong>
                     </span>
                     @endif
@@ -42,7 +42,7 @@
             </form>
         </div>
 
-        <div id="signup">
+        <div class="tab-pane fade" id="signup">
             <h1 class="login-h1-text">Sign Up for Free</h1>
             <form method="POST" action="{{ route('register') }}">
                 <input type='hidden' value="{!! csrf_token() !!}" name='_token' />
@@ -52,7 +52,7 @@
                     </label>
                     <input id="email_register" type="email" name="email" required>
                     @if ($errors->has('email'))
-                    <span class="help-block">
+                        <span class="help-block">
                         <strong>{{ $errors->first('email') }}</strong>
                     </span>
                     @endif
@@ -65,7 +65,7 @@
                         </label>
                         <input id="password_register" type="password" name="password" required>
                         @if ($errors->has('password'))
-                        <span class="help-block">
+                            <span class="help-block">
                             <strong>{{ $errors->first('password') }}</strong>
                         </span>
                         @endif
@@ -82,7 +82,7 @@
                         </label>
                         <input id="name" type="text" name="name">
                         @if ($errors->has('name'))
-                        <span class="help-block">
+                            <span class="help-block">
                             <strong>{{ $errors->first('name') }}</strong>
                         </span>
                         @endif
@@ -93,7 +93,7 @@
                         </label>
                         <input id="date_of_birth" type="date" name="date_of_birth">
                         @if ($errors->has('date_of_birth'))
-                        <span class="help-block">
+                            <span class="help-block">
                             <strong>{{ $errors->first('date_of_birth') }}</strong>
                         </span>
                         @endif
@@ -105,7 +105,7 @@
                     </label>
                     <input id="phone" type="text" name="phone">
                     @if ($errors->has('phone'))
-                    <span class="help-block">
+                        <span class="help-block">
                         <strong>{{ $errors->first('phone') }}</strong>
                     </span>
                     @endif
@@ -116,7 +116,7 @@
                     </label>
                     <input id="address" type="text" name="address">
                     @if ($errors->has('address'))
-                    <span class="help-block">
+                        <span class="help-block">
                         <strong>{{ $errors->first('address') }}</strong>
                     </span>
                     @endif
@@ -126,9 +126,16 @@
             </form>
         </div>
 
+
+
     </div><!-- tab-content -->
 
 </div> <!-- /form -->
 
 <script src=" {{ asset('js/login_register.js') }}"></script>
+<script>
+    $('#date_of_birth').datepicker({
+        uiLibrary: 'bootstrap4'
+    });
+</script>
 @endsection
