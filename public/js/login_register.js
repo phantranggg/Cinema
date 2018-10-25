@@ -26,17 +26,11 @@ $('.form').find('input, textarea').on('keyup blur focus', function (e) {
 
 });
 
-$('.tab a').on('click', function (e) {
-
-    e.preventDefault();
-
-    $(this).parent().addClass('active');
-    $(this).parent().siblings().removeClass('active');
-
-    target = $(this).attr('href');
-
-    $('.tab-content > div').not(target).hide();
-
-    $(target).fadeIn(600);
-
+$("#date_of_birth").change(function() {
+    if ($(this).val() === '') {
+        $(this).prev('label').removeClass('active highlight');
+    } else {
+        $(this).prev('label').addClass('active highlight');
+    }
 });
+
