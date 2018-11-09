@@ -61,6 +61,8 @@ Route::group(['middleware' => ['auth', 'admin']], function() {
     Route::get('/admin/users', 'UsersController@adminShow');
     Route::get('/admin/users/info/{user_id}', 'UsersController@adminModify');
     Route::get('/admin/users/update/{user_id}', 'UsersController@adminUpdate');
+    Route::post('/admin/users/deactivate', 'UsersController@adminDeactivate');
+    Route::post('/admin/users/activate', 'UsersController@adminActivate');
     Route::post('/admin/users/delete', 'UsersController@adminDelete');
     Route::get('/admin/users/form', 'UsersController@adminForm');
     Route::post('/admin/users/insert', 'UsersController@adminInsert');
