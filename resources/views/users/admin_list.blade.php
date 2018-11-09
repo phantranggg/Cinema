@@ -21,7 +21,7 @@
                     <th>Ngày sinh</th>
                     <th>Email</th>
                     <th>Điện thoại</th>
-                    <th>Địa chỉ</th>
+                    <th>Status</th>
                     <th>Loại tài khoản</th>
                     <th>Tiền sử dụng</th>
                 </tr>
@@ -33,10 +33,23 @@
                     <td>{{ $user->date_of_birth }}</td>
                     <td>{{ $user->email }}</td>
                     <td>{{ $user->phone }}</td>
-                    <td>{{ $user->address }}</td>
+                    <td>
+                        @if ($user->status)
+                            <span class="label label-success">Activated</span>
+                        @else
+                            <span class="label label-danger">Deactivated</span>
+                        @endif
+                    </td>
                     <td>{{ $user->account_type }}</td>
                     <td>{{ $user->total_amount }}</td>
                     <td><a href="{{ url('admin/users/info/' . $user->id) }}"><button class="btn btn-success">UPDATE</button></a></td>
+                    <td>
+                        @if ($user->status)
+                            <button class="btn btn-warning deactivate-button-user" userId = "{{ $user->id}}">DEACTIVATE</button>
+                        @else
+                            <button class="btn btn-primary activate-button-user" userId = "{{ $user->id}}">ACTIVATE</button>
+                        @endif
+                    </td>
                     <td><button class="btn btn-danger delete-button-user" userId = "{{ $user->id}}">DELETE</button></td>
                 </tr>
                 @endforeach

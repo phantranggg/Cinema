@@ -18,7 +18,7 @@
                                 <label for="email" class="col-md-4 control-label">Email</label>
 
                                 <div class="col-md-6">
-                                    <input id="email" type="text" class="form-control" name="email">
+                                    <input id="email" type="email" class="form-control" name="email" required>
                                 </div>
                             </div>
 
@@ -26,7 +26,7 @@
                                 <label for="password" class="col-md-4 control-label">Mật khẩu</label>
 
                                 <div class="col-md-6">
-                                    <input id="password" type="password" class="form-control" name="password">
+                                    <input id="password" type="password" class="form-control" name="password" required>
                                 </div>
                             </div>
 
@@ -34,7 +34,7 @@
                                 <label for="password-confirm" class="col-md-4 control-label">Confirm </label>
 
                                 <div class="col-md-6">
-                                    <input id="password-confirm" type="password" class="form-control" name="password_confirmation">
+                                    <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
                                 </div>
                             </div>
 
@@ -42,7 +42,7 @@
                                 <label for="name" class="col-md-4 control-label">Tên</label>
 
                                 <div class="col-md-6">
-                                    <input id="name" type="text" class="form-control" name="name">
+                                    <input id="name" type="text" class="form-control" name="name" required>
                                 </div>
                             </div>
 
@@ -50,7 +50,7 @@
                                 <label for="date_of_birth" class="col-md-4 control-label">Ngày sinh</label>
 
                                 <div class="col-md-6">
-                                    <input id="date_of_birth" type="date" class="form-control" name="date_of_birth">
+                                    <input id="date_of_birth" type="date" class="form-control" name="date_of_birth" required>
                                 </div>
                             </div>
 
@@ -58,7 +58,10 @@
                                 <label for="account_type" class="col-md-4 control-label">Loại tài khoản</label>
 
                                 <div class="col-md-6">
-                                    <input id="account_type" type="text" class="form-control" name="account_type">
+                                    <select id="account_type" class="form-control" name="account_type">
+                                        <option value="normal">Normal</option>
+                                        <option value="vip">Vip</option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -66,7 +69,7 @@
                                 <label for="phone" class="col-md-4 control-label">Số điện thoại</label>
 
                                 <div class="col-md-6">
-                                    <input id="phone" type="text" class="form-control" name="phone">
+                                    <input id="phone" type="text" class="form-control" name="phone" required>
                                 </div>
                             </div>
 
@@ -82,7 +85,10 @@
                                 <label for="role" class="col-md-4 control-label">Người dùng/Admin</label>
 
                                 <div class="col-md-6">
-                                    <input id="role" type="text" class="form-control" name="role">
+                                    <select id="role" class="form-control" name="role">
+                                        <option value="user">User</option>
+                                        <option value="admin">Admin</option>
+                                    </select>
                                 </div>
                             </div>
 

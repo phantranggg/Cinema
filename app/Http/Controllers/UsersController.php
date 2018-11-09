@@ -114,7 +114,7 @@ class UsersController extends Controller {
 //                    WHERE users.status = 1
 //                    GROUP BY users.id
 //                    ORDER BY totalamount DESC NULLS LAST');
-        $users = \App\User::where('status', '=', 1)->orderBy('total_amount', 'desc')->get();
+        $users = \App\User::orderBy('total_amount', 'desc')->get();
         return view('users.admin_list', [
             'users' => $users,
         ]);
@@ -137,7 +137,17 @@ class UsersController extends Controller {
 
     protected function adminDelete() {
         $user_id = $_POST['user_id'];
+        \DB::table('users')->where('id', '=', $user_id)->delete();
+    }
+
+    protected function adminDeactivate() {
+        $user_id = $_POST['user_id'];
         DB::update('UPDATE users SET status = 0 WHERE id = ?', [$user_id]);
+    }
+
+    protected function adminActivate() {
+        $user_id = $_POST['user_id'];
+        DB::update('UPDATE users SET status = 1 WHERE id = ?', [$user_id]);
     }
 
     protected function adminForm() {
