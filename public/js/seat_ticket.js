@@ -19,9 +19,19 @@ function renderHTML(arr) {
     return res;
 }
 
-$("#next").click(function() {
-    $(".bill").css("display","block");
-    $(".process-right-seatmap").css("display","block");
+function changeNextButtonStatus() {
+    if (totalmoney) {
+        $('.process-right-seatmap').prop('disabled', false);
+        $('.process-right-seatmap').css("cursor", "pointer");
+    } else {
+        $('.process-right-seatmap').prop('disabled', true);
+        $(".process-right-seatmap").removeAttr("style");
+    }
+}
+
+$("#next").click(function () {
+    $(".bill").css("display", "block");
+    $(".process-right-seatmap").css("display", "block");
 })
 
 var hadSeat = $('.string-chair').attr('data-id3');
@@ -55,6 +65,7 @@ $('.seat').click(function () {
                     totalmoney = price * array.length;
                     $('#total').html(totalmoney);
                     $('#total-bill').html(totalmoney);
+                    changeNextButtonStatus()
                 },
                 error: function () {
                     alert('error');
@@ -78,6 +89,7 @@ $('.seat').click(function () {
                     totalmoney = price * array.length;
                     $('#total').html(totalmoney);
                     $('#total-bill').html(totalmoney);
+                    changeNextButtonStatus()
                 },
                 error: function () {
                     alert('error');
@@ -107,13 +119,13 @@ $('.seat').click(function () {
                     totalmoney = price * array.length;
                     $('#total').html(totalmoney);
                     $('#total-bill').html(totalmoney);
+                    changeNextButtonStatus()
                 },
                 error: function () {
                     alert('error');
                 }
             });
-        }
-        ;
+        };
     }
 });
 

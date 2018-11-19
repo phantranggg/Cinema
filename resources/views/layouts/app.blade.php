@@ -117,7 +117,7 @@
                     <div class="col-md-2 footer-left">
                         <h3>CGV<span>demo</span></h3>
                         <br>
-                        <p class="footer-company-name">CGV demo &copy; 2017</p>
+                        <p class="footer-company-name">CGV demo &copy; 2018</p>
                     </div>
                     <div class="col-md-4 footer-center">
                         <div>
