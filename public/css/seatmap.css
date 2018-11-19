@@ -52,6 +52,7 @@
     text-align: center;
     padding-top: 4px;
     margin-bottom: 2px;
+    cursor: pointer;
 }
 /*
 .seat:hover {
@@ -169,6 +170,7 @@
 }
 
 .process-right-seatmap:hover {
+    cursor: not-allowed;
 }
 
 .bill {

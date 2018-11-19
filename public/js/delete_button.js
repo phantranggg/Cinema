@@ -73,7 +73,6 @@ $(document).on("click", ".deactivate-button-user", function() {
 });
 
 $(document).on("click", ".activate-button-user", function() {
-    console.log("Click");
     var userId = $(this).attr('userId');
     $.ajaxSetup({
             headers: {

@@ -82,7 +82,7 @@
                     </div>
                 </div>
             </div>
-            <button type="button" id="next" class="process-right-seatmap inline-right">
+            <button type="button" id="next" class="process-right-seatmap inline-right" disabled>
                 Next
             </button>
             <div class="clear"></div>
