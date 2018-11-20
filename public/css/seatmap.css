@@ -54,6 +54,7 @@
     margin-bottom: 2px;
     cursor: pointer;
 }
+
 /*
 .seat:hover {
     background-color: #E94F37;
@@ -174,7 +175,7 @@
 }
 
 .bill {
-/*    display: none;*/
+    /*    display: none;*/
     background-image: url('/img/ticket-background.png');
     background-repeat: no-repeat;
     height: 350px;
@@ -187,9 +188,7 @@
     margin-top: 100px;
 }
 
-.checked {
-    
-}
+.checked {}
 
 .uncheck {
     background-color: white;
@@ -201,4 +200,9 @@
 
 .myseat {
     background-color: #AAAFAD;
+}
+
+.spacer {
+    padding-top: 20px;
+    padding-bottom: 20px
 }

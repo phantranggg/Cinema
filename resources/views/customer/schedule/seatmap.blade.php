@@ -39,14 +39,18 @@
                         <span class="icon-box"></span>
                         <span>Không thể chọn</span>
                     </span>
+
+                    <span>
+                        <div class="spacer"></div>
+                        <button class="w3-button w3-pink">Ghép cặp</button>
+                    </span>
                 </div>
             </div>
             <div class="clear"></div>
         </div>
         <div class="row seatmap-bottom">
-
             <a href="javascript:history.back()">
-                <button class="process-left-seatmap inline-left">Previous</button>
+                <button class="process-left-seatmap inline-left btn btn-default">Quay lại</button>
             </a>
             <div class="movie-cart-info inline-left">
                 <div class="ticket-movie-image inline-block">
@@ -82,8 +86,10 @@
                     </div>
                 </div>
             </div>
-            <button type="button" id="next" class="process-right-seatmap inline-right" data="{{ session('status') }}" disabled>
-                Next
+            {{-- <button type="button" id="next" class="process-right-seatmap inline-right" data="{{ session('status') }}" disabled>
+                Next --}}
+            <button type="button" id="next" class="process-right-seatmap inline-right btn btn-primary" data="{{ session('status') }}" disabled>
+                Đặt vé
             </button>
             <div class="clear"></div>
         </div>
