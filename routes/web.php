@@ -23,6 +23,7 @@ Route::group(['middleware' => ['auth']], function() {
 });
 Route::get('movies/likeCount', 'MoviesController@likeCount');
 Route::get('movies/ticketCount', 'MoviesController@ticketCount');
+Route::post('movies/recommend', 'MoviesController@recommendMovies');
 
 Route::get('tickets/totalAmount', 'TheatersController@updateTotalAmount');
 
