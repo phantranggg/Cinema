@@ -45,22 +45,50 @@
                 </button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form action="{{ url('movies/recommend') }}" method="post">
+                        {{ csrf_field() }}
+                        <h6>Thể loại phim</h6>
                         <div class="form-group">
-                            <h5>Thể loại phim ưa thích</h5>
-                            <div class="checkbox">
-                                <div><input type="checkbox" value="">Option 1</div>
-                            </div>
-                            <div class="checkbox">
-                                <p><input type="checkbox" value="">Option 2</p>
+                            <select class="form-control" id="" name="genre">
+                                <option value="">Thể loại phim</option>
+                                <option value="action">Hành động</option>
+                                <option value="romance">Tâm lý, tình cảm</option>
+                                <option value="horror">Kinh dị</option>
+                                <option value="adventure">Phiêu lưu</option>
+                                <option value="scientific">Viễn tưởng</option>
+                            </select>
+                        </div>
+                        <h6>Năm phát hành</h6>
+                        <div class="form-group">
+                            <select class="form-control" id="" name="year">
+                                <option value="">Năm phát hành</option>
+                                <option value="2018">2018</option>
+                                <option value="2017">2017</option>
+                                <option value="2016">2016</option>
+                                <option value="2015">2015</option>
+                            </select>
+                        </div>
+                        <h6>Quốc gia</h6>
+                        <div class="form-group">
+                            <select class="form-control" id="" name="country">
+                                <option value="">Quốc gia</option>
+                                <option value="usa">Mỹ</option>
+                                <option value="vie">Việt Nam</option>
+                                <option value="kor">Hàn Quốc</option>
+                                <option value="jap">Nhật Bản</option>
+                                <option value="chi">Trung Quốc</option>
+                            </select>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-10">
+                                <button type="submit" id="hid-recommend-btn" class="btn btn-primary hidden"></button>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                    <button type="button" class="btn btn-primary">Tìm phim phù hợp</button>
+                    <button type="button" id="recommend-btn" class="btn btn-primary">Tìm phim phù hợp</button>
                 </div>
             </div>
         </div>
@@ -79,12 +107,12 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item {{ (\Request::is('/')) ? "active" : "" }}">
+                <li class="nav-item {{ (\Request::is('/')) ? " active " : " " }}">
                     <a class="nav-link" href="{{ url('/') }}">
                         Trang chủ
                     </a>
                 </li>
-                <li class="nav-item dropdown {{ (\Request::is('movies/*')) ? "active" : "" }}">
+                <li class="nav-item dropdown {{ (\Request::is('movies/*')) ? " active " : " " }}">
                     <a class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="fa fa-film fa-lg"></span> PHIM
                         </a>
@@ -107,7 +135,7 @@
                         <a class="dropdown-item" href="#">Something else here</a>
                     </div>
                 </li> --}}
-                <li class="nav-item {{ (\Request::is('theaters')) ? "active" : "" }}">
+                <li class="nav-item {{ (\Request::is('theaters')) ? " active " : " " }}">
                     <a class="nav-link" href="{!! url('theaters') !!}"><span class="fa fa-home fa-lg"></span> RẠP</a>
                 </li>
                 {{--
@@ -269,6 +297,7 @@
         </div>
     </footer>
     <!-- Scripts -->
+    <script src="{{ asset('js/layout.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"

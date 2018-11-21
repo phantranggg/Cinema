@@ -7,6 +7,7 @@ use App\Movie;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Repositories\Movie\MovieEloquentRepository;
+use Carbon\Carbon;
 
 class MoviesController extends Controller {
 
@@ -158,4 +159,46 @@ class MoviesController extends Controller {
         return redirect('/admin');
     }
 
+    protected function recommendMovies(Request $request) {
+        // echo $request->genre;
+        // echo $request->year;
+        // echo $request->country;
+        $pageTitle = "PHIM GỢI Ý";
+        // $movies = $this->movieRepository->getNowPlaying(30);
+        $allmovies = Movie::all();
+        $movies = [];
+        // dd($allmovies);
+        foreach($allmovies as $movie) {
+            // dd($movie->release_date);
+            $year = Carbon::createFromFormat('Y-m-d', $movie->release_date)->year;
+            if ($request->year != "" && $request->year != $year) {
+                continue;
+            }
+            $genre = $movie->genres;
+            $genres = explode(", ", $genre);
+            for ($i = 0; $i < count($genres); $i++) {
+                if ($genres[$i] === "Hành Động") { $genres[$i] = "action"; }
+                if ($genres[$i] === "Tâm Lý") { $genres[$i] = "romance"; }
+                if ($genres[$i] === "Tình Cảm") { $genres[$i] = "romance"; }
+                if ($genres[$i] === "Kinh Dị") { $genres[$i] = "horror"; }
+                if ($genres[$i] === "Phiêu Lưu") { $genres[$i] = "adventure"; }
+                if ($genres[$i] === "Khoa Học Viễn Tưởng") { $genres[$i] = "scientific"; }
+            }
+            $country = $request->country == "usa" ? "USA" : ($request->country == "vie" ? "Việt Nam" : 
+                ($request->country == "chi" ? "Trung Quốc" : ($request->country == "kor" ? "Hàn Quốc" : ($request->country == "jap" ? "Nhật Bản" : "")))); 
+            if ($country != "" && $country != $movie->country) {
+                continue;
+            }
+            if ($request->genre != "" && !in_array($request->genre, $genres)) {
+                continue;
+            }
+            array_push($movies, $movie);
+        }
+
+        return view('movies.recommend', [
+            'pageTitle' => $pageTitle,
+            'movies' => $movies,
+            'movieObj' => $this->movieRepository
+        ]);
+    }
 }
