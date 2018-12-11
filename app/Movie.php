@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 
 class Movie extends Model
 {
+    protected $table = 'movies';
+
     protected $fillable = ['title', 'release_date', 'genres', 'score', 'director', 'country', 'length', 'subtitle', 'rating', 'status'];
 
     public function theaters() {

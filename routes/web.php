@@ -10,12 +10,27 @@
   | contains the "web" middleware group. Now create something great!
   |
  */
-Auth::routes();
-Route::get('/', 'HomeController@index');
-Route::get('/home', 'HomeController@index');
+// Route::get('/', function(){
+//     return redirect()->route('customer.auth.login');
+// });
 
-Route::get('movies/nowplay', 'MoviesController@nowplay');
-Route::get('movies/comesoon', 'MoviesController@comesoon');
+// Route::get('/', function(){
+//     return redirect()->route('customer.home')->name('customer.home');
+// });
+
+Route::group(['prefix' => 'customer'], function(){
+    Route::group(['prefix' => 'movie'], function(){
+        Route::get('now-playing', 'Customer\MovieController@showNowPlayingList')->name('customer.movie.now-playing');
+        Route::get('coming-soon', 'Customer\MovieController@showComingSoonList')->name('customer.movie.comming-soon');
+    });
+});
+
+
+Auth::routes();
+Route::get('/', 'Customer\HomeController@index');
+Route::get('/home', 'Customer\HomeController@index');
+
+
 
 Route::group(['middleware' => ['auth']], function() {
     Route::post('movies/like', 'MoviesController@like');
