@@ -23,6 +23,18 @@ Route::group(['prefix' => 'customer'], function(){
         Route::get('now-playing', 'Customer\MovieController@showNowPlayingList')->name('customer.movie.now-playing');
         Route::get('coming-soon', 'Customer\MovieController@showComingSoonList')->name('customer.movie.comming-soon');
     });
+    Route::group(['prefix' => 'theater'], function(){
+        Route::get('index', 'Customer\TheaterController@index')->name('customer.theater.index');
+        Route::post('detail', 'Customer\TheaterController@detail')->name('customer.theater.detail');
+        Route::get('{movie_id}', 'Customer\TheaterController@movieInfo')->name('customer.theater.info');
+        Route::post('schedule', 'Customer\TheaterController@schedule')->name('customer.theater.schedule');
+        Route::post('schedule-movie', 'Customer\TheaterController@scheduleMovie')->name('customer.theater.schedule-movie');
+        Route::get('seatmap/{id}', 'Customer\TheaterController@seatmap')->name('customer.theater.');
+        Route::post('choose-seat', 'Customer\TheaterController@chooseSeat');
+        Route::post('bill', 'Customer\TheaterController@bill');
+        Route::post('ticket-delete', 'Customer\TheaterController@ticketDelete');
+        
+    });
 });
 
 
@@ -40,19 +52,9 @@ Route::get('movies/likeCount', 'MoviesController@likeCount');
 Route::get('movies/ticketCount', 'MoviesController@ticketCount');
 Route::post('movies/recommend', 'MoviesController@recommendMovies');
 
-Route::get('tickets/totalAmount', 'TheatersController@updateTotalAmount');
+Route::get('tickets/totalAmount', 'Customer\TheaterController@updateTotalAmount');
 
-Route::get('theaters/testChart', 'TheatersController@testChart');
-
-Route::get('theaters', 'TheatersController@index');
-Route::get('theaters/{movie_id}', 'TheatersController@indexMovie');
-Route::post('theaters/detail', 'TheatersController@detail');
-Route::post('theaters/schedule', 'TheatersController@schedule');
-Route::post('theaters/scheduleMovie', 'TheatersController@scheduleMovie');
-Route::get('theaters/seatmap/{id}', 'TheatersController@seatmap');
-Route::post('theaters/chooseSeat', 'TheatersController@chooseSeat');
-Route::post('theaters/bill', 'TheatersController@bill');
-Route::post('theaters/ticketDelete', 'TheatersController@ticketDelete');
+Route::get('testChart', 'Customer\TheaterController@testChart');
 
 Route::get('users/test', 'UsersController@userLike');
 Route::get('users/profile', 'UsersController@profile');
@@ -83,20 +85,20 @@ Route::group(['middleware' => ['auth', 'admin']], function() {
     Route::get('/admin/users/form', 'UsersController@adminForm');
     Route::post('/admin/users/insert', 'UsersController@adminInsert');
 
-    Route::get('/admin/theaters/all', 'TheatersController@adminAll');
-    Route::get('/admin/theaters/info/{id}', 'TheatersController@adminInfo');
-    Route::post('/admin/theaters/update', 'TheatersController@adminUpdate');
-    Route::get('/admin/theaters/delete/{id}', 'TheatersController@adminDelete');
-    Route::get('/admin/theaters/addTheater', 'TheatersController@adminAddTheater');
-    Route::post('/admin/theaters/add', 'TheatersController@adminAdd');
-    Route::get('/admin/theaters/theaterDetail', 'TheatersController@adminDetail');
+    Route::get('/admin/all', 'Customer\TheaterController@adminAll');
+    Route::get('/admin/info/{id}', 'Customer\TheaterController@adminInfo');
+    Route::post('/admin/update', 'Customer\TheaterController@adminUpdate');
+    Route::get('/admin/delete/{id}', 'Customer\TheaterController@adminDelete');
+    Route::get('/admin/addTheater', 'Customer\TheaterController@adminAddTheater');
+    Route::post('/admin/add', 'Customer\TheaterController@adminAdd');
+    Route::get('/admin/theaterDetail', 'Customer\TheaterController@adminDetail');
 
-    Route::get('/admin/schedules/all', 'TheatersController@adminScheduleAll');
-    Route::get('/admin/schedules/addSchedule', 'TheatersController@adminAddSchedule');
-    Route::post('/admin/schedules/addSche', 'TheatersController@adminAddSche');
-    Route::get('/admin/schedules/delete/{id}', 'TheatersController@adminDeleteSchedule');
-    Route::get('/admin/schedules/info/{id}', 'TheatersController@adminScheduleInfo');
-    Route::post('/admin/schedules/update', 'TheatersController@adminUpdateSchedule');
-    Route::get('/admin/schedules/scheduleDetail', 'TheatersController@adminScheduleDetail');
-    Route::post('/admin/schedules/filter', 'TheatersController@adminFilter');
+    Route::get('/admin/schedules/all', 'Customer\TheaterController@adminScheduleAll');
+    Route::get('/admin/schedules/addSchedule', 'Customer\TheaterController@adminAddSchedule');
+    Route::post('/admin/schedules/addSche', 'Customer\TheaterController@adminAddSche');
+    Route::get('/admin/schedules/delete/{id}', 'Customer\TheaterController@adminDeleteSchedule');
+    Route::get('/admin/schedules/info/{id}', 'Customer\TheaterController@adminScheduleInfo');
+    Route::post('/admin/schedules/update', 'Customer\TheaterController@adminUpdateSchedule');
+    Route::get('/admin/schedules/scheduleDetail', 'Customer\TheaterController@adminScheduleDetail');
+    Route::post('/admin/schedules/filter', 'Customer\TheaterController@adminFilter');
 });

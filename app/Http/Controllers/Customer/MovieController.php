@@ -124,7 +124,7 @@ class MovieController extends Controller
 
     protected function showNowPlayingList() {
         $movies = $this->movieRepo->getNowPlayingList(30);
-        return view('customer.movies.nowplay', [
+        return view('customer.movie.nowplay', [
             'pageTitle' => "Phim Đang Chiếu",
             'movies' => $movies,
             'movieObj' => $this->movieRepo
@@ -133,7 +133,7 @@ class MovieController extends Controller
 
     protected function showComingSoonList() {
         $movies = $this->movieRepo->getNowPlayingList(30);
-        return view('customer.movies.comesoon', [
+        return view('customer.movie.comesoon', [
             'pageTitle' => "Phim Sắp Chiếu",
             'movies' => $movies,
             'movieObj' => $this->movieRepo

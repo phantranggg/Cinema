@@ -29,6 +29,14 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
     
+    public function likes() {
+        return $this->hasMany('\App\Like');
+    }
+
+    public function tickets() {
+        return $this->hasMany('\App\Ticket');
+    }
+
     public function isAdmin() {
         if (Auth::user()->role == 'admin') {
             return true;

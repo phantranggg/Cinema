@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Backend;
+namespace App\Http\Controllers\Customer;
 
 use Illuminate\Http\Request;
 use App\Http\Requests;
@@ -21,11 +21,11 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $countmovie = $this->movieRepo->count();
-        $countInvoice = $this->invoiceRepo->count();
-        $countRevenue = $this->revenueRepo->sum();
-        return view('backend/index', compact('countmovie','countInvoice','countRevenue'));
+    public function index() {
+        $pageTitle = "Trang Chủ";
+        $movieObj = $this->movieRepo;
+        $nowplay = $this->movieRepo->getNowPlayingList(6);
+        $comesoon = $this->movieRepo->getCommingSoonList(6);
+        return view('customer.home', compact('pageTitle', 'movieObj', 'nowplay','comesoon'));
     }
 }
