@@ -1,9 +1,13 @@
 <?php
 
-namespace Repositories;
+namespace App\Repositories;
 
 use App\User;
-use Repositories\Support\SAbstractRepository;
+use App\Repositories\Support\SAbstractRepository;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use App\Http\Requests;
+use Illuminate\Support\Facades\DB;
 
 class UserRepository extends SAbstractRepository
 {
@@ -174,6 +178,65 @@ class UserRepository extends SAbstractRepository
      */
     public function count(){
         return $this->model->where('active',User::ACTIVE)->count();
+    }
+
+    public function getOrderedTicketList() {
+        $movies = DB::select('SELECT schedules.id, movies.title, theaters.name, schedules.type, schedules.show_date, schedules.show_time '
+                        . 'FROM schedules '
+                        . 'INNER JOIN movies ON schedules.movie_id = movies.id '
+                        . 'INNER JOIN theaters ON schedules.theater_id = theaters.id '
+                        . 'INNER JOIN tickets ON schedules.id = tickets.schedule_id '
+                        . 'WHERE tickets.user_id = ? '
+                        . 'AND show_date >= ? '
+                        . 'GROUP BY schedules.id, movies.title, theaters.name, schedules.show_date, schedules.show_time', [Auth::id(), config('constant.today')]);
+        foreach ($movies as $key => $value) {
+            $tickets = DB::select('SELECT chair_num '
+                            . 'FROM tickets '
+                            . 'WHERE user_id = ? '
+                            . 'AND schedule_id = ? ', [Auth::id(), $value->id]);
+            $value->tickets = $tickets;
+            $movies[$key] = $value;
+        }
+        return $movies;
+    }
+
+    public function like($movieId) {
+        \App\Like::insert(['movie_id' => $movieId, 'user_id' => Auth::id()]);
+        $movie = \App\Movie::find($movieId);
+        $movie->like_num = $movie->like_num + 1;
+        $movie->save();
+    }
+    
+    public function unlike($movieId) {
+        \App\Like::where('movie_id', '=', $movieId)
+                ->where('user_id', '=', Auth::id())->delete();
+        $movie = \App\Movie::find($movieId);
+        $movie->like_num = $movie->like_num - 1;
+        $movie->save();
+    }
+    
+    public function getBill(Request $request) {
+        $seatList = $request->seat_list;
+        $scheduleId = $request->schedule_id;
+        foreach ($seatList as $seat) {
+            //$exist = \DB::table('tickets')->where('schedule_id', $scheduleId)->where('chair_num', $seat);
+            $exist = DB::select('SELECT id FROM tickets WHERE schedule_id = ? AND chair_num = ?', [$scheduleId, $seat]);
+            if (!$exist) {
+                //DB::insert('INSERT INTO tickets(schedule_id, user_id, chair_num) VALUES (?,?,?)', [$scheduleId, Auth::id(), $seat]);
+                DB::table('tickets')->insert(
+                        ['schedule_id' => $scheduleId, 'user_id' => Auth::id(), 'chair_num' => $seat]
+                );
+                $user = \App\User::find(Auth::id());
+                $schedule = \DB::table('schedules')->find($scheduleId);
+                $tmp = (int) $user->total_amount + (int) $schedule->price;
+                \App\User::where('id', Auth::id())->update(['total_amount' => $tmp]);
+                if ($tmp >= 1000000) {
+                    \App\User::find(Auth::id())->update(['account_type' => 'vip']);
+                } else {
+                    \App\User::find(Auth::id())->update(['account_type' => 'normal']);
+                }
+            }
+        }
     }
 
 }

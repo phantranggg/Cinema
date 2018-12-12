@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Customer;
 
 use Illuminate\Http\Request;
 use App\Http\Requests;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Repositories\TheaterRepository;
 
@@ -29,61 +28,51 @@ class TheaterController extends Controller
         return view('customer.theater.index', compact('pageTitle', 'theaters', 'movieId'));
     }
 
+    /**
+     * Show theater index but only show schedule of only one movie
+     * @param $movieId
+     */
+    protected function indexForOnlyOneMovie($movieId) {
+        $pageTitle = "Hệ Thống Rạp";
+        $theaters = $this->theaterRepo->getIndexForOnlyOneMovie($movieId);
+        return view('customer.theater.index', [
+            'pageTitle' => $pageTitle,
+            'theaters' => $theaters,
+            'movieId' => $movieId,
+        ]);
+    }
+
     protected function detail(Request $request) {
         $infoDetail = $this->theaterRepo->find($request->theater_id);
         return view('customer.theater.detail', compact('infoDetail'));
     }
 
     protected function schedule(Request $request) {
-        $movieTitle = DB::select('SELECT DISTINCT movies.id, title, url '
-                        . 'FROM movies INNER JOIN schedules '
-                        . 'ON movies.id = schedules.movie_id '
-                        . 'WHERE theater_id = ?', [$request->theater_id]);
-        foreach ($movieTitle as $key => $value) {
-            $schedule_detail = DB::select('WITH seatnum AS 
-                                (SELECT id, row_num * column_num AS totalseat FROM theaters WHERE status = 1)
-                        SELECT schedules.id, show_date, show_time, type, totalseat - count(tickets.id) AS totalseat
-                        FROM tickets 
-                        RIGHT JOIN schedules ON tickets.schedule_id = schedules.id
-                        INNER JOIN seatnum ON schedules.theater_id = seatnum.id
-                        WHERE schedules.status = 1
-                        AND theater_id = ?
-                        AND movie_id = ?
-                        GROUP BY schedules.id, seatnum.totalseat
-                        ORDER BY show_date ASC, show_time ASC', [$theater_id, $value->id]);
-            $value->schedule_detail = $schedule_detail;
-            $movieTitle[$key] = $value;
-        }
+        $scheduleDetail = $this->theaterRepo->getScheduleDetail($request);
         return view('customer.theater.schedule', [
-            'schedule' => $movieTitle
+            'schedule' => $scheduleDetail
         ]);
     }
 
-    protected function scheduleMovie(Request $request) {
-        $theater_id = $request->theater_id;
-        $movie_id = $request->movie_id;
-        $movieTitle = DB::select('SELECT DISTINCT movies.id, title, url '
-                        . 'FROM movies INNER JOIN schedules '
-                        . 'ON movies.id = schedules.movie_id '
-                        . 'WHERE theater_id = ? '
-                        . 'AND movie_id = ?', [$theater_id, $movie_id]);
-        foreach ($movieTitle as $key => $value) {
-            $scheduleDetail = DB::select('WITH seatnum AS 
-                                (SELECT id, row_num * column_num AS totalseat FROM theaters WHERE status = 1)
-                        SELECT schedules.id, show_date, show_time, type, totalseat - count(tickets.id) AS totalseat
-                        FROM tickets 
-                        RIGHT JOIN schedules ON tickets.schedule_id = schedules.id
-                        INNER JOIN seatnum ON schedules.theater_id = seatnum.id
-                        WHERE schedules.status = 1
-                        AND theater_id = ?
-                        AND movie_id = ?
-                        GROUP BY schedules.id, seatnum.totalseat
-                        ORDER BY show_date ASC, show_time ASC', [$theater_id, $value->id]);
-            $value->schedule_detail = $scheduleDetail;
-            $movieTitle[$key] = $value;
-        }
+    protected function scheduleForOnlyOneMovie(Request $request) {
+        $scheduleDetail = $this->theaterRepo->getScheduleForOnlyOneMovie($request);
         return view('customer.theater.schedule', [
-            'schedule' => $movieTitle
+            'schedule' => $scheduleDetail
         ]);
     }
+
+    protected function seatmap($schedule_id) {
+        $pageTitle = "Đặt Vé Trực Tuyến";
+        $seatmap = $this->theaterRepo->getSeatmap($schedule_id);
+        $chosenSeat = \App\Ticket::where('schedule_id', $schedule_id)->select('chair_num')->get();
+        $schedule = \App\Schedule::find($schedule_id);
+        // die($schedule);
+        return view('customer.theater.seatmap', [
+            'pageTitle' => $pageTitle,
+            'seatmap' => $seatmap,
+            'chosenSeat' => $chosenSeat,
+            'price' => $schedule->price
+        ]);
+    }
+
 }

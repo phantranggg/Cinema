@@ -7,7 +7,7 @@
             <div class="movie-title-schedule">{{ $movie->title }}</div>
             @foreach ($movie->schedule_detail as $scheduleInfo)
                 @if (Auth::check())
-                <a href="/theaters/seatmap/{{ $scheduleInfo->id }}">
+                <a href="/customer/theater/seatmap/{{ $scheduleInfo->id }}">
                 @else
                 <a href="{{ url('login') }}">
                 @endif

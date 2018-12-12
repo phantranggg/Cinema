@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('customer.layouts.app')
 
 @section('content')
 @php $info = $seatmap[0] @endphp

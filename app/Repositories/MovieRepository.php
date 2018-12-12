@@ -151,7 +151,7 @@ class MovieRepository extends SAbstractRepository
         }
         return TRUE;
     }
-    
+
     public function getNowPlayingList($limit) {
         $nowPlayingMovies = \DB::select("SELECT m.* FROM movies m
                         WHERE ?::date >= release_date::date 
@@ -170,23 +170,6 @@ class MovieRepository extends SAbstractRepository
                         ORDER BY ticket_num DESC, like_num DESC
                         LIMIT ?", [config('constant.today'), config('constant.today'), $limit]);
         return $commingSoonMovies;
-    }
-    
-    public function like($movieId) {
-        \DB::table('likes')->insert(['movie_id' => $movieId, 'user_id' => Auth::id()]);
-        //$movie = $this->find($movieId);
-        //die(var_dump($movie));
-        $movie = \App\Movie::find($movieId);
-        $movie->like_num = $movie->like_num + 1;
-        $movie->save();
-    }
-    
-    public function unlike($movieId) {
-        \DB::table('likes')->where('movie_id', '=', $movieId)
-                ->where('user_id', '=', Auth::id())->delete();
-        $movie = \App\Movie::find($movieId);
-        $movie->like_num = $movie->like_num - 1;
-        $movie->save();
     }
     
     public function getAllMoviesInOrder() {

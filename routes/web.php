@@ -18,29 +18,36 @@
 //     return redirect()->route('customer.home')->name('customer.home');
 // });
 
+Auth::routes();
+Route::get('/', 'Customer\HomeController@index');
+Route::get('/home', 'Customer\HomeController@index');
+
 Route::group(['prefix' => 'customer'], function(){
+    Route::group(['prefix' => 'user'], function(){
+        Route::get('profile', 'Customer\UserController@profile')->name('customer.user.profile');
+        Route::post('like', 'Customer\UserController@like')->name('customer.user.like');
+        Route::post('unlike', 'Customer\UserController@unlike')->name('customer.user.unlike');
+        Route::post('bill', 'Customer\UserController@bill')->name('customer.user.bill');
+        Route::post('ticket/delete', 'UsersController@ticketDelete');
+        Route::get('ticket/modify/{schedule_id}', 'UsersController@ticketModify');
+        // Route::post('ticket-delete', 'Customer\TheaterController@ticketDelete');
+    });
     Route::group(['prefix' => 'movie'], function(){
         Route::get('now-playing', 'Customer\MovieController@showNowPlayingList')->name('customer.movie.now-playing');
-        Route::get('coming-soon', 'Customer\MovieController@showComingSoonList')->name('customer.movie.comming-soon');
+        Route::get('comming-soon', 'Customer\MovieController@showComingSoonList')->name('customer.movie.comming-soon');
     });
     Route::group(['prefix' => 'theater'], function(){
         Route::get('index', 'Customer\TheaterController@index')->name('customer.theater.index');
+        Route::get('index/{movie_id}', 'Customer\TheaterController@indexForOnlyOneMovie')->name('customer.theater.index.{movie_id}');
         Route::post('detail', 'Customer\TheaterController@detail')->name('customer.theater.detail');
-        Route::get('{movie_id}', 'Customer\TheaterController@movieInfo')->name('customer.theater.info');
         Route::post('schedule', 'Customer\TheaterController@schedule')->name('customer.theater.schedule');
-        Route::post('schedule-movie', 'Customer\TheaterController@scheduleMovie')->name('customer.theater.schedule-movie');
-        Route::get('seatmap/{id}', 'Customer\TheaterController@seatmap')->name('customer.theater.');
-        Route::post('choose-seat', 'Customer\TheaterController@chooseSeat');
-        Route::post('bill', 'Customer\TheaterController@bill');
-        Route::post('ticket-delete', 'Customer\TheaterController@ticketDelete');
+        Route::post('schedule-movie', 'Customer\TheaterController@scheduleForOnlyOneMovie')->name('customer.theater.schedule-movie');
+        Route::get('seatmap/{id}', 'Customer\TheaterController@seatmap')->name('customer.theater.seatmap');
+        // Route::post('choose-seat', 'Customer\TheaterController@chooseSeat')->name('customer.theater.choose-seet');
         
     });
 });
 
-
-Auth::routes();
-Route::get('/', 'Customer\HomeController@index');
-Route::get('/home', 'Customer\HomeController@index');
 
 
 

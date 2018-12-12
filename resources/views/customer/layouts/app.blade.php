@@ -112,13 +112,13 @@
                         Trang chủ
                     </a>
                 </li>
-                <li class="nav-item dropdown {{ (\Request::is('movies/*')) ? " active " : " " }}">
+                <li class="nav-item dropdown {{ (\Request::is('customer/movie/*')) ? " active " : " " }}">
                     <a class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="fa fa-film fa-lg"></span> PHIM
                         </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="{!! url('movies/nowplay') !!}">PHIM ĐANG CHIẾU</a>
-                        <a class="dropdown-item" href="{!! url('movies/comesoon') !!}">PHIM SẮP CHIẾU</a>
+                        <a class="dropdown-item" href="{!! url('customer/movie/now-playing') !!}">PHIM ĐANG CHIẾU</a>
+                        <a class="dropdown-item" href="{!! url('customer/movie/comming-soon') !!}">PHIM SẮP CHIẾU</a>
                     </div>
                 </li>
                 {{--
@@ -135,8 +135,8 @@
                         <a class="dropdown-item" href="#">Something else here</a>
                     </div>
                 </li> --}}
-                <li class="nav-item {{ (\Request::is('theaters')) ? " active " : " " }}">
-                    <a class="nav-link" href="{!! url('theaters') !!}"><span class="fa fa-home fa-lg"></span> RẠP</a>
+                <li class="nav-item {{ (\Request::is('customer/theater/index')) ? " active " : " " }}">
+                    <a class="nav-link" href="{!! url('customer/theater/index') !!}"><span class="fa fa-home fa-lg"></span> RẠP</a>
                 </li>
                 {{--
                 <li class="nav-item">
@@ -158,7 +158,7 @@
                 <li><a href="{{ route('login') }}">Login</a></li>
                 <li><a href="{{ route('register') }}">Register</a></li>
                 @else
-                <li><a href="{!! url('users/profile') !!}">{{ 'Welcome ' . Auth::user()->name }}</a></li>
+                <li><a href="{!! url('customer/user/profile') !!}">{{ 'Welcome ' . Auth::user()->name }}</a></li>
                 <li><a href="/" onclick="event.preventDefault();
                             document.getElementById('logout-form').submit();">Logout</a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

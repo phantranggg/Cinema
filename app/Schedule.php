@@ -10,7 +10,4 @@ class Schedule extends Model
         return $this->hasMany('\App\Ticket');
     }
 
-    public function movieRoom() {
-        return $this->belongsTo('\App\MovieRoom');
-    }
 }

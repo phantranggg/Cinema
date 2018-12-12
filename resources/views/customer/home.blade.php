@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('customer.layouts.app')
 
 @section('content')
 
@@ -65,7 +65,7 @@
                         </button>
                         @endif
                         @endif
-                        <a href="{{ url('theaters/' . $movie->id) }}">
+                        <a href="{{ url('customer/theater/index/' . $movie->id) }}">
                             <button class="buy-ticket-button">
                                 <span>Mua vé</span>
                             </button>
@@ -139,7 +139,7 @@
                     </button>
                     @endif
                     @endif
-                    <a href="{{ url('theaters/' . $movie->id) }}">
+                    <a href="{{ url('customer/theater/index/' . $movie->id) }}">
                         <button class="buy-ticket-button">
                             <span>Mua vé</span>
                         </button>

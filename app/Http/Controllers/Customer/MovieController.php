@@ -139,4 +139,5 @@ class MovieController extends Controller
             'movieObj' => $this->movieRepo
         ]);
     }
+
 }

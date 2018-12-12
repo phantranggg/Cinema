@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('customer.layouts.app')
 
 @section('content')
 @php $info = $seatmap[0] @endphp
@@ -45,7 +45,7 @@
         </div>
         <div class="row seatmap-bottom">
 
-            <a href="{{ url('theaters') }}">
+            <a href="javascript:history.back()">
                 <button class="process-left-seatmap inline-left">Previous</button>
             </a>
             <div class="movie-cart-info inline-left">

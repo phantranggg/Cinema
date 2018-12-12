@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('customer.layouts.app')
 
 @section('content')
 <div class="container">
@@ -104,7 +104,7 @@
             </div>
 
             <div id="Right2" class="w3-container city w3-animate-right" style="display:none">
-                @foreach ($movies as $info)
+                @foreach ($tickets as $info)
                 <div class="bill bill-{{ $info->id }}">
                     <div class="bill-row">
                         <label>Tên phim: </label>{{ $info->title }}
@@ -127,7 +127,7 @@
                         <span class="movie-seats inline-block">{{ $ticket->chair_num }}</span>
                         @endforeach
                     </div>
-                    <a href="{{ url('/users/tickets/modify/' . $info->id ) }}"><button class="btn btn-primary">THAY ĐỔI</button></a>
+                    <a href="{{ url('customer/user/ticket/modify/' . $info->id ) }}"><button class="btn btn-primary">THAY ĐỔI</button></a>
                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal-{{ $info->id }}">XOÁ</button>
                     <!-- Modal -->
                     <div class="modal fade" id="myModal-{{ $info->id }}" role="dialog">

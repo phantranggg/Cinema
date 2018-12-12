@@ -138,7 +138,7 @@ $('.process-right-seatmap').click(function () {
 
     $.ajax({
         method: "POST",
-        url: "/theaters/bill",
+        url: "/customer/user/bill",
         data: {
             seat_list: array,
             schedule_id: scheduleId
