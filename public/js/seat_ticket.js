@@ -45,86 +45,50 @@ if (hadSeat != null) {
 }
 
 var price = $('#total').attr('data-id4');
-console.log(price);
 
-var scheduleId = $('.seat').attr('data-id2');
-$('.seat').click(function () {
+var scheduleId = $('.seats').attr('data-id2');
+$('.seats').click(function () {
     var seatNum = ($(this).attr('data-id1'));
-    if (!$(this).hasClass('chosen')) {
-        if ($(this).hasClass('uncheck')) {
-            $(this).css('background-color', '#FF7E75');
-            $(this).removeClass('uncheck');
-            $(this).addClass('checked');
-            delete_chairs.push();
+    if ($(this).is(':checked')) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
 
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
+        $.ajax({
+            success: function (data) {
+                array.push(seatNum);
+                $('.movie-seats').html(renderHTML(array));
+                totalmoney = price * array.length;
+                $('#total').html(totalmoney.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " VND");
+                $('#total-bill').html(totalmoney.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " VND");
+                changeNextButtonStatus()
+            },
+            error: function () {
+                alert('error');
+            }
+        });
+    } else {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
 
-            $.ajax({
-                success: function (data) {
-                    array.push(seatNum);
-                    $('.movie-seats').html(renderHTML(array));
-                    totalmoney = price * array.length;
-                    $('#total').html(totalmoney);
-                    $('#total-bill').html(totalmoney);
-                    changeNextButtonStatus()
-                },
-                error: function () {
-                    alert('error');
-                }
-            });
-        } else if ($(this).hasClass('checked')) {
-            $(this).css('background-color', '#FFFFFF');
-            $(this).removeClass('checked');
-            $(this).addClass('uncheck');
-
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
-            $.ajax({
-                success: function (data) {
-                    array.splice(array.indexOf(seatNum), 1);
-                    $('.movie-seats').html(renderHTML(array));
-                    totalmoney = price * array.length;
-                    $('#total').html(totalmoney);
-                    $('#total-bill').html(totalmoney);
-                    changeNextButtonStatus()
-                },
-                error: function () {
-                    alert('error');
-                }
-            });
-        } else if ($(this).hasClass('myseat')) {
-            $(this).css('background-color', '#FFFFFF');
-            $(this).removeClass('myseat');
-            $(this).addClass('uncheck');
-
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
-            $.ajax({
-                success: function (data) {
-                    array.splice(array.indexOf(seatNum), 1);
-                    $('.movie-seats').html(renderHTML(array));
-                    totalmoney = price * array.length;
-                    $('#total').html(totalmoney);
-                    $('#total-bill').html(totalmoney);
-                    changeNextButtonStatus()
-                },
-                error: function () {
-                    alert('error');
-                }
-            });
-        };
+        $.ajax({
+            success: function (data) {
+                array.splice(array.indexOf(seatNum), 1);
+                $('.movie-seats').html(renderHTML(array));
+                totalmoney = price * array.length;
+                $('#total').html(totalmoney.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " VND");
+                $('#total-bill').html(totalmoney.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " VND");
+                changeNextButtonStatus()
+            },
+            error: function () {
+                alert('error');
+            }
+        });
     }
 });
 
@@ -154,4 +118,53 @@ $('.process-right-seatmap').click(function () {
             }
         });
     }
+
+    console.log(array);
+    console.log(scheduleId);
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $.ajax({
+        method: "POST",
+        url: "/user/bill",
+        data: {
+            seat_list: array,
+            schedule_id: scheduleId
+        },
+        success: function (data) {
+            console.log(data);
+            $('#total-bill').html(totalmoney.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " VND");
+            $('#ticketModal').modal('show');
+        },
+        error: function () {
+            alert('Có lỗi đã xảy ra. Vui lòng thử lại');
+        }
+    });
 });
+
+// $('#confirm-update-ticket').click(function(){
+//     $.ajaxSetup({
+//         headers: {
+//             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+//         }
+//     });
+
+//     $.ajax({
+//         method: "POST",
+//         url: "/ticket/update",
+//         data: {
+//             seat_list: array,
+//             schedule_id: scheduleId
+//         },
+//         success: function (data) {
+//             console.log(array);
+//             // $('#total-bill').html(totalmoney);
+//         },
+//         error: function () {
+//             alert('error');
+//         }
+//     });
+// })
