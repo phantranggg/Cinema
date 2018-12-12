@@ -65,7 +65,7 @@
                         </button>
                         @endif
                         @endif
-                        <a href="{{ url('customer/theater/index/' . $movie->id) }}">
+                        <a href="{{ url('theater/' . $movie->id) }}">
                             <button class="buy-ticket-button">
                                 <span>Mua vé</span>
                             </button>
@@ -139,7 +139,7 @@
                     </button>
                     @endif
                     @endif
-                    <a href="{{ url('customer/theater/index/' . $movie->id) }}">
+                    <a href="{{ url('theater/' . $movie->id) }}">
                         <button class="buy-ticket-button">
                             <span>Mua vé</span>
                         </button>

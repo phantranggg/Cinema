@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Controllers\Customer;
-use App\Http\Controllers\Controller;
 
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -55,16 +56,9 @@ class UserController extends Controller
 
     protected function ticketModify($schedule_id) {
         $pageTitle = "Sửa thông tin vé";
-        $seatmap = DB::select('SELECT movies.*, theaters.*, schedules.* '
-                        . 'FROM schedules '
-                        . 'INNER JOIN movies ON schedules.movie_id = movies.id '
-                        . 'INNER JOIN theaters ON schedules.theater_id = theaters.id '
-                        . 'WHERE schedules.id = ?', [$schedule_id]);
-        $chosenSeat = DB::select('SELECT chair_num FROM tickets WHERE schedule_id = ?', [$schedule_id]);
-        $mySeat = DB::select('SELECT chair_num '
-                        . 'FROM tickets '
-                        . 'WHERE schedule_id = ? '
-                        . 'AND user_id = ?', [$schedule_id, Auth::id()]);
+        $seatmap = $this->userRepo->getSeatMap($schedule_id);
+        $chosenSeat = \App\Ticket::where('schedule_id', $schedule_id)->select('chair_num')->get();
+        $mySeat = \App\Ticket::where([['schedule_id', $schedule_id],['user_id', Auth::id()]])->select('chair_num')->get();
         $i = 0;
         $string = "";
         foreach ($mySeat as $seat) {
@@ -75,7 +69,7 @@ class UserController extends Controller
             }
         }
         $schedule = DB::table('schedules')->where('id', '=', $schedule_id)->first();
-        return view('users.ticket_modify', [
+        return view('customer.user.ticket_modify', [
             'pageTitle' => $pageTitle,
             'seatmap' => $seatmap,
             'chosenSeat' => $chosenSeat,
@@ -88,10 +82,7 @@ class UserController extends Controller
 
     protected function ticketDelete(Request $request) {
         $scheduleId = $request->schedule_id;
-        $seats = DB::select('SELECT chair_num '
-                        . 'FROM tickets '
-                        . 'WHERE schedule_id = ? '
-                        . 'AND user_id = ?', [$scheduleId, Auth::id()]);
+        $seats = \App\Ticket::where([['schedule_id', $scheduleId],['user_id', Auth::id()]])->select('chair_num')->get();
         $user = \App\User::find(Auth::id());
         $schedule = \DB::table('schedules')->find($scheduleId);
         $tmp = (int) $user->total_amount;

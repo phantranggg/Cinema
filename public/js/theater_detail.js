@@ -9,7 +9,7 @@ $('.theater-name').click(function () {
 
     $.ajax({
         method: "POST",
-        url: "/customer/theater/detail",
+        url: "/theater/detail",
         data: {
             theater_id: theaterId
         },
@@ -24,7 +24,7 @@ $('.theater-name').click(function () {
     if (movieId == null) {
         $.ajax({
             method: "POST",
-            url: "/customer/theater/schedule",
+            url: "/theater/schedule",
             data: {
                 theater_id: theaterId
             },
@@ -39,7 +39,7 @@ $('.theater-name').click(function () {
     console.log(movieId);
         $.ajax({
             method: "POST",
-            url: "/customer/theater/schedule-movie",
+            url: "/theater/schedule-movie",
             data: {
                 theater_id: theaterId,
                 movie_id: movieId,

@@ -15,7 +15,7 @@
                     <div class="panel-heading">THÔNG TIN NGƯỜI DÙNG</div>
 
                     <div class="panel-body user-info">
-                        <form class="form-horizontal" method="POST" action="{{ url('users/update') }}">
+                        <form class="form-horizontal" method="POST" action="{{ url('user/update') }}">
                             <input type='hidden' value="{!! csrf_token() !!}" name='_token' />
                             <div class="form-group user-info-detail">
                                 <label for="name" class="col-md-4 control-label">Tên</label>
@@ -127,7 +127,7 @@
                         <span class="movie-seats inline-block">{{ $ticket->chair_num }}</span>
                         @endforeach
                     </div>
-                    <a href="{{ url('customer/user/ticket/modify/' . $info->id ) }}"><button class="btn btn-primary">THAY ĐỔI</button></a>
+                    <a href="{{ url('/user/ticket/modify/' . $info->id ) }}"><button class="btn btn-primary">THAY ĐỔI</button></a>
                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal-{{ $info->id }}">XOÁ</button>
                     <!-- Modal -->
                     <div class="modal fade" id="myModal-{{ $info->id }}" role="dialog">
