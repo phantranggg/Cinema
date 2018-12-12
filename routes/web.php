@@ -41,9 +41,6 @@ Route::namespace('Customer')->group(function(){
     Route::get('/', 'HomeController@index')->name('index');
     Route::get('/home', 'HomeController@index')->name('home');
     
-    // Route::post('ticket-delete', 'TheaterController@ticketDelete');
-    
-    
     Route::get('movie/now-playing', 'MovieController@showNowPlayingList')->name('movie.now-playing');
     Route::get('movie/comming-soon', 'MovieController@showComingSoonList')->name('movie.comming-soon');
     Route::post('movie/recommend', 'MovieController@recommend')->name('movie.recommend');
@@ -67,6 +64,27 @@ Route::namespace('Customer')->group(function(){
 });
 
 
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin'], function (){
+    Route::namespace('Auth')->group(function() {
+        Route::get('login', 'LoginController@showLoginForm')->name('login');
+        Route::post('login', 'LoginController@login')->name('login.post');
+        Route::post('logout', 'LoginController@logout')->name('logout');
+    });
+
+    Route::middleware('admin')->group(function() {
+        Route::get('/', 'IndexController@index')->name('home');
+        Route::resource('/setting/user', 'UserController', ['as' => 'setting']);
+        // Route::resource('/setting/product', 'ProductController', ['as' => 'setting']);
+        // Route::resource('/setting/invoice', 'InvoiceController', ['as' => 'setting']);
+        // Route::get('/setting/invoiceitem/multiple_update','InvoiceItemController@multiple_update')->name('invoices_item_multiple_update');
+//        Route::resource('/setting/invoiceitem', 'InvoiceItemController', ['as' => 'setting'])->only([
+//            'destroy','edit','update','show'
+//        ]);
+        // Route::get('/setting/invoiceitem/destroy/{id}','InvoiceItemController@destroy')->name('setting.invoiceitem_destroy');
+
+
+    });
+});
 
 
 Route::group(['middleware' => ['auth']], function() {

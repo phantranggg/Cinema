@@ -17,6 +17,8 @@ class CreateTheatersTable extends Migration
             $table->increments('id');
             $table->string('name', 30);
             $table->string('hotline', 50)->nullable();
+            $table->smallInteger('row_num');
+            $table->smallInteger('column_num');
             $table->string('fax', 50)->nullable();
             $table->string('address', 70)->nullable();
             $table->smallInteger('status');
