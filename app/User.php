@@ -11,6 +11,14 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    const ACTIVE = 1;
+    const INACTIVE = 0;
+    const ROLE_ADMIN = 1;
+    const ROLE_USER = 2;
+    const PATH_AVATAR = 'uploads/users/avatars/';
+    const PATH_AVATAR_DEFAULT = 'uploads/users/avatars/default.png';
+    const CAN_NOT_DELETE = 1;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -29,8 +37,16 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
     
+    public function likes() {
+        return $this->hasMany('\App\Like');
+    }
+
+    public function tickets() {
+        return $this->hasMany('\App\Ticket');
+    }
+
     public function isAdmin() {
-        if (Auth::user()->role == 'admin') {
+        if (Auth::user()->role == "admin") {
             return true;
         }
         return false;

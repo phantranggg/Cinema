@@ -17,7 +17,7 @@ $(".btn-like").click(function () {
         });
         $.ajax({
             method: "POST",
-            url: "/movies/unlike",
+            url: "/user/unlike",
             data: {
                 movie_id: id
             },
@@ -44,7 +44,7 @@ $(".btn-like").click(function () {
         });
         $.ajax({
             method: "POST",
-            url: "/movies/like",
+            url: "/user/like",
             data: {
                 movie_id: id
             },
