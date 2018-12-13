@@ -206,4 +206,9 @@ class MovieRepository extends SAbstractRepository
         return $movies;
     }
 
+    public function getNotHaveScheduleMovies(){
+        $movies = \DB::select('select * from movies where id not in (select movie_id from schedules)');
+        return $movies;
+    }
+
 }

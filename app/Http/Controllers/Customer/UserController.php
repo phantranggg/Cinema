@@ -35,7 +35,7 @@ class UserController extends Controller
 
     public function update(Request $request) {
         $this->userRepo->update($request, Auth::user()->id);
-        return back()->with('success','You have successfully update profile');
+            return back()->with('success','You have successfully update profile');
     }
 
     protected function like(Request $request) {

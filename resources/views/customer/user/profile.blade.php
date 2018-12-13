@@ -15,7 +15,7 @@
                     <div class="panel-heading">THÔNG TIN NGƯỜI DÙNG</div>
 
                     <div class="panel-body user-info">
-                        <form class="form-horizontal" method="POST" action="{{ url('user/update') }}">
+                        <form class="form-horizontal" method="POST" action="{{ url('users/update') }}">
                             <input type='hidden' value="{!! csrf_token() !!}" name='_token' />
                             <div class="form-group user-info-detail">
                                 <label for="name" class="col-md-4 control-label">Tên</label>

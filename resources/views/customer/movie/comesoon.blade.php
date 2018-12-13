@@ -58,11 +58,17 @@
                         <span>Like</span>
                     </button>
                     @endif
+
+                    @if(in_array($movie, $nothavesche))
+                        <button class="disabled"> Mua vé </button>
+                    @else
                     <a href="{{ url('theaters/' . $movie->id) }}">
                         <button class="buy-ticket-button">
                             <span>Mua vé</span>
                         </button>
                     </a>
+                    @endif
+
                     <div class = "clear"></div>
                 </div>
             </div>

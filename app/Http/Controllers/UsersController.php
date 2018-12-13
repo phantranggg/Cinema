@@ -45,7 +45,7 @@ class UsersController extends Controller {
                     . 'SET password = ?, date_of_birth = ?, phone = ?, address = ? '
                     . 'WHERE id = ?', [bcrypt($request->password), $request->date_of_birth, $request->phone, $request->address, Auth::id()]);
         }
-        return redirect('/users/profile');
+        return redirect('user/profile');
     }
 
     protected function ticketModify($schedule_id) {

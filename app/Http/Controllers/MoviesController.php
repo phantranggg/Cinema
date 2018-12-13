@@ -54,9 +54,11 @@ class MoviesController extends Controller {
     protected function comesoon() {
         $pageTitle = "Phim Sắp Chiếu";
         $movies = $this->movieRepository->getCommingSoon(30);
+        $nothavesche = $this -> movieRepository -> getNotHaveScheduleMovies();
         return view('movies.comesoon', [
             'pageTitle' => $pageTitle,
-            'movies' => $movies,
+//            'movies' => $movies,
+            'nothavesche' => $nothavesche,
             'movieObj' => $this->movieRepository
         ]);
     }

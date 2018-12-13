@@ -132,11 +132,13 @@ class MovieController extends Controller
     }
 
     protected function showComingSoonList() {
-        $movies = $this->movieRepo->getNowPlayingList(30);
+        $movies = $this->movieRepo->getCommingSoonList(30);
+        $nothavesche = $this->movieRepo->getNotHaveScheduleMovies();
         return view('customer.movie.comesoon', [
             'pageTitle' => "Phim Sắp Chiếu",
             'movies' => $movies,
-            'movieObj' => $this->movieRepo
+            'movieObj' => $this->movieRepo,
+            'nothavesche' => $nothavesche
         ]);
     }
 
