@@ -107,7 +107,6 @@
 
     {{-- Navbar --}}
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        {{-- <a class="navbar-brand" href="#">Cinema</a> --}}
         <a class="navbar-brand" href="{{ url('/') }}">
             {{ config('app.name', 'Laravel') }}
         </a>
@@ -132,36 +131,13 @@
                         <a class="dropdown-item" href="{!! url('movie/comming-soon') !!}">PHIM SẮP CHIẾU</a>
                     </div>
                 </li>
-                {{--
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
-                </li> --}} {{--
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false">Dropdown</a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                </li> --}}
                 <li class="nav-item {{ (\Request::is('theater')) ? " active " : " " }}">
                     <a class="nav-link" href="{!! url('theater') !!}"><span class="fa fa-home fa-lg"></span> RẠP</a>
                 </li>
-                {{--
-                <li class="nav-item">
-                    @if (Auth::check())
-                    <a class="nav-link" href="{!! url('users/profile') !!}"><span class="fa fa-user fa-lg"></span> NGƯỜI DÙNG</a>                    @else
-                    <a class="nav-link" href="{!! url('login') !!}"><span class="fa fa-user fa-lg"></span> NGƯỜI DÙNG</a>                    @endif
-                </li> --}} {{--
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#">Disabled</a>
-                </li> --}}
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <form class="form-inline my-2 my-lg-0" action="{{ route('movie.search') }}" method="GET">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="keyword">
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                 </form>
                 <!-- Authentication Links -->
@@ -213,66 +189,6 @@
         </div>
     </nav>
 
-    {{-- Old Navbar --}} {{--
-    <nav class="navbar navbar-default navbar-static-top navbar-inverse">
-        <div class="container">
-            <div class="navbar-header">
-
-                <!-- Collapsed Hamburger -->
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse" aria-expanded="false">
-                        <span class="sr-only">Toggle Navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-
-                <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
-                    </a>
-            </div>
-
-            <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                <!-- Left Side Of Navbar -->
-                <ul class="nav navbar-nav mr-auto">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="fa fa-film fa-lg"></span> PHIM
-                            </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="{!! url('movies/nowplay') !!}">PHIM ĐANG CHIẾU</a>
-                            <a class="dropdown-item" href="{!! url('movies/comesoon') !!}">PHIM SẮP CHIẾU</a>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{!! url('theaters') !!}"><span class="fa fa-home fa-lg"></span> RẠP</a>
-                    </li>
-                    <li class="nav-item">
-                        @if (Auth::check())
-                        <a class="nav-link" href="{!! url('users/profile') !!}"><span class="fa fa-user fa-lg"></span> NGƯỜI DÙNG</a>                        @else
-                        <a class="nav-link" href="{!! url('login') !!}"><span class="fa fa-user fa-lg"></span> NGƯỜI DÙNG</a>                        @endif
-                    </li>
-                </ul>
-
-                <!-- Right Side Of Navbar -->
-                <ul class="nav navbar-nav navbar-right">
-                    <!-- Authentication Links -->
-                    @guest
-                    <li><a href="{{ route('login') }}">Login</a></li>
-                    <li><a href="{{ route('register') }}">Register</a></li>
-                    @else
-                    <li><a>{{ 'Welcome ' . Auth::user()->name }}</a></li>
-                    <li><a href="/" onclick="event.preventDefault();
-                                document.getElementById('logout-form').submit();">Logout</a>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                            {{ csrf_field() }}
-                        </form>
-                    </li>
-                    @endguest
-                </ul>
-            </div>
-        </div>
-    </nav> --}} {{-- Jumbotron --}}
     <header class="jumbotron">
         <div class="container">
             <div class="row row-header">

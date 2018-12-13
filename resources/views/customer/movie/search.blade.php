@@ -3,8 +3,9 @@
 @section('content')
 <div class="container">
     <div class="category-title">
-        <br/><h1>{{ $pageTitle }}</h1><br />
+        <br /><h1>{{ $pageTitle }}</h1><br />
     </div>
+    <h4>Kết quả tìm kiếm cho từ khóa: {{ $keyword }}</h4>
     @php $count = 0; @endphp
     @foreach ($movies as $movie)
     @php $count++; @endphp

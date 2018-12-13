@@ -182,4 +182,16 @@ class MovieController extends Controller
             'movieObj' => $this->movieRepo
         ]);
     }
+
+    protected function search(Request $request) {
+        $pageTitle = "TÌM KIẾM PHIM";
+        $kw = $request->keyword;
+        $data = $this->movieRepo->findByKeyword($kw);
+        return view('customer.movie.search', [
+            'pageTitle' => $pageTitle,
+            'movies' => $data,
+            'movieObj' => $this->movieRepo,
+            'keyword' => $kw
+        ]);
+    }
 }
