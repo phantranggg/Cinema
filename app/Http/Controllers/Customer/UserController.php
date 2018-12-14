@@ -33,9 +33,9 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(Request $request) {
-        $this->userRepo->update($request, Auth::user()->id);
-        return back()->with('success','You have successfully update profile');
+    protected function update(Request $request) {
+        $this->userRepo->update($request);
+        return redirect('/user/profile');
     }
 
     protected function like(Request $request) {
@@ -52,6 +52,27 @@ class UserController extends Controller
 
     protected function bill(Request $request) {
         $this->userRepo->getBill($request);
+    }
+
+    protected function ticketDelete(Request $request) {
+        $scheduleId = $request->schedule_id;
+        $seats = DB::select('SELECT chair_num '
+                        . 'FROM tickets '
+                        . 'WHERE schedule_id = ? '
+                        . 'AND user_id = ?', [$scheduleId, Auth::id()]);
+        $user = \App\User::find(Auth::id());
+        $schedule = \DB::table('schedules')->find($scheduleId);
+        $tmp = (int) $user->total_amount;
+        foreach ($seats as $seat) {
+            // DB::delete('DELETE FROM tickets WHERE schedule_id = ? AND chair_num = ? AND user_id = ?', [$scheduleId, $seat->chair_num, Auth::id()]);
+            $tmp = $tmp - $schedule->price;
+        }
+        //die(var_dump($tmp));
+        if ($tmp >= 1000000) {
+            \App\User::where('id', Auth::id())->update(['total_amount' => $tmp]);
+        } else {
+            \App\User::where('id', Auth::id())->update(['total_amount' => $tmp, 'account_type' => 'normal']);
+        }
     }
 
     protected function ticketModify($schedule_id) {
@@ -80,21 +101,25 @@ class UserController extends Controller
         ]);
     }
 
-    protected function ticketDelete(Request $request) {
-        $scheduleId = $request->schedule_id;
-        $seats = \App\Ticket::where([['schedule_id', $scheduleId],['user_id', Auth::id()]])->select('chair_num')->get();
-        $user = \App\User::find(Auth::id());
-        $schedule = \DB::table('schedules')->find($scheduleId);
-        $tmp = (int) $user->total_amount;
-        foreach ($seats as $seat) {
-            // DB::delete('DELETE FROM tickets WHERE schedule_id = ? AND chair_num = ? AND user_id = ?', [$scheduleId, $seat->chair_num, Auth::id()]);
-            $tmp = $tmp - $schedule->price;
-        }
-        //die(var_dump($tmp));
-        if ($tmp >= 1000000) {
-            \App\User::where('id', Auth::id())->update(['total_amount' => $tmp]);
-        } else {
-            \App\User::where('id', Auth::id())->update(['total_amount' => $tmp, 'account_type' => 'normal']);
-        }
+    protected function ticketUpdate() {
+        
     }
+
+    // protected function ticketDelete(Request $request) {
+    //     $scheduleId = $request->schedule_id;
+    //     $seats = \App\Ticket::where([['schedule_id', $scheduleId],['user_id', Auth::id()]])->select('chair_num')->get();
+    //     $user = \App\User::find(Auth::id());
+    //     $schedule = \DB::table('schedules')->find($scheduleId);
+    //     $tmp = (int) $user->total_amount;
+    //     foreach ($seats as $seat) {
+    //         // DB::delete('DELETE FROM tickets WHERE schedule_id = ? AND chair_num = ? AND user_id = ?', [$scheduleId, $seat->chair_num, Auth::id()]);
+    //         $tmp = $tmp - $schedule->price;
+    //     }
+    //     //die(var_dump($tmp));
+    //     if ($tmp >= 1000000) {
+    //         \App\User::where('id', Auth::id())->update(['total_amount' => $tmp]);
+    //     } else {
+    //         \App\User::where('id', Auth::id())->update(['total_amount' => $tmp, 'account_type' => 'normal']);
+    //     }
+    // }
 }

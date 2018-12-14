@@ -100,38 +100,45 @@ class UserRepository extends SAbstractRepository
      * @param int $id
      * @return bool
      */
-    public function update($request, $id)
-    {
-        $user = User::find($id);
-        $user->name = $request->get('name');
-        $user->email = $request->get('email');
-        if (!empty($request->get('password'))) {
-            $user->password = bcrypt($request->get('password'));
+    public function update($request) {
+        if ($request->password === $request->password_confirmation) {
+            DB::update('UPDATE users '
+                    . 'SET password = ?, date_of_birth = ?, phone = ?, address = ? '
+                    . 'WHERE id = ?', [bcrypt($request->password), $request->date_of_birth, $request->phone, $request->address, Auth::id()]);
         }
-        if (!is_null($request->get('active'))) {
-            $user->active = User::ACTIVE;
-        } else {
-            $user->active = User::INACTIVE;
-        }
-        $user->role_id = $request->get('role_id');
-        if ($user->id == User::CAN_NOT_DELETE) {
-            $user->active = User::ACTIVE;
-            $user->role_id = User::ROLE_ADMIN;
-        }
-        $avatar = $request->file('avatar');
-        if (isset($avatar)) {
-            $upload = $avatar->getClientOriginalName();
-            $filename = str_slug(pathinfo($upload, PATHINFO_FILENAME));
-            $fileExtension = str_slug(pathinfo($upload, PATHINFO_EXTENSION));
-            $changeName = time() . '_' . $filename . '.' . $fileExtension;
-            $avatar->move(User::PATH_AVATAR, $changeName);
-            $avatarPath = User::PATH_AVATAR . $changeName;
-            $user->avatar = $avatarPath;
-        }
-        $user->save();
-        
-        return $user;
     }
+    // public function update($request, $id)
+    // {
+    //     $user = User::find($id);
+    //     $user->name = $request->get('name');
+    //     $user->email = $request->get('email');
+    //     if (!empty($request->get('password'))) {
+    //         $user->password = bcrypt($request->get('password'));
+    //     }
+    //     if (!is_null($request->get('active'))) {
+    //         $user->active = User::ACTIVE;
+    //     } else {
+    //         $user->active = User::INACTIVE;
+    //     }
+    //     $user->role_id = $request->get('role_id');
+    //     if ($user->id == User::CAN_NOT_DELETE) {
+    //         $user->active = User::ACTIVE;
+    //         $user->role_id = User::ROLE_ADMIN;
+    //     }
+    //     $avatar = $request->file('avatar');
+    //     if (isset($avatar)) {
+    //         $upload = $avatar->getClientOriginalName();
+    //         $filename = str_slug(pathinfo($upload, PATHINFO_FILENAME));
+    //         $fileExtension = str_slug(pathinfo($upload, PATHINFO_EXTENSION));
+    //         $changeName = time() . '_' . $filename . '.' . $fileExtension;
+    //         $avatar->move(User::PATH_AVATAR, $changeName);
+    //         $avatarPath = User::PATH_AVATAR . $changeName;
+    //         $user->avatar = $avatarPath;
+    //     }
+    //     $user->save();
+        
+    //     return $user;
+    // }
 
     /**
      * Create a user.

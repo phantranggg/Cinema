@@ -113,8 +113,8 @@
             <label>Tổng tiền: </label><span id="total-bill"></span>
         </div>
 
-        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal" style="margin-left: 250px">
-            Xác nhận
+        <button type="button" id="confirm-update-ticket" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal" style="margin-left: 250px">
+            Confirm
         </button>
     </div>
 
