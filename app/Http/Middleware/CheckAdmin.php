@@ -18,7 +18,8 @@ class CheckAdmin {
         if (Auth::user()->role == "admin") {
             return $next($request);
         }
-        return redirect('/home');
+//        return 'hahah';
+//        return redirect('/ad');
     }
 
 }

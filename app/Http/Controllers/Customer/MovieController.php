@@ -26,7 +26,7 @@ class MovieController extends Controller
     {
         $movies = $this->movieRepo->all($request, false);
         die($movies);
-        // return view('customer.movie.index', compact('movies'));
+        // return view('customer.movies.index', compact('movies'));
     }
 
     /**
@@ -37,7 +37,7 @@ class MovieController extends Controller
     public function create()
     {
         $paymentTypeArr = $this->movieRepo->paymentTypeArr();
-        return view('customer.movie.create', compact('paymentTypeArr'));
+        return view('customer.movies.create', compact('paymentTypeArr'));
     }
 
     /**
@@ -55,7 +55,7 @@ class MovieController extends Controller
         }
         $this->movieRepo->create($request);
         $this->toastrSuccess(trans('customer/base.msg_susscess'));
-        return redirect()->route('customer.movie.index');
+        return redirect()->route('customer.movies.index');
     }
 
     /**
@@ -70,7 +70,7 @@ class MovieController extends Controller
         if (is_null($movie)) {
             abort(404);
         }
-        return view('customer.movie.show', compact('movie'));
+        return view('customer.movies.show', compact('movie'));
     }
 
     /**
@@ -86,7 +86,7 @@ class MovieController extends Controller
         if (is_null($movie)) {
             abort(404);
         }
-        return view('customer.movie.edit', compact('movie','paymentTypeArr'));
+        return view('customer.movies.edit', compact('movie','paymentTypeArr'));
     }
 
     /**
@@ -105,7 +105,7 @@ class MovieController extends Controller
         } else {
             $this->movieRepo->update($request, $id);
             $this->toastrSuccess(trans('customer/base.msg_susscess'));
-            return redirect()->route('customer.movie.edit', $id);
+            return redirect()->route('customer.movies.edit', $id);
         }
     }
 
@@ -124,7 +124,7 @@ class MovieController extends Controller
 
     protected function showNowPlayingList() {
         $movies = $this->movieRepo->getNowPlayingList(30);
-        return view('customer.movie.nowplay', [
+        return view('customer.movies.nowplay', [
             'pageTitle' => "Phim Đang Chiếu",
             'movies' => $movies,
             'movieObj' => $this->movieRepo
@@ -133,7 +133,7 @@ class MovieController extends Controller
 
     protected function showComingSoonList() {
         $movies = $this->movieRepo->getNowPlayingList(30);
-        return view('customer.movie.comesoon', [
+        return view('customer.movies.comesoon', [
             'pageTitle' => "Phim Sắp Chiếu",
             'movies' => $movies,
             'movieObj' => $this->movieRepo
@@ -150,7 +150,7 @@ class MovieController extends Controller
         $movies = [];
         // dd($allmovies);
         foreach($allmovies as $movie) {
-            // dd($movie->release_date);
+            // dd($movies->release_date);
             $year = \Carbon\Carbon::createFromFormat('Y-m-d', $movie->release_date)->year;
             if ($request->year != "" && $request->year != $year) {
                 continue;
@@ -176,7 +176,7 @@ class MovieController extends Controller
             array_push($movies, $movie);
         }
 
-        return view('customer.movie.recommend', [
+        return view('customer.movies.recommend', [
             'pageTitle' => $pageTitle,
             'movies' => $movies,
             'movieObj' => $this->movieRepo

@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Http\Controllers;
-
+namespace App\Http\Controllers\Admin;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Movie;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Repositories\Movie\MovieEloquentRepository;
+use App\Repositories\MovieRepository;
 use Carbon\Carbon;
 
 class MoviesController extends Controller {
 
     protected $movieRepository;
 
-    public function __construct(MovieEloquentRepository $movieRepository) {
+    public function __construct(MovieRepository $movieRepository) {
         $this->movieRepository = $movieRepository;
         
     }
@@ -76,18 +76,18 @@ class MoviesController extends Controller {
     }
 
     protected function adminNowPlay() {
-        $nowplay = $this->movieRepository->getNowPlaying(30);
+        $nowplay = $this->movieRepository->getNowPlayingList(30);
         $theaterName = \App\Theater::where('status', '=', 1)->get();
-        return view('movies.admin_nowplay', [
+        return view('admin.movies.admin_nowplay', [
             'nowplay' => $nowplay,
             'theaterName' => $theaterName
         ]);
     }
 
     protected function adminComeSoon() {
-        $comesoon = $this->movieRepository->getCommingSoon(30);
+        $comesoon = $this->movieRepository->getCommingSoonList(30);
         $theaterName = \App\Theater::where('status', '=', 1)->get();
-        return view('movies.admin_comesoon', [
+        return view('admin.movies.admin_comesoon', [
             'comesoon' => $comesoon,
             'theaterName' => $theaterName
         ]);
@@ -95,7 +95,7 @@ class MoviesController extends Controller {
 
     protected function adminAllMovies() {
         $allmovies = $this->movieRepository->getAllMoviesInOrder();
-        return view('movies.admin_allmovies', [
+        return view('admin.movies.admin_allmovies', [
             'allmovies' => $allmovies
         ]);
     }
@@ -103,7 +103,7 @@ class MoviesController extends Controller {
     protected function adminInfo($movieId) {
         $movie = $this->movieRepository->find($movieId);
         return view('movies.admin_info', [
-            'movie' => $movie
+            'movies' => $movie
         ]);
     }
 
@@ -169,7 +169,7 @@ class MoviesController extends Controller {
         $movies = [];
         // dd($allmovies);
         foreach($allmovies as $movie) {
-            // dd($movie->release_date);
+            // dd($movies->release_date);
             $year = Carbon::createFromFormat('Y-m-d', $movie->release_date)->year;
             if ($request->year != "" && $request->year != $year) {
                 continue;

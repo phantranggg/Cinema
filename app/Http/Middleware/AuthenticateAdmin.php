@@ -21,6 +21,7 @@ class AuthenticateAdmin
             return redirect()->route('admin.login');
         }
         if (Auth::user()->role == "admin") {
+//            return 'hihii';
             return redirect()->route('index');
         } else 
             return redirect()->route('admin.home');

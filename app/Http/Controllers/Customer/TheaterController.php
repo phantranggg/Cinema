@@ -29,7 +29,7 @@ class TheaterController extends Controller
     }
 
     /**
-     * Show theater index but only show schedule of only one movie
+     * Show theater index but only show schedule of only one movies
      * @param $movieId
      */
     protected function indexForOnlyOneMovie($movieId) {

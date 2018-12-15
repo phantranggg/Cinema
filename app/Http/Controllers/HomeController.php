@@ -17,8 +17,10 @@ class HomeController extends Controller {
     public function index() {
         $pageTitle = "Trang Chủ";
         $movieObj = new Movie();
+
         $nowplay = $movieObj->nowPlaying(6);
         $comesoon = $movieObj->commingSoon(6);
+        // echo 'ahahah';
         return view('home')->with([
                     'pageTitle' => $pageTitle,
                     'nowplay' => $nowplay,
@@ -35,18 +37,6 @@ class HomeController extends Controller {
         return $likes;
     }
 
-//    protected function admin() {
-//        $ticketNum = DB::select('SELECT count(*) FROM tickets');
-//        $movieNum = DB::select('SELECT count(*) FROM movies');
-//        $theaterNum = DB::select('SELECT count(*) FROM theaters');
-//        $userNum = DB::select('SELECT count(*) FROM users');
-//        return view('admin', [
-//            'ticketNum' => $ticketNum[0]->count,
-//            'movieNum' => $movieNum[0]->count,
-//            'theaterNum' => $theaterNum[0]->count,
-//            'userNum' => $userNum[0]->count,
-//        ]);
-//    }
 
     protected function admin() {
         $ticketNum = DB::select('SELECT count(*) FROM tickets');
