@@ -16,7 +16,7 @@
                         <div class="show_time">Giờ chiếu: {{ $scheduleInfo->show_time }}</div>
                         <div class="type_schedule">Định dạng: {{ $scheduleInfo->type }}</div>
                         <div class="chair_num">Số ghế trống: {{ $scheduleInfo->totalseat }} ghế</div>
-                        <a href="{{ url('schedule/pair/' . $scheduleInfo->id) }}">Match</a>
+                        <a href="{{ url('schedule/pair/' . $scheduleInfo->id) }}"><button class="btn btn-sm btn-success pull-right mt-2">Match</button></a>
                     </div>
                 </a>
             @endforeach
