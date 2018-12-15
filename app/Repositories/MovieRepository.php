@@ -173,7 +173,7 @@ class MovieRepository extends SAbstractRepository
     }
     
     public function getAllMoviesInOrder() {
-        $allmovies = $this->model->where('status', '=', 1)->orderBy('ticket_num', 'desc')->orderBy('like_num', 'desc')->get();
+        $allmovies = $this->model->where('status', 1)->orderBy('ticket_num', 'desc')->orderBy('like_num', 'desc')->get();
         return $allmovies;
         //$allmovies = \App\Movie::where('status', '=', 1)->orderBy('ticket_num', 'desc')->orderBy('like_num', 'desc')->get();
     }

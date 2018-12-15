@@ -48,9 +48,13 @@ Route::namespace('Customer')->group(function(){
     Route::get('theater', 'TheaterController@index')->name('theater.index');
     Route::get('theater/{movie_id}', 'TheaterController@indexForOnlyOneMovie')->name('theater.index.{movie_id}');
     Route::post('theater/detail', 'TheaterController@detail')->name('theater.detail');
-    Route::post('theater/schedule', 'TheaterController@schedule')->name('theater.schedule');
-    Route::post('theater/schedule-movie', 'TheaterController@scheduleForOnlyOneMovie')->name('theater.schedule-movie');
-    Route::get('theater/seatmap/{id}', 'TheaterController@seatmap')->name('theater.seatmap');
+    
+    Route::post('schedule', 'ScheduleController@schedule')->name('schedule');
+    Route::post('schedule/movie', 'ScheduleController@scheduleForOnlyOneMovie')->name('schedule.movie');
+    Route::get('schedule/seatmap/{schedule_id}', 'ScheduleController@seatmap')->name('schedule.seatmap');
+    Route::get('schedule/pair/{id}', 'ScheduleController@showPairList')->name('schedule.pair');
+    Route::get('schedule/join-pair', 'ScheduleController@joinPair')->name('schedule.join-pair');
+    Route::get('schedule/self-add', 'ScheduleController@selfAdd')->name('schedule.self-add');
     // Route::post('choose-seat', 'TheaterController@chooseSeat')->name('theater.choose-seet');
 
     Route::middleware('auth')->group(function(){

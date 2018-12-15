@@ -7,7 +7,7 @@
             <div class="movie-title-schedule">{{ $movie->title }}</div>
             @foreach ($movie->schedule_detail as $scheduleInfo)
                 @if (Auth::check())
-                <a href="/theater/seatmap/{{ $scheduleInfo->id }}">
+                <a href="/schedule/seatmap/{{ $scheduleInfo->id }}">
                 @else
                 <a href="{{ url('login') }}">
                 @endif
@@ -16,6 +16,7 @@
                         <div class="show_time">Giờ chiếu: {{ $scheduleInfo->show_time }}</div>
                         <div class="type_schedule">Định dạng: {{ $scheduleInfo->type }}</div>
                         <div class="chair_num">Số ghế trống: {{ $scheduleInfo->totalseat }} ghế</div>
+                        <a href="{{ url('schedule/pair/' . $scheduleInfo->id) }}">Match</a>
                     </div>
                 </a>
             @endforeach

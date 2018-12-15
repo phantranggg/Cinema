@@ -161,7 +161,7 @@ $('#confirm-update-ticket').click(function(){
 
     $.ajax({
         method: "POST",
-        url: "user/ticket/update",
+        url: "/user/ticket/update",
         data: {
             seat_list: array,
             schedule_id: scheduleId

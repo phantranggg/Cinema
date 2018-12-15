@@ -24,7 +24,7 @@ $('.theater-name').click(function () {
     if (movieId == null) {
         $.ajax({
             method: "POST",
-            url: "/theater/schedule",
+            url: "/schedule",
             data: {
                 theater_id: theaterId
             },
@@ -39,7 +39,7 @@ $('.theater-name').click(function () {
     console.log(movieId);
         $.ajax({
             method: "POST",
-            url: "/theater/schedule-movie",
+            url: "/schedule/movie",
             data: {
                 theater_id: theaterId,
                 movie_id: movieId,

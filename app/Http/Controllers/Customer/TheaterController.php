@@ -47,32 +47,4 @@ class TheaterController extends Controller
         return view('customer.theater.detail', compact('infoDetail'));
     }
 
-    protected function schedule(Request $request) {
-        $scheduleDetail = $this->theaterRepo->getScheduleDetail($request);
-        return view('customer.theater.schedule', [
-            'schedule' => $scheduleDetail
-        ]);
-    }
-
-    protected function scheduleForOnlyOneMovie(Request $request) {
-        $scheduleDetail = $this->theaterRepo->getScheduleForOnlyOneMovie($request);
-        return view('customer.theater.schedule', [
-            'schedule' => $scheduleDetail
-        ]);
-    }
-
-    protected function seatmap($schedule_id) {
-        $pageTitle = "Đặt Vé Trực Tuyến";
-        $seatmap = $this->theaterRepo->getSeatmap($schedule_id);
-        $chosenSeat = \App\Ticket::where('schedule_id', $schedule_id)->select('chair_num')->get();
-        $schedule = \App\Schedule::find($schedule_id);
-        // die($schedule);
-        return view('customer.theater.seatmap', [
-            'pageTitle' => $pageTitle,
-            'seatmap' => $seatmap,
-            'chosenSeat' => $chosenSeat,
-            'price' => $schedule->price
-        ]);
-    }
-
 }

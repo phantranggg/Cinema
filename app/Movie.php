@@ -11,12 +11,12 @@ class Movie extends Model
 
     protected $fillable = ['title', 'release_date', 'genres', 'score', 'director', 'country', 'length', 'subtitle', 'rating', 'status'];
 
-    public function movieRooms() {
-        return $this->hasMany('\App\MovieRoom');
-    }
-
     public function likes() {
         return $this->hasMany('\App\Like');
+    }
+
+    public function schedules() {
+        return $this->hasMany('App\Schedule');
     }
        
     public function checkLike($movieId) 
