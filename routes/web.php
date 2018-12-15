@@ -63,9 +63,10 @@ Route::namespace('Customer')->group(function(){
         Route::post('user/like', 'UserController@like')->name('user.like');
         Route::post('user/unlike', 'UserController@unlike')->name('user.unlike');
         Route::post('user/bill', 'UserController@bill')->name('user.bill');
-        Route::post('user/ticket/delete', 'UserController@ticketDelete')->name('user.ticket-delete');
-        Route::get('user/ticket/modify/{schedule_id}', 'UserController@ticketModify')->name('user.ticket-modify');
-        Route::get('user/ticket/update', 'UserController@ticketUpdate')->name('user.ticket-update');
+
+        Route::post('ticket/delete', 'TicketController@delete')->name('ticket.delete');
+        Route::get('ticket/modify/{schedule_id}', 'TicketController@modify')->name('ticket.modify');
+        Route::get('ticket/update', 'TicketController@update')->name('ticket.update');
     });
 });
 

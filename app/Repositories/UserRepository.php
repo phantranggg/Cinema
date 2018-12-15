@@ -225,34 +225,23 @@ class UserRepository extends SAbstractRepository
     public function getBill(Request $request) {
         $seatList = $request->seat_list;
         $scheduleId = $request->schedule_id;
+        $mySeatList = \App\Ticket::where('schedule_id', $scheduleId)->where('user_id', Auth::id())->get();
         foreach ($seatList as $seat) {
             //$exist = \DB::table('tickets')->where('schedule_id', $scheduleId)->where('chair_num', $seat);
             $exist = DB::select('SELECT id FROM tickets WHERE schedule_id = ? AND chair_num = ?', [$scheduleId, $seat]);
+            // $exist = \App\Ticket::where('schedule_id', $scheduleId)->where('chair_num', $seat)->get();
             if (!$exist) {
-                //DB::insert('INSERT INTO tickets(schedule_id, user_id, chair_num) VALUES (?,?,?)', [$scheduleId, Auth::id(), $seat]);
                 DB::table('tickets')->insert(
                         ['schedule_id' => $scheduleId, 'user_id' => Auth::id(), 'chair_num' => $seat]
                 );
-                $user = \App\User::find(Auth::id());
-                $schedule = \DB::table('schedules')->find($scheduleId);
-                $tmp = (int) $user->total_amount + (int) $schedule->price;
-                \App\User::where('id', Auth::id())->update(['total_amount' => $tmp]);
-                if ($tmp >= 1000000) {
-                    \App\User::find(Auth::id())->update(['account_type' => 'vip']);
-                } else {
-                    \App\User::find(Auth::id())->update(['account_type' => 'normal']);
-                }
             }
         }
-    }
-
-    public function getSeatMap($schedule_id) {
-        $seatmap = DB::select('SELECT movies.*, theaters.*, schedules.* '
-                        . 'FROM schedules '
-                        . 'INNER JOIN movies ON schedules.movie_id = movies.id '
-                        . 'INNER JOIN theaters ON schedules.theater_id = theaters.id '
-                        . 'WHERE schedules.id = ?', [$schedule_id]);
-        return $seatmap;
+        foreach ($mySeatList as $seat) {
+            echo($seat);
+            if (!in_array($seat->chair_num, $seatList)) {
+                DB::delete('DELETE FROM tickets WHERE schedule_id = ? AND chair_num = ?', [$scheduleId, $seat->chair_num]);
+            }
+        }
     }
 
 }
