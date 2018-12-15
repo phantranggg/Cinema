@@ -100,38 +100,45 @@ class UserRepository extends SAbstractRepository
      * @param int $id
      * @return bool
      */
-    public function update($request, $id)
-    {
-        $user = User::find($id);
-        $user->name = $request->get('name');
-        $user->email = $request->get('email');
-        if (!empty($request->get('password'))) {
-            $user->password = bcrypt($request->get('password'));
+    public function update($request) {
+        if ($request->password === $request->password_confirmation) {
+            DB::update('UPDATE users '
+                    . 'SET password = ?, date_of_birth = ?, phone = ?, address = ? '
+                    . 'WHERE id = ?', [bcrypt($request->password), $request->date_of_birth, $request->phone, $request->address, Auth::id()]);
         }
-        if (!is_null($request->get('active'))) {
-            $user->active = User::ACTIVE;
-        } else {
-            $user->active = User::INACTIVE;
-        }
-        $user->role_id = $request->get('role_id');
-        if ($user->id == User::CAN_NOT_DELETE) {
-            $user->active = User::ACTIVE;
-            $user->role_id = User::ROLE_ADMIN;
-        }
-        $avatar = $request->file('avatar');
-        if (isset($avatar)) {
-            $upload = $avatar->getClientOriginalName();
-            $filename = str_slug(pathinfo($upload, PATHINFO_FILENAME));
-            $fileExtension = str_slug(pathinfo($upload, PATHINFO_EXTENSION));
-            $changeName = time() . '_' . $filename . '.' . $fileExtension;
-            $avatar->move(User::PATH_AVATAR, $changeName);
-            $avatarPath = User::PATH_AVATAR . $changeName;
-            $user->avatar = $avatarPath;
-        }
-        $user->save();
-        
-        return $user;
     }
+    // public function update($request, $id)
+    // {
+    //     $user = User::find($id);
+    //     $user->name = $request->get('name');
+    //     $user->email = $request->get('email');
+    //     if (!empty($request->get('password'))) {
+    //         $user->password = bcrypt($request->get('password'));
+    //     }
+    //     if (!is_null($request->get('active'))) {
+    //         $user->active = User::ACTIVE;
+    //     } else {
+    //         $user->active = User::INACTIVE;
+    //     }
+    //     $user->role_id = $request->get('role_id');
+    //     if ($user->id == User::CAN_NOT_DELETE) {
+    //         $user->active = User::ACTIVE;
+    //         $user->role_id = User::ROLE_ADMIN;
+    //     }
+    //     $avatar = $request->file('avatar');
+    //     if (isset($avatar)) {
+    //         $upload = $avatar->getClientOriginalName();
+    //         $filename = str_slug(pathinfo($upload, PATHINFO_FILENAME));
+    //         $fileExtension = str_slug(pathinfo($upload, PATHINFO_EXTENSION));
+    //         $changeName = time() . '_' . $filename . '.' . $fileExtension;
+    //         $avatar->move(User::PATH_AVATAR, $changeName);
+    //         $avatarPath = User::PATH_AVATAR . $changeName;
+    //         $user->avatar = $avatarPath;
+    //     }
+    //     $user->save();
+        
+    //     return $user;
+    // }
 
     /**
      * Create a user.
@@ -218,34 +225,23 @@ class UserRepository extends SAbstractRepository
     public function getBill(Request $request) {
         $seatList = $request->seat_list;
         $scheduleId = $request->schedule_id;
+        $mySeatList = \App\Ticket::where('schedule_id', $scheduleId)->where('user_id', Auth::id())->get();
         foreach ($seatList as $seat) {
             //$exist = \DB::table('tickets')->where('schedule_id', $scheduleId)->where('chair_num', $seat);
             $exist = DB::select('SELECT id FROM tickets WHERE schedule_id = ? AND chair_num = ?', [$scheduleId, $seat]);
+            // $exist = \App\Ticket::where('schedule_id', $scheduleId)->where('chair_num', $seat)->get();
             if (!$exist) {
-                //DB::insert('INSERT INTO tickets(schedule_id, user_id, chair_num) VALUES (?,?,?)', [$scheduleId, Auth::id(), $seat]);
                 DB::table('tickets')->insert(
                         ['schedule_id' => $scheduleId, 'user_id' => Auth::id(), 'chair_num' => $seat]
                 );
-                $user = \App\User::find(Auth::id());
-                $schedule = \DB::table('schedules')->find($scheduleId);
-                $tmp = (int) $user->total_amount + (int) $schedule->price;
-                \App\User::where('id', Auth::id())->update(['total_amount' => $tmp]);
-                if ($tmp >= 1000000) {
-                    \App\User::find(Auth::id())->update(['account_type' => 'vip']);
-                } else {
-                    \App\User::find(Auth::id())->update(['account_type' => 'normal']);
-                }
             }
         }
-    }
-
-    public function getSeatMap($schedule_id) {
-        $seatmap = DB::select('SELECT movies.*, theaters.*, schedules.* '
-                        . 'FROM schedules '
-                        . 'INNER JOIN movies ON schedules.movie_id = movies.id '
-                        . 'INNER JOIN theaters ON schedules.theater_id = theaters.id '
-                        . 'WHERE schedules.id = ?', [$schedule_id]);
-        return $seatmap;
+        foreach ($mySeatList as $seat) {
+            echo($seat);
+            if (!in_array($seat->chair_num, $seatList)) {
+                DB::delete('DELETE FROM tickets WHERE schedule_id = ? AND chair_num = ?', [$scheduleId, $seat->chair_num]);
+            }
+        }
     }
 
 }

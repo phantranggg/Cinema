@@ -22,7 +22,7 @@ $('.delete-button-ticket').click(function() {
 
     $.ajax({
         method: "POST",
-        url: "/user/ticket/delete",
+        url: "/ticket/delete",
         data: {
             schedule_id: schedule_id
         },

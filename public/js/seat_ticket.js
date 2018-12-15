@@ -1,5 +1,6 @@
 var totalmoney = document.getElementById("total").innerHTML;
 var array;
+var delete_chairs = [];
 
 if (totalmoney == '') {
     totalmoney = 0;
@@ -51,6 +52,7 @@ $('.seat').click(function () {
             $(this).css('background-color', '#FF7E75');
             $(this).removeClass('uncheck');
             $(this).addClass('checked');
+            delete_chairs.push();
 
             $.ajaxSetup({
                 headers: {
@@ -107,12 +109,6 @@ $('.seat').click(function () {
             });
 
             $.ajax({
-                method: "POST",
-                url: "/user/ticket/delete",
-                data: {
-                    schedule_id: scheduleId,
-                    seat_num: seatNum
-                },
                 success: function (data) {
                     array.splice(array.indexOf(seatNum), 1);
                     $('.movie-seats').html(renderHTML(array));
@@ -151,3 +147,27 @@ $('.process-right-seatmap').click(function () {
         }
     });
 });
+
+// $('#confirm-update-ticket').click(function(){
+//     $.ajaxSetup({
+//         headers: {
+//             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+//         }
+//     });
+
+//     $.ajax({
+//         method: "POST",
+//         url: "/ticket/update",
+//         data: {
+//             seat_list: array,
+//             schedule_id: scheduleId
+//         },
+//         success: function (data) {
+//             console.log(array);
+//             // $('#total-bill').html(totalmoney);
+//         },
+//         error: function () {
+//             alert('error');
+//         }
+//     });
+// })

@@ -165,7 +165,7 @@ class MovieRepository extends SAbstractRepository
     public function getCommingSoonList($limit) {
         $commingSoonMovies = \DB::select("SELECT m.* FROM movies m
                         WHERE release_date::date > ?::date
-                        AND 14 >= (select release_date::date - ?::date from movies where movies.id = m.id)
+                        AND 14 > (select release_date::date - ?::date from movies where movies.id = m.id)
                         AND status = 1
                         ORDER BY ticket_num DESC, like_num DESC
                         LIMIT ?", [config('constant.today'), config('constant.today'), $limit]);
@@ -173,7 +173,7 @@ class MovieRepository extends SAbstractRepository
     }
     
     public function getAllMoviesInOrder() {
-        $allmovies = $this->model->where('status', '=', 1)->orderBy('ticket_num', 'desc')->orderBy('like_num', 'desc')->get();
+        $allmovies = $this->model->where('status', 1)->orderBy('ticket_num', 'desc')->orderBy('like_num', 'desc')->get();
         return $allmovies;
         //$allmovies = \App\Movie::where('status', '=', 1)->orderBy('ticket_num', 'desc')->orderBy('like_num', 'desc')->get();
     }

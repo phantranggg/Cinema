@@ -114,7 +114,7 @@
         </div>
 
         <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal" style="margin-left: 250px">
-            Xác nhận
+            Confirm
         </button>
     </div>
 
