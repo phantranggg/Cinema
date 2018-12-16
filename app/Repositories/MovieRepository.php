@@ -97,25 +97,31 @@ class MovieRepository extends SAbstractRepository
      */
     public function create($request)
     {
-        $active = is_null($request->get('active')) ? Movie::INACTIVE : Movie::ACTIVE;
+//        $active = is_null($request-['active']) ? Movie::INACTIVE : Movie::ACTIVE;
         $movie = Movie::create([
-                    'name' => $request->get('name'),
-                    'email' => $request->get('email'),
-                    'password' => bcrypt($request->get('password')),
-                    'role_id' => $request->get('role_id'),
-                    'active' => $active
+            'title'=>$request->get('title'),
+            'release_date'=>$request->get('release_date'),
+            'genres'=>$request->get('genres'),
+            'score'=>$request->get('score'),
+            'director'=>$request->get('director'),
+            'country'=>$request->get('country'),
+            'length'=>$request->get('length'),
+            'subtitle'=>$request->get('subtitle'),
+            'rating'=>$request->get('rating'),
+            'status'=> Movie::ACTIVE,
+            'url'=>'some url in here, change it in movie repository'
         ]);
-        $avatar = $request->file('avatar');
-        if (isset($avatar)) {
-            $upload = $avatar->getClientOriginalName();
-            $filename = str_slug(pathinfo($upload, PATHINFO_FILENAME));
-            $fileExtension = str_slug(pathinfo($upload, PATHINFO_EXTENSION));
-            $changeName = time() . '_' . $filename . '.' . $fileExtension;
-            $avatar->move(Movie::PATH_AVATAR, $changeName);
-            $avatarPath = Movie::PATH_AVATAR . $changeName;
-            $movie->avatar = $avatarPath;
-            $movie->save();
-        }
+//        $avatar = $request->file('file');
+//        if (isset($avatar)) {
+//            $upload = $avatar->getClientOriginalName();
+//            $filename = str_slug(pathinfo($upload, PATHINFO_FILENAME));
+//            $fileExtension = str_slug(pathinfo($upload, PATHINFO_EXTENSION));
+//            $changeName = time() . '_' . $filename . '.' . $fileExtension;
+//            $avatar->move(Movie::PATH_AVATAR, $changeName);
+//            $avatarPath = Movie::PATH_AVATAR . $changeName;
+//            $movie->avatar = $avatarPath;
+//            $movie->save();
+//        }
         return $movie;
     }
 
@@ -169,6 +175,7 @@ class MovieRepository extends SAbstractRepository
                         AND status = 1
                         ORDER BY ticket_num DESC, like_num DESC
                         LIMIT ?", [config('constant.today'), config('constant.today'), $limit]);
+        $commingSoonMovies = Movie::paginate();
         return $commingSoonMovies;
     }
     

@@ -2,8 +2,9 @@
 
 namespace App\Repositories;
 
+
 use Illuminate\Http\Request;
-use App\Http\Requests;
+
 use Illuminate\Support\Facades\DB;
 use App\Repositories\Support\SAbstractRepository;
 use App\Schedule;
@@ -90,14 +91,20 @@ class ScheduleRepository extends SAbstractRepository
      */
     public function create($request)
     {
-        $active = is_null($request->get('active')) ? Schedule::INACTIVE : Schedule::ACTIVE;
-        $schedule = Schedule::create([
-                    'name' => $request->get('name'),
-                    'email' => $request->get('email'),
-                    'password' => bcrypt($request->get('password')),
-                    'role_id' => $request->get('role_id'),
-                    'active' => $active
-        ]);
+//        $active = is_null($request->get('active')) ? Schedule::INACTIVE : Schedule::ACTIVE;
+        $schedule = Schedule::create(
+            [
+                'type'=>$request->get('type'),
+                'show_time'=>$request->get('show_time'),
+                'show_date'=>$request->get('show_date'),
+                'price'=>$request->get('price'),
+                'movie_id' =>$request->get('movie_id'),
+                'theater_id' =>$request->get('theater_id'),
+                'status'=>Schedule::ACTIVE
+            ]
+
+        );
+        $schedule->save();
         return $schedule;
     }
 
@@ -108,9 +115,11 @@ class ScheduleRepository extends SAbstractRepository
     public function delete($id)
     {
         $schedule = $this->find($id);
+        DB::update('UPDATE schedules '
+            . 'SET status = 0'
+            . 'WHERE id = ?', [$id]);
         $schedule->delete();
     }
-    
     /**
      * Count schedule
      * @return type

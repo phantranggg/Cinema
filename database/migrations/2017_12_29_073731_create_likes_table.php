@@ -18,7 +18,7 @@ class CreateLikesTable extends Migration
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('movie_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('movie_id')->references('id')->on('movies');
+            $table->foreign('movie_id')->references('id')->on('movie');
             $table->unique(['user_id', 'movie_id']);
             $table->timestamps();
         });

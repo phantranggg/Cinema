@@ -49,6 +49,9 @@ class TheaterRepository extends SAbstractRepository
         return $rules;
     }
 
+    public function index(){
+        return Theater::paginate(15);
+    }
     /**
      * Find a theater
      * @param int $theaterId

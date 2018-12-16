@@ -305,7 +305,7 @@
                     <!-- sidebar menu: : style can be found in sidebar.less -->
                     <ul class="sidebar-menu" data-widget="tree">
                         <li class="header">MAIN NAVIGATION</li>
-                        <li class="treeview {{ Request::is('admin/movies/*') ? 'active' : '' }}">
+                        <li class="treeview {{ Request::is('movie') ? 'active' : '' }}">
                             <a href="">
                                 <i class="fa fa-film"></i> <span>PHIM</span>
                                 <span class="pull-right-container">

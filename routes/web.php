@@ -1,22 +1,5 @@
 <?php
 
-/*
-  |--------------------------------------------------------------------------
-  | Web Routes
-  |--------------------------------------------------------------------------
-  |
-  | Here is where you can register web routes for your application. These
-  | routes are loaded by the RouteServiceProvider within a group which
-  | contains the "web" middleware group. Now create something great!
-  |
- */
-// Route::get('/', function(){
-//     return redirect()->route('auth.login');
-// });
-
-// Route::get('/', function(){
-//     return redirect()->route('home')->name('home');
-// });
 
 Auth::routes();
 
@@ -48,7 +31,6 @@ Route::namespace('Customer')->group(function(){
     Route::get('theater', 'TheaterController@index')->name('theater.index');
     Route::get('theater/{movie_id}', 'TheaterController@indexForOnlyOneMovie')->name('theater.index.{movie_id}');
     Route::post('theater/detail', 'TheaterController@detail')->name('theater.detail');
-    
     Route::post('schedule', 'ScheduleController@schedule')->name('schedule');
     Route::post('schedule/movie', 'ScheduleController@scheduleForOnlyOneMovie')->name('schedule.movie');
     Route::get('schedule/seatmap/{schedule_id}', 'ScheduleController@seatmap')->name('schedule.seatmap');
@@ -78,17 +60,28 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin'], fu
         Route::post('logout', 'LoginController@logout')->name('logout');
     });
 
-    Route::middleware(['auth','admin'])->group(function() {
-        Route::get('/', 'IndexController@index')->name('home');
-        Route::resource('/setting/user', 'UserController', ['as' => 'setting']);
-        // Route::resource('/setting/product', 'ProductController', ['as' => 'setting']);
-        // Route::resource('/setting/invoice', 'InvoiceController', ['as' => 'setting']);
-        // Route::get('/setting/invoiceitem/multiple_update','InvoiceItemController@multiple_update')->name('invoices_item_multiple_update');
-//        Route::resource('/setting/invoiceitem', 'InvoiceItemController', ['as' => 'setting'])->only([
-//            'destroy','edit','update','show'
-//        ]);
-        // Route::get('/setting/invoiceitem/destroy/{id}','InvoiceItemController@destroy')->name('setting.invoiceitem_destroy');
 
+
+
+    Route::middleware('admin')->group(function() {
+        Route::get('/', 'IndexController@index')->name('home');
+
+        Route::get('/movies/nowplay', 'MoviesController@adminNowPlay');
+        Route::get('/movies/comesoon', 'MoviesController@adminComeSoon');
+        Route::get('/movies/allmovies', 'MoviesController@adminAllMovies');
+        Route::get('/movies/addMovie', 'MoviesController@addMovie');
+        Route::post('/movies/delete', 'MoviesController@adminDelete');
+        Route::post('/movies/add', 'MoviesController@add');
+
+        Route::get('/theaters/all', 'TheatersController@adminAll');
+        Route::get('/theaters/addTheater', 'TheatersController@adminAddTheater');
+
+        Route::get('/users', 'UsersController@adminShow');
+
+        Route::get('/schedules/all', 'ScheduleController@adminScheduleAll')->name('AllSchedule');
+        Route::get('/schedules/addSchedule', 'ScheduleController@adminAddSchedule');
+        Route::post('/schedules/addSche', 'ScheduleController@adminAddSche')->name('addSchedule');
+        Route::get('/schedules/delete/{id}', 'ScheduleController@adminDeleteSchedule');
 
     });
 });

@@ -14,13 +14,13 @@ class CreateSchedulesTable extends Migration {
     public function up() {
         Schema::create('schedules', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('movie_id');
-            $table->integer('theater_id');
+            $table->unsignedInteger('movie_id');
+            $table->unsignedInteger('theater_id');
             $table->string('type', 5);
             $table->time('show_time');
             $table->date('show_date');
             $table->float('price');
-            $table->foreign('movie_id')->references('id')->on('movies');
+            $table->foreign('movie_id')->references('id')->on('movie');
             $table->foreign('theater_id')->references('id')->on('theaters');
             $table->smallInteger('status');
             $table->timestamps();

@@ -15,7 +15,7 @@
     @else 
     <td>{{ $movie->ticket_num }}</td>
     @endif
-    <td><a href="{{ url('admin/movies/movieInfo/' . $movie->id) }}"><button class="btn btn-success">UPDATE</button></a></td>
+    <td><a href="{{ url('movie' . $movie->id) }}"><button class="btn btn-success">UPDATE</button></a></td>
     <td><a href=""><button class="btn btn-danger">DELETE</button></a></td>
 </tr>
 @endforeach
