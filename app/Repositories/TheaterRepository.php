@@ -101,27 +101,10 @@ class TheaterRepository extends SAbstractRepository
      * @param \Illuminate\Http\Request $request
      * @return Theater
      */
-    public function create($request)
+    public function create($data)
     {
-        $active = is_null($request->get('active')) ? Theater::INACTIVE : Theater::ACTIVE;
-        $theater = Theater::create([
-                    'name' => $request->get('name'),
-                    'email' => $request->get('email'),
-                    'password' => bcrypt($request->get('password')),
-                    'role_id' => $request->get('role_id'),
-                    'active' => $active
-        ]);
-        $avatar = $request->file('avatar');
-        if (isset($avatar)) {
-            $upload = $avatar->getClientOriginalName();
-            $filename = str_slug(pathinfo($upload, PATHINFO_FILENAME));
-            $fileExtension = str_slug(pathinfo($upload, PATHINFO_EXTENSION));
-            $changeName = time() . '_' . $filename . '.' . $fileExtension;
-            $avatar->move(Theater::PATH_AVATAR, $changeName);
-            $avatarPath = Theater::PATH_AVATAR . $changeName;
-            $theater->avatar = $avatarPath;
-            $theater->save();
-        }
+        $theater = Theater::create($data);
+        $theater->save();
         return $theater;
     }
 
@@ -132,17 +115,21 @@ class TheaterRepository extends SAbstractRepository
     public function delete($id)
     {
         $theater = $this->find($id);
+//        $theater->status=0;
         $theater->delete();
     }
-    
+
+
     /**
      * Count theater
      * @return type
      */
     public function count(){
-        return $this->model->where('active',Theater::ACTIVE)->count();
+        return $this->model->count();
     }
-
+    public function getAllName(){
+        return DB::select('SELECT id,name FROM theaters');
+    }
     public function getActiveList() {
         return $this->model->where('status','=',1)->get();
     }
@@ -154,5 +141,11 @@ class TheaterRepository extends SAbstractRepository
                         . 'AND theaters.status = 1 '
                         . 'AND schedules.status = 1', [$movieId]);
         return $theaters;
+    }
+    public function countNumberTicket(){
+        return DB::select('SELECT name,count(*)
+        FROM theaters LEFT JOIN schedules ON (theaters.id = schedules.theater_id) 
+                      JOIN tickets ON (schedules.id = tickets.schedule_id)
+        GROUP BY theaters.id');
     }
 }

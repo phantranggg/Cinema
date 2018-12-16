@@ -127,7 +127,48 @@ class ScheduleRepository extends SAbstractRepository
     public function count(){
         return $this->model->where('active',Schedule::ACTIVE)->count();
     }
+    public function statistic(){
+        return DB::select("SELECT count(schedule_id),  
+                case	
+                    when date_part('hour', show_time) = 8 then 1
+                    when date_part('hour', show_time) = 9 then 1
+                    when date_part('hour', show_time) = 10 then 1
+                    when date_part('hour', show_time) = 11 then 1
+                    when date_part('hour', show_time) = 12 then 2
+                    when date_part('hour', show_time) = 13 then 2
+                    when date_part('hour', show_time) = 14 then 2
+                    when date_part('hour', show_time) = 15 then 2
+                    when date_part('hour', show_time) = 16 then 3
+                    when date_part('hour', show_time) = 17 then 3
+                    when date_part('hour', show_time) = 18 then 3
+                    when date_part('hour', show_time) = 19 then 3
+                    when date_part('hour', show_time) = 20 then 4
+                    when date_part('hour', show_time) = 21 then 4
+                    when date_part('hour', show_time) = 22 then 4
+                    when date_part('hour', show_time) = 23 then 4
+                end
+            from tickets, schedules
+            where schedule_id = schedules.id
+            group by case 	when date_part('hour', show_time) = 8 then 1
+                    when date_part('hour', show_time) = 9 then 1
+                    when date_part('hour', show_time) = 10 then 1
+                    when date_part('hour', show_time) = 11 then 1
+                    when date_part('hour', show_time) = 12 then 2
+                    when date_part('hour', show_time) = 13 then 2
+                    when date_part('hour', show_time) = 14 then 2
+                    when date_part('hour', show_time) = 15 then 2
+                    when date_part('hour', show_time) = 16 then 3
+                    when date_part('hour', show_time) = 17 then 3
+                    when date_part('hour', show_time) = 18 then 3
+                    when date_part('hour', show_time) = 19 then 3
+                    when date_part('hour', show_time) = 20 then 4
+                    when date_part('hour', show_time) = 21 then 4
+                    when date_part('hour', show_time) = 22 then 4
+                    when date_part('hour', show_time) = 23 then 4
+                end
 
+            order by (count(schedule_id)) DESC");
+    }
     public function getActiveList() {
         return $this->model->where('status','=',1)->get();
     }
