@@ -67,6 +67,14 @@ Route::namespace('Customer')->group(function(){
         Route::post('ticket/delete', 'TicketController@delete')->name('ticket.delete');
         Route::get('ticket/modify/{schedule_id}', 'TicketController@modify')->name('ticket.modify');
         Route::get('ticket/update', 'TicketController@update')->name('ticket.update');
+        
+        Route::get('schedule/test-join', function(){
+            \App\User::find(28)->notify(new \App\Notifications\TaskCompleted);
+        });
+        Route::get('mark-read', function(){
+            auth()->user()->unreadNotifications->markAsRead();
+            return redirect()->back();
+        })->name('mark-read');
     });
 });
 

@@ -173,31 +173,39 @@
                 <li class="dropdown notifications-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-bell-o"></i>
-                        <span class="label label-primary">2</span>
+                        @if (auth()->user()->unreadNotifications->count())
+                        <span class="label label-primary">{{ auth()->user()->unreadNotifications->count() }}</span>
+                        @endif
                     </a>
                     <ul class="dropdown-menu">
-                        <li class="header">Bạn có 2 thông báo</li>
+                        @if (auth()->user()->unreadNotifications->count())
+                        <li class="header"><a style="color:green" href="{{ route('mark-read') }}">Mark all as Read</a></li>
+                        @endif
                         <li>
                         <!-- inner menu: contains the actual data -->
                             <ul class="menu">
-                                <li>
-                                    <a href="#">
-                                        <i class="fa fa-envelope text-aqua"></i> Bạn có lời mời ... 
-                                        <p>
-                                            <button class="btn btn-sm btn-danger pull-right ml-1">Từ chối</button>
-                                            <button class="btn btn-sm btn-primary pull-right">Đồng ý</button>
-                                        </p>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="fa fa-envelope text-aqua"></i> Bạn có lời mời ... 
-                                        <p>
-                                            <button class="btn btn-sm btn-danger pull-right ml-1">Từ chối</button>
-                                            <button class="btn btn-sm btn-primary pull-right">Đồng ý</button>
-                                        </p>
-                                    </a>
-                                </li>
+                                @foreach (auth()->user()->unreadNotifications as $notification)
+                                    <li style="background-color: lightgray">
+                                        <a href="#">
+                                            <i class="fa fa-envelope text-aqua"></i> {{ $notification->data['data'] }}
+                                            <p>
+                                                <button class="btn btn-sm btn-danger pull-right ml-1">Từ chối</button>
+                                                <button class="btn btn-sm btn-primary pull-right">Đồng ý</button>
+                                            </p>
+                                        </a>
+                                    </li>
+                                @endforeach
+                                @foreach (auth()->user()->readNotifications as $notification)
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-envelope text-aqua"></i> {{ $notification->data['data'] }}
+                                            <p>
+                                                <button class="btn btn-sm btn-danger pull-right ml-1">Từ chối</button>
+                                                <button class="btn btn-sm btn-primary pull-right">Đồng ý</button>
+                                            </p>
+                                        </a>
+                                    </li>
+                                @endforeach
                             </ul>
                         </li>
                     </ul>

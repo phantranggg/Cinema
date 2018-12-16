@@ -21,6 +21,7 @@ class CreateInvitationsTable extends Migration
             $table->string('status');
             $table->unique(['schedule_id', 'user_id1']);     
             $table->unique(['schedule_id', 'user_id2']);
+            $table->timestamps();
         });
     }
 
