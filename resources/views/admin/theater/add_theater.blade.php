@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">THÊM RẠP MỚI</div>
                 <div class="panel-body user-info">
-                    <form class="form-horizontal" method="POST" action="{{ url('admin/theaters/add') }}">
+                    <form class="form-horizontal" method="POST" action="{{ route('admin.addTheater') }}">
                         <input type='hidden' value="{!! csrf_token() !!}" name='_token' />
                         <div class="form-group user-info-detail">
                             <label for="name" class="col-md-4 control-label">Tên rạp</label>

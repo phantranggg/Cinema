@@ -214,13 +214,13 @@ class TheaterController extends Controller {
 //        return redirect('/admin/theaters/all');
 //    }
 //
-//    protected function delete($theater_id) {
-////        DB::update('UPDATE theaters '
-////                . 'SET status = 0'
-////                . 'WHERE id = ?', [$theater_id]);
-//        $this->theaterRepo->delete($theater_id);
-//        return redirect('/admin/theaters/all');
-//    }
+    protected function delete($theater_id) {
+//        DB::update('UPDATE theaters '
+//                . 'SET status = 0'
+//                . 'WHERE id = ?', [$theater_id]);
+        $this->theaterRepo->delete($theater_id);
+        return redirect('/admin/theaters/all');
+    }
 
     protected function addTheater() {
         return view('admin.theater.add_theater');
@@ -230,7 +230,8 @@ class TheaterController extends Controller {
 //        DB::insert('INSERT INTO theaters (name, hotline, row_num, column_num, fax, address, status)
 //                VALUES (?,?,?,?,?,?,?)', [$request->name, $request->hotline, $request->row_num, $request->column_num,
 //            $request->fax, $request->address, 1]);
-        $this->theaterRepo->create($request);
+        $this->theaterRepo->create(['name'=>$request->name, 'hotline'=>$request->hostline, 'row_num'=>$request->row_num, 'column_num'=>$request->column_num,
+            'fax'=>$request->fax, 'address'=>$request->address, 'status'=>1]);
         return redirect('/admin/theaters/all');
     }
 

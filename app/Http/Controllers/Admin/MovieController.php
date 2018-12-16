@@ -88,6 +88,11 @@ class MovieController extends Controller {
     }
 
     protected function comeSoon() {
+
+
+//        return $start;
+
+//        return date('Y-m-d',config('constant.today'));
         $comesoon = $this->movieRepo->getCommingSoonList(12);
         $theaterName = \App\Theater::where('status', '=', 1)->get();
         return view('admin.movie.comesoon', [
@@ -103,18 +108,23 @@ class MovieController extends Controller {
         ]);
     }
 
-//    protected function Info($movieId) {
-//        $movie = $this->movieRepo->find($movieId);
-//        return view('movies.admin_info', [
-//            'movies' => $movie
-//        ]);
-//    }
+    protected function info($movieId) {
+        $movie = $this->movieRepo->find($movieId);
+        return view('admin.movie.info', [
+            'movie' => $movie
+        ]);
+    }
 
-    protected function Update(Request $request) {
-        $this->movieRepo->update($request->id, ['title' => $request->title, 'release_date' => $request->release_date,
+    protected function update(Request $request) {
+
+        $this->movieRepo->update_array($request->id, ['title' => $request->title, 'release_date' => $request->release_date,
                     'genres' => $request->genres, 'score' => $request->score, 'director' => $request->director, 'country' => $request->country,
                     'length' => $request->length, 'subtitle' => $request->subtitle, 'rating' => $request->rating]);
-        return redirect('/admin');
+        $movie=$this->movieRepo->update($request,$request->id);
+        return view('admin.movie.info', [
+            'movie' => $movie
+        ]);
+
     }
 
     protected function filterNowPlay(Request $request) {
@@ -142,9 +152,12 @@ class MovieController extends Controller {
         ]);
     }*/
 
-    protected function Delete(Request $request) {
+    protected function delete(Request $request) {
+//        return 'hahah';
         $movieId = $request->movie_id;
-        $this->movieRepo->update($movieId, ['status' => 0]);
+//        return 'hahah';
+        $this->movieRepo->update_array($movieId, ['status' => 0]);
+        return 'hahah';
     }
 
     protected function addMovie() {

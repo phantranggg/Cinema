@@ -71,15 +71,20 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin'], fu
         Route::get('/movies/comesoon', 'MovieController@comeSoon');
         Route::get('/movies/allmovies', 'MovieController@allMovies');
         Route::get('/movies/addMovie', 'MovieController@addMovie');
-        Route::post('/movies/delete', 'MovieController@delete');
+        Route::post('/movies/delete/', 'MovieController@delete');
         Route::post('/movies/add', 'MovieController@add');
         Route::post('/movies/filterNowPlay','MovieController@filterNowPlay');
-        Route::get('/movies/info/{id}', 'MovieController@adminInfo');
+        Route::get('/movies/info/{id}', 'MovieController@info');
+        Route::post('/movies/update', 'MovieController@update');
 
         Route::get('/theaters/all', 'TheaterController@all');
         Route::get('/theaters/addTheater', 'TheaterController@addTheater');
+        Route::post('/theaters/add', 'TheaterController@add')->name('addTheater');
+        Route::get('/theaters/delete/{id}', 'TheaterController@delete');
 
         Route::get('/users', 'UserController@show');
+        Route::get('/users/info/{user_id}', 'UserController@modify');
+        Route::post('/users/update/', 'UserController@update')->name('updateUser');
 
         Route::get('/schedules/all', 'ScheduleController@scheduleAll')->name('AllSchedule');
         Route::get('/schedules/addSchedule', 'ScheduleController@addSchedule');

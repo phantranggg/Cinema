@@ -62,29 +62,41 @@ class MovieRepository extends SAbstractRepository
      * @param int $id
      * @return bool
      */
+    public function update_array($id,$data){
+        $movie = Movie::find($id);
+        foreach($data as $key=>$value){
+            if($key=='title'){
+                $movie->title=$value;
+            }
+            elseif($key=='status'){
+                $movie->status=$value;
+            }
+        }
+//        $movie->title=$request->title;
+//        $movie->release_date=$request->release_date;
+//        $movie->genres=$request->genres;
+//        $movie->score=$request->score;
+//        $movie->director=$request->director;
+//        $movie->country=$request->country;
+//        $movie->length=$request->length;
+//        $movie->subtitle=$request->subtitle;
+//        $movie->rating=$request->rating;
+        $movie->save();
+
+        return $movie;
+    }
     public function update($request, $id)
     {
         $movie = Movie::find($id);
-        $movie->name = $request->get('name');
-        $movie->email = $request->get('email');
-        if (!empty($request->get('password'))) {
-            $movie->password = bcrypt($request->get('password'));
-        }
-        if (!is_null($request->get('active'))) {
-            $movie->active = Movie::ACTIVE;
-        } else {
-            $movie->active = Movie::INACTIVE;
-        }
-        $avatar = $request->file('avatar');
-        if (isset($avatar)) {
-            $upload = $avatar->getClientOriginalName();
-            $filename = str_slug(pathinfo($upload, PATHINFO_FILENAME));
-            $fileExtension = str_slug(pathinfo($upload, PATHINFO_EXTENSION));
-            $changeName = time() . '_' . $filename . '.' . $fileExtension;
-            $avatar->move(Movie::PATH_AVATAR, $changeName);
-            $avatarPath = Movie::PATH_AVATAR . $changeName;
-            $movie->avatar = $avatarPath;
-        }
+        $movie->title=$request->title;
+        $movie->release_date=$request->release_date;
+        $movie->genres=$request->genres;
+        $movie->score=$request->score;
+        $movie->director=$request->director;
+        $movie->country=$request->country;
+        $movie->length=$request->length;
+        $movie->subtitle=$request->subtitle;
+        $movie->rating=$request->rating;
         $movie->save();
         
         return $movie;
@@ -159,12 +171,12 @@ class MovieRepository extends SAbstractRepository
     }
 
     public function getNowPlayingList($limit) {
-        $nowPlayingMovies = \DB::select("SELECT m.* FROM movies m
-                        WHERE ?::date >= release_date::date
-                        AND 14 >= (select ?::date - release_date::date from movies where movies.id = m.id)
-                        AND status = 1
-                        ORDER BY ticket_num DESC, like_num DESC
-                        LIMIT ?", [config('constant.today'), config('constant.today'), $limit]);
+//        $nowPlayingMovies = \DB::select("SELECT m.* FROM movies m
+//                        WHERE ?::date >= release_date::date
+//                        AND 14 >= (select ?::date - release_date::date from movies where movies.id = m.id)
+//                        AND status = 1
+//                        ORDER BY ticket_num DESC, like_num DESC
+//                        LIMIT ?", [config('constant.today'), config('constant.today'), $limit]);
         $nowPlayingMovies=Movie::where('release_date','>=',config('constant.today'));
         $nowPlayingMovies=$nowPlayingMovies->paginate($limit);
         return $nowPlayingMovies;
@@ -177,7 +189,8 @@ class MovieRepository extends SAbstractRepository
 //                        AND status = 1
 //                        ORDER BY ticket_num DESC, like_num DESC
 //                        LIMIT ?", [config('constant.today'), config('constant.today'), $limit]);
-        $commingSoonMovies = Movie::paginate($limit);
+        $commingSoonMovies = Movie::where('release_date','>=',config('constant.today'))->where('release_date','<=',date('Y-m-d',strtotime(config('constant.today').' + 14 days')))->paginate($limit);
+
         return $commingSoonMovies;
     }
     

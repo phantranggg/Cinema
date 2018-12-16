@@ -123,25 +123,29 @@ class UserController extends Controller {
 //
         $users = $this->userRepo->getShow();
 //        $users = \App\User::orderBy('total_amount', 'desc')->get();
-        return view('admin.user.admin_list', [
+        return view('admin.user.list', [
             'users' => $users,
         ]);
     }
 
-//    protected function adminModify($user_id) {
-//        $user = DB::select('SELECT * FROM users WHERE id = ?', [$user_id]);
-//        return view('users.admin_info', [
-//            'user' => $user,
-//        ]);
-//    }
+    protected function modify($user_id) {
+        $user = $this->userRepo->find($user_id);
+//        return 'ahahah';
+        return view('admin.user.info', [
+            'user' => $user,
+        ]);
+    }
 //
 //    //dang chua update thanh cong
-//    protected function adminUpdate(Request $request, $user_id) {
+    protected function update(Request $request) {
 //        DB::update('UPDATE users '
 //                . 'SET date_of_birth = ?, phone = ?, address = ?, account_type = ?, role = ? '
 //                . 'WHERE id = ?', [$request->date_of_birth, $request->phone, $request->address, $request->account_type, $request->role, $user_id]);
-//        return redirect('/admin/users');
-//    }
+//        $this->userRepo->updateAdmin($request->user_id,['date_of_birth'=>$request->date_of_birth,'phone'=>$request->phone,
+//            'address'=>$request->address,'account_type'=> $request->account_type,'role'=>$request->role]);
+        $this->userRepo->updateAdmin($request->user_id,$request);
+        return redirect('/admin/users');
+    }
 //
 //    protected function adminDelete() {
 //        $user_id = $_POST['user_id'];

@@ -93,13 +93,24 @@ class UserRepository extends SAbstractRepository
         $query = $this->all($request, null);
         return $query->where('role_id', '=', User::ROLE_USER)->paginate(self::PAGE_SIZE);
     }
-
+    public function updateAdmin($user_id,$request){
+//        $user=User::find($user_id);
+//        foreach ($data as $key=>$value){
+//            if($key=='date_of_birth'){
+//                $user->date_of_birth=$value;
+//            }
+//        }
+                DB::update('UPDATE users '
+                . 'SET date_of_birth = ?, phone = ?, address = ?, account_type = ?, role = ? '
+                . 'WHERE id = ?', [$request->date_of_birth, $request->phone, $request->address, $request->account_type, $request->role, $user_id]);
+    }
     /**
      * Update a user.
      * @param \Illuminate\Http\Request $request
      * @param int $id
      * @return bool
      */
+
     public function update($request) {
         if ($request->password === $request->password_confirmation) {
             DB::update('UPDATE users '

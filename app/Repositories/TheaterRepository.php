@@ -101,27 +101,10 @@ class TheaterRepository extends SAbstractRepository
      * @param \Illuminate\Http\Request $request
      * @return Theater
      */
-    public function create($request)
+    public function create($data)
     {
-        $active = is_null($request->get('active')) ? Theater::INACTIVE : Theater::ACTIVE;
-        $theater = Theater::create([
-                    'name' => $request->get('name'),
-                    'email' => $request->get('email'),
-                    'password' => bcrypt($request->get('password')),
-                    'role_id' => $request->get('role_id'),
-                    'active' => $active
-        ]);
-        $avatar = $request->file('avatar');
-        if (isset($avatar)) {
-            $upload = $avatar->getClientOriginalName();
-            $filename = str_slug(pathinfo($upload, PATHINFO_FILENAME));
-            $fileExtension = str_slug(pathinfo($upload, PATHINFO_EXTENSION));
-            $changeName = time() . '_' . $filename . '.' . $fileExtension;
-            $avatar->move(Theater::PATH_AVATAR, $changeName);
-            $avatarPath = Theater::PATH_AVATAR . $changeName;
-            $theater->avatar = $avatarPath;
-            $theater->save();
-        }
+        $theater = Theater::create($data);
+        $theater->save();
         return $theater;
     }
 
@@ -132,6 +115,7 @@ class TheaterRepository extends SAbstractRepository
     public function delete($id)
     {
         $theater = $this->find($id);
+//        $theater->status=0;
         $theater->delete();
     }
 
