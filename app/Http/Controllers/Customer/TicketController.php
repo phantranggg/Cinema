@@ -18,19 +18,6 @@ class TicketController extends Controller
         $this->ticketRepo = $ticketRepo;
     }
 
-    // public function insertSeat(Request $request) {
-    //     $seatNum = $request->seat_num;
-    //     $scheduleId = $request->schedule_id;
-    //     DB::insert('INSERT INTO tickets (schedule_id, user_id, chair_num) VALUES (?, ?, ?)', [$scheduleId, Auth::id(), $seatNum]);
-    // }
-
-    // public function deleteSeat(Request $request) {
-    //     die("hihi");
-    //     $seatNum = $request->seat_num;
-    //     $scheduleId = $request->schedule_id;
-    //     DB::delete('DELETE FROM tickets WHERE schedule_id = ? AND chair_num = ?', [$scheduleId, $seatNum]);
-    // }
-
     protected function modify($schedule_id) {
         $pageTitle = "Sửa thông tin vé";
         $seatmap = $this->ticketRepo->getSeatMap($schedule_id);

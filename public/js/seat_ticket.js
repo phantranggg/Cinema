@@ -1,3 +1,4 @@
+var status = ($('.process-right-seatmap')).attr('data');
 var totalmoney = document.getElementById("total").innerHTML;
 var array;
 var delete_chairs = [];
@@ -31,7 +32,9 @@ function changeNextButtonStatus() {
 }
 
 $("#next").click(function () {
-    $(".bill").css("display", "block");
+    if ((typeof variable === "undefined") || (status=='pair-mode' && array.length==2)) {
+        $(".bill").css("display", "block");
+    }
     $(".process-right-seatmap").css("display", "block");
 })
 
@@ -126,48 +129,29 @@ $('.seat').click(function () {
 });
 
 $('.process-right-seatmap').click(function () {
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
+    if (status=='pair-mode' && array.length!=2) {
+        alert('Bạn phải chọn đúng 2 vé');
+    }   
+    if ((typeof variable === "undefined") || (status=='pair-mode' && array.length==2)) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
 
-    $.ajax({
-        method: "POST",
-        url: "/user/bill",
-        data: {
-            seat_list: array,
-            schedule_id: scheduleId
-        },
-        success: function (data) {
-            $('#total-bill').html(totalmoney);
-        },
-        error: function () {
-            alert('error');
-        }
-    });
+        $.ajax({
+            method: "POST",
+            url: "/user/bill",
+            data: {
+                seat_list: array,
+                schedule_id: scheduleId
+            },
+            success: function (data) {
+                $('#total-bill').html(totalmoney);
+            },
+            error: function () {
+                alert('error');
+            }
+        });
+    }
 });
-
-// $('#confirm-update-ticket').click(function(){
-//     $.ajaxSetup({
-//         headers: {
-//             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//         }
-//     });
-
-//     $.ajax({
-//         method: "POST",
-//         url: "/ticket/update",
-//         data: {
-//             seat_list: array,
-//             schedule_id: scheduleId
-//         },
-//         success: function (data) {
-//             console.log(array);
-//             // $('#total-bill').html(totalmoney);
-//         },
-//         error: function () {
-//             alert('error');
-//         }
-//     });
-// })

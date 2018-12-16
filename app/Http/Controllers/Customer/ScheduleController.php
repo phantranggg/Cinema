@@ -59,7 +59,6 @@ class ScheduleController extends Controller
         $userId1 = $_GET['user_id1'];
         $scheduleId = $_GET['schedule_id'];
         $this->scheduleRepo->selfAdd($userId1, $scheduleId);
-        // $this->seatmap($scheduleId);
-        return redirect('/schedule/seatmap/1');
+        return redirect('/schedule/seatmap/'.$scheduleId)->with('status', 'pair-mode');
     }
 }

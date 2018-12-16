@@ -137,7 +137,6 @@ class ScheduleRepository extends SAbstractRepository
     public function joinPair($userId1, $scheduleId) {
         \App\Invitation::where('schedule_id',$scheduleId)->where('user_id1', $userId1)->update(['user_id2' => Auth::id(), 'status' => 'JOINED']);
         $invitationId = \App\Invitation::where('schedule_id',$scheduleId)->where('user_id1', $userId1)->select('id')->first();
-        // $arr = array('invitationId' => invitationId->id);
         \App\User::find($userId1)->notify(new \App\Notifications\JoinPairNotification($invitationId->id));
     }
 

@@ -197,6 +197,10 @@ class UserRepository extends SAbstractRepository
                         . 'AND show_date >= ? '
                         . 'GROUP BY schedules.id, movies.title, theaters.name, schedules.show_date, schedules.show_time', [Auth::id(), config('constant.today')]);
         foreach ($movies as $key => $value) {
+            $invitation = \App\Invitation::where('user_id1',Auth::id())->where('schedule_id',$movies[$key]->id)->first();
+            if ($invitation) {
+                $value->invitation = true;
+            } else $value->invitation = false;
             $tickets = DB::select('SELECT chair_num '
                             . 'FROM tickets '
                             . 'WHERE user_id = ? '

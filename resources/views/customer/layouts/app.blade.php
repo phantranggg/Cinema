@@ -202,7 +202,7 @@
                                     <li class="read-noti">
                                         <a href="#">
                                             <i class="fa fa-envelope text-aqua"></i> {{ $notification->data['noti'] }}
-                                            @if (notification->data['hasButton'])
+                                            @if ($notification->data['hasButton'])
                                             <p>
                                                 <button class="btn btn-sm btn-danger pull-right ml-1 decline-join" data="{{ $notification->data['invitationId'] }}">Từ chối</button>
                                                 <button class="btn btn-sm btn-primary pull-right accept-join" data="{{ $notification->data['invitationId'] }}">Đồng ý</button>
