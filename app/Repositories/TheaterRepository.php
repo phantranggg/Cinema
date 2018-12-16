@@ -134,15 +134,18 @@ class TheaterRepository extends SAbstractRepository
         $theater = $this->find($id);
         $theater->delete();
     }
-    
+
+
     /**
      * Count theater
      * @return type
      */
     public function count(){
-        return $this->model->where('active',Theater::ACTIVE)->count();
+        return $this->model->count();
     }
-
+    public function getAllName(){
+        return DB::select('SELECT id,name FROM theaters');
+    }
     public function getActiveList() {
         return $this->model->where('status','=',1)->get();
     }
@@ -154,5 +157,11 @@ class TheaterRepository extends SAbstractRepository
                         . 'AND theaters.status = 1 '
                         . 'AND schedules.status = 1', [$movieId]);
         return $theaters;
+    }
+    public function countNumberTicket(){
+        return DB::select('SELECT name,count(*)
+        FROM theaters LEFT JOIN schedules ON (theaters.id = schedules.theater_id) 
+                      JOIN tickets ON (schedules.id = tickets.schedule_id)
+        GROUP BY theaters.id');
     }
 }

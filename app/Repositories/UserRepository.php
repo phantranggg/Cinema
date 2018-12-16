@@ -184,9 +184,40 @@ class UserRepository extends SAbstractRepository
      * @return type
      */
     public function count(){
-        return $this->model->where('active',User::ACTIVE)->count();
+        return $this->model->where('status',User::ACTIVE)->count();
     }
+    public function statitic(){
+        return DB::select("SELECT count(id),  
+                case    when (2017 - date_part('year', date_of_birth)) < 13 then 1	
+                    when (2017 - date_part('year', date_of_birth)) between 13 and 18 then 2
+                    when (2017 - date_part('year', date_of_birth)) between 19 and 30 then 3
+                    when (2017 - date_part('year', date_of_birth)) between 31 and 50 then 4
+                    when (2017 - date_part('year', date_of_birth)) > 50 then 5
+                end
+            from users
+            group by case    when (2017 - date_part('year', date_of_birth)) < 13 then 1	
+                when (2017 - date_part('year', date_of_birth)) between 13 and 18 then 2
+                when (2017 - date_part('year', date_of_birth)) between 19 and 30 then 3
+                when (2017 - date_part('year', date_of_birth)) between 31 and 50 then 4
+                when (2017 - date_part('year', date_of_birth)) > 50 then 5
+            end
 
+            order by (count(id)) DESC");
+    }
+    public function getShow(){
+        $users = DB::select('WITH ticketnum AS
+                            (SELECT tickets.user_id, schedule_id, count(tickets.id) AS num
+                            FROM tickets
+                            GROUP BY tickets.user_id, schedule_id)
+                    SELECT users.*, sum(ticketnum.num * price) AS totalamount
+                    FROM users 
+                    LEFT JOIN ticketnum ON users.id = ticketnum.user_id
+                    LEFT JOIN schedules ON schedules.id = ticketnum.schedule_id
+                    WHERE users.status = 1
+                    GROUP BY users.id
+                    ORDER BY totalamount DESC NULLS LAST');
+        return $users;
+    }
     public function getOrderedTicketList() {
         $movies = DB::select('SELECT schedules.id, movies.title, theaters.name, schedules.type, schedules.show_date, schedules.show_time '
                         . 'FROM schedules '

@@ -28,5 +28,14 @@ class TicketRepository extends SAbstractRepository
         return $seatmap;
     }
 
-
+    public function count(){
+//        return DB::select('SELECT count(*) FROM tickets');
+        return $this->model->count();
+    }
+    public function countByDay(){
+        return DB::select('select show_date, count(tickets.id) as count
+                                from tickets right join schedules on tickets.schedule_id = schedules.id 
+                                group by show_date
+                                order by show_date;');
+    }
 }

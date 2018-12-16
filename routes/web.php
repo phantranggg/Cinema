@@ -67,66 +67,68 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin'], fu
 
         Route::get('/', 'IndexController@index')->name('home');
 
-        Route::get('/movies/nowplay', 'MoviesController@adminNowPlay');
-        Route::get('/movies/comesoon', 'MoviesController@adminComeSoon');
-        Route::get('/movies/allmovies', 'MoviesController@adminAllMovies');
-        Route::get('/movies/addMovie', 'MoviesController@addMovie');
-        Route::post('/movies/delete', 'MoviesController@adminDelete');
-        Route::post('/movies/add', 'MoviesController@add');
+        Route::get('/movies/nowplay', 'MovieController@nowPlay');
+        Route::get('/movies/comesoon', 'MovieController@comeSoon');
+        Route::get('/movies/allmovies', 'MovieController@allMovies');
+        Route::get('/movies/addMovie', 'MovieController@addMovie');
+        Route::post('/movies/delete', 'MovieController@delete');
+        Route::post('/movies/add', 'MovieController@add');
+        Route::post('/movies/filterNowPlay','MovieController@filterNowPlay');
+        Route::get('/movies/info/{id}', 'MovieController@adminInfo');
 
-        Route::get('/theaters/all', 'TheatersController@adminAll');
-        Route::get('/theaters/addTheater', 'TheatersController@adminAddTheater');
+        Route::get('/theaters/all', 'TheaterController@all');
+        Route::get('/theaters/addTheater', 'TheaterController@addTheater');
 
-        Route::get('/users', 'UsersController@adminShow');
+        Route::get('/users', 'UserController@show');
 
-        Route::get('/schedules/all', 'ScheduleController@adminScheduleAll')->name('AllSchedule');
-        Route::get('/schedules/addSchedule', 'ScheduleController@adminAddSchedule');
-        Route::post('/schedules/addSche', 'ScheduleController@adminAddSche')->name('addSchedule');
-        Route::get('/schedules/delete/{id}', 'ScheduleController@adminDeleteSchedule');
+        Route::get('/schedules/all', 'ScheduleController@scheduleAll')->name('AllSchedule');
+        Route::get('/schedules/addSchedule', 'ScheduleController@addSchedule');
+        Route::post('/schedules/addSche', 'ScheduleController@addSche')->name('addSchedule');
+        Route::get('/schedules/delete/{id}', 'ScheduleController@deleteSchedule');
 
     });
 });
 
 
 // Route::group(['middleware' => ['auth']], function() {
-//     Route::post('movies/like', 'MoviesController@like');
-//     Route::post('movies/unlike', 'MoviesController@unlike');
+//     Route::post('movies/like', 'MovieController@like');
+//     Route::post('movies/unlike', 'MovieController@unlike');
 // });
-// Route::get('movies/likeCount', 'MoviesController@likeCount');
-// Route::get('movies/ticketCount', 'MoviesController@ticketCount');
+// Route::get('movies/likeCount', 'MovieController@likeCount');
+// Route::get('movies/ticketCount', 'MovieController@ticketCount');
 
 // Route::get('tickets/totalAmount', 'TheaterController@updateTotalAmount');
 
 // Route::get('testChart', 'TheaterController@testChart');
 
-// Route::get('users/test', 'UsersController@userLike');
-// Route::get('users/profile', 'UsersController@profile');
-// Route::post('users/update', 'UsersController@update');
-// Route::post('users/tickets/delete', 'UsersController@ticketDelete');
-// Route::get('users/tickets/modify/{schedule_id}', 'UsersController@ticketModify');
+// Route::get('users/test', 'UserController@userLike');
+// Route::get('users/profile', 'UserController@profile');
+// Route::post('users/update', 'UserController@update');
+// Route::post('users/tickets/delete', 'UserController@ticketDelete');
+// Route::get('users/tickets/modify/{schedule_id}', 'UserController@ticketModify');
 
 // Route::group(['middleware' => ['auth', 'admin']], function() {
 //     Route::get('/admin', 'HomeController@admin');
-//     Route::get('/admin/movies/nowplay', 'MoviesController@adminNowPlay');
-//     Route::get('/admin/movies/comesoon', 'MoviesController@adminComeSoon');
-//     Route::get('/admin/movies/allmovies', 'MoviesController@adminAllMovies');
-//     Route::post('/admin/movies/delete', 'MoviesController@adminDelete');
-//     Route::get('/admin/movies/info/{id}', 'MoviesController@adminInfo');
-//     Route::post('/admin/movies/update', 'MoviesController@adminUpdate');
-//     Route::get('/admin/movies/movieDelete/{id}', 'MoviesController@adminDelete');
-//     Route::post('/admin/movies/filterNowPlay', 'MoviesController@filterNowPlay');
-//     Route::post('/admin/movies/filterComeSoon', 'MoviesController@filterComeSoon');
-//     Route::get('/admin/movies/addMovie', 'MoviesController@addMovie');
-//     Route::post('/admin/movies/add', 'MoviesController@add');
+//     Route::get('/admin/movies/nowplay', 'MovieController@adminNowPlay');
+//     Route::get('/admin/movies/comesoon', 'MovieController@adminComeSoon');
+//     Route::get('/admin/movies/allmovies', 'MovieController@adminAllMovies');
+//     Route::post('/admin/movies/delete', 'MovieController@adminDelete');
+//     Route::get('/admin/movies/info/{id}', 'MovieController@adminInfo');
+//     Route::post('/admin/movies/update', 'MovieController@adminUpdate');
+//     Route::get('/admin/movies/movieDelete/{id}', 'MovieController@adminDelete');
+//     Route::post('/admin/movies/filterNowPlay', 'MovieController@filterNowPlay');
+//     Route::post('/admin/movies/filterComeSoon', 'MovieController@filterComeSoon');
+//     Route::get('/admin/movies/addMovie', 'MovieController@addMovie');
+//     Route::post('/admin/movies/add', 'MovieController@add');
 
-//     Route::get('/admin/users', 'UsersController@adminShow');
-//     Route::get('/admin/users/info/{user_id}', 'UsersController@adminModify');
-//     Route::get('/admin/users/update/{user_id}', 'UsersController@adminUpdate');
-//     Route::post('/admin/users/deactivate', 'UsersController@adminDeactivate');
-//     Route::post('/admin/users/activate', 'UsersController@adminActivate');
-//     Route::post('/admin/users/delete', 'UsersController@adminDelete');
-//     Route::get('/admin/users/form', 'UsersController@adminForm');
-//     Route::post('/admin/users/insert', 'UsersController@adminInsert');
+//     Route::get('/admin/users', 'UserController@adminShow');
+//     Route::get('/admin/users/info/{user_id}', 'UserController@adminModify');
+//     Route::get('/admin/users/update/{user_id}', 'UserController@adminUpdate');
+//     Route::post('/admin/users/deactivate', 'UserController@adminDeactivate');
+//     Route::post('/admin/users/activate', 'UserController@adminActivate');
+//     Route::post('/admin/users/delete', 'UserController@adminDelete');
+//     Route::get('/admin/users/form', 'UserController@adminForm');
+//     Route::post('/admin/users/insert', 'UserController@adminInsert');
 
 //     Route::get('/admin/all', 'TheaterController@adminAll');
 //     Route::get('/admin/info/{id}', 'TheaterController@adminInfo');

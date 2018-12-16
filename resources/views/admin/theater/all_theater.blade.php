@@ -32,6 +32,7 @@
                 @endforeach
             </tbody>
         </table>
+        {{$theaters->links()}}
     </div>
 </div>
 
