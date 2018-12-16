@@ -53,7 +53,7 @@ Route::namespace('Customer')->group(function(){
     Route::post('schedule/movie', 'ScheduleController@scheduleForOnlyOneMovie')->name('schedule.movie');
     Route::get('schedule/seatmap/{schedule_id}', 'ScheduleController@seatmap')->name('schedule.seatmap');
     Route::get('schedule/pair/{id}', 'ScheduleController@showPairList')->name('schedule.pair');
-    Route::get('schedule/join-pair', 'ScheduleController@joinPair')->name('schedule.join-pair');
+    Route::post('schedule/join-pair', 'ScheduleController@joinPair')->name('schedule.join-pair');
     Route::get('schedule/self-add', 'ScheduleController@selfAdd')->name('schedule.self-add');
     // Route::post('choose-seat', 'TheaterController@chooseSeat')->name('theater.choose-seet');
 

@@ -49,8 +49,10 @@ class ScheduleController extends Controller
         return view('customer.schedule.pair', compact('schedule_id', 'users'));
     }
 
-    public function joinPair() {
-
+    public function joinPair(Request $request) {
+        $userId1 = $request->user_id1;
+        $scheduleId = $request->schedule_id;
+        $this->scheduleRepo->joinPair($userId1, $scheduleId);
     }
 
     public function selfAdd() {
