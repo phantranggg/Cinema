@@ -7,16 +7,17 @@ use Illuminate\Support\Facades\DB;
 
 class Movie extends Model
 {
+    const ACTIVE = 1;
     protected $table = 'movies';
 
-    protected $fillable = ['title', 'release_date', 'genres', 'score', 'director', 'country', 'length', 'subtitle', 'rating', 'status'];
-
-    public function movieRooms() {
-        return $this->hasMany('\App\MovieRoom');
-    }
+    protected $fillable = ['title', 'release_date', 'genres', 'score', 'director', 'country', 'length', 'subtitle', 'rating', 'status','url'];
 
     public function likes() {
         return $this->hasMany('\App\Like');
+    }
+
+    public function schedules() {
+        return $this->hasMany('App\Schedule');
     }
        
     public function checkLike($movieId) 

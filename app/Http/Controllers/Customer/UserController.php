@@ -33,9 +33,9 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(Request $request) {
-        $this->userRepo->update($request, Auth::user()->id);
-        return back()->with('success','You have successfully update profile');
+    protected function update(Request $request) {
+        $this->userRepo->update($request);
+        return redirect('/user/profile');
     }
 
     protected function like(Request $request) {
@@ -54,35 +54,12 @@ class UserController extends Controller
         $this->userRepo->getBill($request);
     }
 
-    protected function ticketModify($schedule_id) {
-        $pageTitle = "Sửa thông tin vé";
-        $seatmap = $this->userRepo->getSeatMap($schedule_id);
-        $chosenSeat = \App\Ticket::where('schedule_id', $schedule_id)->select('chair_num')->get();
-        $mySeat = \App\Ticket::where([['schedule_id', $schedule_id],['user_id', Auth::id()]])->select('chair_num')->get();
-        $i = 0;
-        $string = "";
-        foreach ($mySeat as $seat) {
-            if ($i++ < count($mySeat) - 1) {
-                $string = $string . $seat->chair_num . ' ';
-            } else {
-                $string = $string . $seat->chair_num;
-            }
-        }
-        $schedule = DB::table('schedules')->where('id', '=', $schedule_id)->first();
-        return view('customer.user.ticket_modify', [
-            'pageTitle' => $pageTitle,
-            'seatmap' => $seatmap,
-            'chosenSeat' => $chosenSeat,
-            'mySeat' => $mySeat,
-            'nowBill' => count($mySeat) * $schedule->price,
-            'price' => $schedule->price,
-            'stringChair' => $string,
-        ]);
-    }
-
     protected function ticketDelete(Request $request) {
         $scheduleId = $request->schedule_id;
-        $seats = \App\Ticket::where([['schedule_id', $scheduleId],['user_id', Auth::id()]])->select('chair_num')->get();
+        $seats = DB::select('SELECT chair_num '
+                        . 'FROM tickets '
+                        . 'WHERE schedule_id = ? '
+                        . 'AND user_id = ?', [$scheduleId, Auth::id()]);
         $user = \App\User::find(Auth::id());
         $schedule = \DB::table('schedules')->find($scheduleId);
         $tmp = (int) $user->total_amount;

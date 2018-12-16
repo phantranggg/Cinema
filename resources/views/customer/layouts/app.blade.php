@@ -25,11 +25,22 @@
     <link href="{{ asset('css/profile.css') }}" rel="stylesheet">
     <link href="{{ asset('css/slick.css') }}" rel="stylesheet">
     <link href="{{ asset('css/slick-theme.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-
+    
+    <!-- Scripts -->
+    <script src="{{ asset('js/layout.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/slick.min.js') }}"></script>
 </head>
 
 <body>
@@ -159,6 +170,38 @@
                 <li><a href="{{ route('register') }}">Register</a></li>
                 @else
                 <li><a href="{!! url('user/profile') !!}">{{ 'Welcome ' . Auth::user()->name }}</a></li>
+                <li class="dropdown notifications-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-bell-o"></i>
+                        <span class="label label-primary">2</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="header">Bạn có 2 thông báo</li>
+                        <li>
+                        <!-- inner menu: contains the actual data -->
+                            <ul class="menu">
+                                <li>
+                                    <a href="#">
+                                        <i class="fa fa-envelope text-aqua"></i> Bạn có lời mời ... 
+                                        <p>
+                                            <button class="btn btn-sm btn-danger pull-right ml-1">Từ chối</button>
+                                            <button class="btn btn-sm btn-primary pull-right">Đồng ý</button>
+                                        </p>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <i class="fa fa-envelope text-aqua"></i> Bạn có lời mời ... 
+                                        <p>
+                                            <button class="btn btn-sm btn-danger pull-right ml-1">Từ chối</button>
+                                            <button class="btn btn-sm btn-primary pull-right">Đồng ý</button>
+                                        </p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
                 <li><a href="/" onclick="event.preventDefault();
                             document.getElementById('logout-form').submit();">Logout</a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -296,16 +339,6 @@
             </div>
         </div>
     </footer>
-    <!-- Scripts -->
-    <script src="{{ asset('js/layout.js') }}"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-        crossorigin="anonymous"></script>
-    <script src="{{ asset('js/app.js') }}"></script>
-    <script src="{{ asset('js/slick.min.js') }}"></script>
 </body>
 
 </html>

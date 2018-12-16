@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Theater extends Model
 {
-    public function rooms() {
-        return $this->hasMany('\App\Room');
+    public function schedules() {
+        return $this->hasMany('\App\Schedule');
     }
 }

@@ -2,8 +2,9 @@
 
 namespace App\Repositories;
 
+
 use Illuminate\Http\Request;
-use App\Http\Requests;
+
 use Illuminate\Support\Facades\DB;
 use App\Repositories\Support\SAbstractRepository;
 use App\Schedule;
@@ -90,14 +91,20 @@ class ScheduleRepository extends SAbstractRepository
      */
     public function create($request)
     {
-        $active = is_null($request->get('active')) ? Schedule::INACTIVE : Schedule::ACTIVE;
-        $schedule = Schedule::create([
-                    'name' => $request->get('name'),
-                    'email' => $request->get('email'),
-                    'password' => bcrypt($request->get('password')),
-                    'role_id' => $request->get('role_id'),
-                    'active' => $active
-        ]);
+//        $active = is_null($request->get('active')) ? Schedule::INACTIVE : Schedule::ACTIVE;
+        $schedule = Schedule::create(
+            [
+                'type'=>$request->get('type'),
+                'show_time'=>$request->get('show_time'),
+                'show_date'=>$request->get('show_date'),
+                'price'=>$request->get('price'),
+                'movie_id' =>$request->get('movie_id'),
+                'theater_id' =>$request->get('theater_id'),
+                'status'=>Schedule::ACTIVE
+            ]
+
+        );
+        $schedule->save();
         return $schedule;
     }
 
@@ -108,9 +115,11 @@ class ScheduleRepository extends SAbstractRepository
     public function delete($id)
     {
         $schedule = $this->find($id);
+        DB::update('UPDATE schedules '
+            . 'SET status = 0'
+            . 'WHERE id = ?', [$id]);
         $schedule->delete();
     }
-    
     /**
      * Count schedule
      * @return type
@@ -121,5 +130,83 @@ class ScheduleRepository extends SAbstractRepository
 
     public function getActiveList() {
         return $this->model->where('status','=',1)->get();
+    }
+
+    public function getPairList($schedule_id) {
+        $users = \App\Invitation::where('schedule_id', $schedule_id)->select('user_id1')->get();
+        foreach ($users as $key => $value) {
+            $user_info = \App\User::find($value->user_id1);
+            $value->user_info = $user_info;
+            $users[$key] = $value;
+        }
+        return $users;
+    }
+
+    public function selfAdd($userId1, $scheduleId) {
+        $invitation = new \App\Invitation;
+        $invitation->user_id1 = $userId1;
+        $invitation->user_id2 = -1;
+        $invitation->schedule_id = $scheduleId;
+        $invitation->status = 'WAIT';
+        $invitation->save();
+    }
+    
+    public function getScheduleDetail(Request $request) {
+        $theater_id = $request->theater_id;
+        $movieTitle = DB::select('SELECT DISTINCT movies.id, title, url '
+                        . 'FROM movies INNER JOIN schedules '
+                        . 'ON movies.id = schedules.movie_id '
+                        . 'WHERE theater_id = ?', [$theater_id]);
+        foreach ($movieTitle as $key => $value) {
+            $schedule_detail = DB::select('WITH seatnum AS 
+                                (SELECT id, row_num * column_num AS totalseat FROM theaters WHERE status = 1)
+                        SELECT schedules.id, show_date, show_time, type, totalseat - count(tickets.id) AS totalseat
+                        FROM tickets 
+                        RIGHT JOIN schedules ON tickets.schedule_id = schedules.id
+                        INNER JOIN seatnum ON schedules.theater_id = seatnum.id
+                        WHERE schedules.status = 1
+                        AND theater_id = ?
+                        AND movie_id = ?
+                        GROUP BY schedules.id, seatnum.totalseat
+                        ORDER BY show_date ASC, show_time ASC', [$theater_id, $value->id]);
+            $value->schedule_detail = $schedule_detail;
+            $movieTitle[$key] = $value;
+        }
+        return $movieTitle;
+    }
+
+    public function getScheduleForOnlyOneMovie(Request $request) {
+        $theater_id = $request->theater_id;
+        $movie_id = $request->movie_id;
+        $movieTitle = DB::select('SELECT DISTINCT movies.id, title, url '
+                        . 'FROM movies INNER JOIN schedules '
+                        . 'ON movies.id = schedules.movie_id '
+                        . 'WHERE theater_id = ? '
+                        . 'AND movie_id = ?', [$theater_id, $movie_id]);
+        foreach ($movieTitle as $key => $value) {
+            $scheduleDetail = DB::select('WITH seatnum AS 
+                                (SELECT id, row_num * column_num AS totalseat FROM theaters WHERE status = 1)
+                        SELECT schedules.id, show_date, show_time, type, totalseat - count(tickets.id) AS totalseat
+                        FROM tickets 
+                        RIGHT JOIN schedules ON tickets.schedule_id = schedules.id
+                        INNER JOIN seatnum ON schedules.theater_id = seatnum.id
+                        WHERE schedules.status = 1
+                        AND theater_id = ?
+                        AND movie_id = ?
+                        GROUP BY schedules.id, seatnum.totalseat
+                        ORDER BY show_date ASC, show_time ASC', [$theater_id, $value->id]);
+            $value->schedule_detail = $scheduleDetail;
+            $movieTitle[$key] = $value;
+        }
+        return $movieTitle;
+    }
+
+    public function getSeatMap($schedule_id) {
+        $seatmap = DB::select('SELECT movies.*, theaters.*, schedules.* '
+                        . 'FROM schedules '
+                        . 'INNER JOIN movies ON schedules.movie_id = movies.id '
+                        . 'INNER JOIN theaters ON schedules.theater_id = theaters.id '
+                        . 'WHERE schedules.id = ?', [$schedule_id]);
+        return $seatmap;
     }
 }

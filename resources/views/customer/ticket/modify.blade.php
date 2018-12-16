@@ -102,7 +102,7 @@
                 </div>
             </div>
             <button type="button" class="process-right-seatmap inline-right" data-toggle="modal" data-target="#myModal">
-                Xác nhận
+                Confirm
             </button>
             <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                 <div class="modal-dialog" role="document">

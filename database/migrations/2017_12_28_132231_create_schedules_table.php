@@ -20,7 +20,7 @@ class CreateSchedulesTable extends Migration {
             $table->time('show_time');
             $table->date('show_date');
             $table->float('price');
-            $table->foreign('movie_id')->references('id')->on('movies');
+            $table->foreign('movie_id')->references('id')->on('movie');
             $table->foreign('theater_id')->references('id')->on('theaters');
             $table->smallInteger('status');
             $table->timestamps();

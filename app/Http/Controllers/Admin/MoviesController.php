@@ -78,7 +78,7 @@ class MoviesController extends Controller {
     protected function adminNowPlay() {
         $nowplay = $this->movieRepository->getNowPlayingList(30);
         $theaterName = \App\Theater::where('status', '=', 1)->get();
-        return view('admin.movies.admin_nowplay', [
+        return view('admin.movie.admin_nowplay', [
             'nowplay' => $nowplay,
             'theaterName' => $theaterName
         ]);
@@ -87,7 +87,7 @@ class MoviesController extends Controller {
     protected function adminComeSoon() {
         $comesoon = $this->movieRepository->getCommingSoonList(30);
         $theaterName = \App\Theater::where('status', '=', 1)->get();
-        return view('admin.movies.admin_comesoon', [
+        return view('admin.movie.admin_comesoon', [
             'comesoon' => $comesoon,
             'theaterName' => $theaterName
         ]);
@@ -95,7 +95,7 @@ class MoviesController extends Controller {
 
     protected function adminAllMovies() {
         $allmovies = $this->movieRepository->getAllMoviesInOrder();
-        return view('admin.movies.admin_allmovies', [
+        return view('admin.movie.admin_allmovies', [
             'allmovies' => $allmovies
         ]);
     }
@@ -144,7 +144,7 @@ class MoviesController extends Controller {
     }
 
     protected function addMovie() {
-        return view('movies.adminAddMovie');
+        return view('admin.movie.adminAddMovie');
     }
 
     protected function add(Request $request) {
@@ -152,9 +152,11 @@ class MoviesController extends Controller {
             $file = $request->file;
             $file->move('img', $file->getClientOriginalName());
 
-            $this->movieRepository->create([$request->title, $request->score, $request->director, $request->country,
-                $request->release_date, $request->length, $request->subtitle, $request->genres, $request->rating,
-                $file->getClientOriginalName(), 1]);
+            $this->movieRepository->create($request);
+
+//            $this->movieRepository->create([$request->title, $request->score, $request->director, $request->country,
+//                $request->release_date, $request->length, $request->subtitle, $request->genres, $request->rating,
+//                $file->getClientOriginalName(), 1]);
         }
         return redirect('/admin');
     }
