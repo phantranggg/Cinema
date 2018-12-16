@@ -179,30 +179,35 @@
                     </a>
                     <ul class="dropdown-menu">
                         @if (auth()->user()->unreadNotifications->count())
-                        <li class="header"><a style="color:green" href="{{ route('mark-read') }}">Mark all as Read</a></li>
+                        {{-- <li class="header"><a style="color:green" href="{{ route('mark-read') }}">Mark all as Read</a></li> --}}
+                        <li class="header"><a style="color:green" id="mark-read">Mark all as Read</a></li>
                         @endif
                         <li>
                         <!-- inner menu: contains the actual data -->
                             <ul class="menu">
                                 @foreach (auth()->user()->unreadNotifications as $notification)
-                                    <li style="background-color: lightgray">
+                                    <li class="unread-noti" style="background-color: lightgray">
                                         <a href="#">
-                                            <i class="fa fa-envelope text-aqua"></i> {{ $notification->data['data'] }}
+                                            <i class="fa fa-envelope text-aqua"></i> {{ $notification->data['noti'] }}
+                                            @if ($notification->data['hasButton'])
                                             <p>
-                                                <button class="btn btn-sm btn-danger pull-right ml-1">Từ chối</button>
-                                                <button class="btn btn-sm btn-primary pull-right">Đồng ý</button>
+                                                <button class="btn btn-sm btn-danger pull-right ml-1 decline-join" data="{{ $notification->data['invitationId'] }}">Từ chối</button>
+                                                <button class="btn btn-sm btn-primary pull-right accept-join" data="{{ $notification->data['invitationId'] }}">Đồng ý</button>
                                             </p>
+                                            @endif
                                         </a>
                                     </li>
                                 @endforeach
                                 @foreach (auth()->user()->readNotifications as $notification)
-                                    <li>
+                                    <li class="read-noti">
                                         <a href="#">
-                                            <i class="fa fa-envelope text-aqua"></i> {{ $notification->data['data'] }}
+                                            <i class="fa fa-envelope text-aqua"></i> {{ $notification->data['noti'] }}
+                                            @if (notification->data['hasButton'])
                                             <p>
-                                                <button class="btn btn-sm btn-danger pull-right ml-1">Từ chối</button>
-                                                <button class="btn btn-sm btn-primary pull-right">Đồng ý</button>
+                                                <button class="btn btn-sm btn-danger pull-right ml-1 decline-join" data="{{ $notification->data['invitationId'] }}">Từ chối</button>
+                                                <button class="btn btn-sm btn-primary pull-right accept-join" data="{{ $notification->data['invitationId'] }}">Đồng ý</button>
                                             </p>
+                                            @endif
                                         </a>
                                     </li>
                                 @endforeach
@@ -221,66 +226,6 @@
         </div>
     </nav>
 
-    {{-- Old Navbar --}} {{--
-    <nav class="navbar navbar-default navbar-static-top navbar-inverse">
-        <div class="container">
-            <div class="navbar-header">
-
-                <!-- Collapsed Hamburger -->
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse" aria-expanded="false">
-                        <span class="sr-only">Toggle Navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-
-                <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
-                    </a>
-            </div>
-
-            <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                <!-- Left Side Of Navbar -->
-                <ul class="nav navbar-nav mr-auto">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="fa fa-film fa-lg"></span> PHIM
-                            </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="{!! url('movies/nowplay') !!}">PHIM ĐANG CHIẾU</a>
-                            <a class="dropdown-item" href="{!! url('movies/comesoon') !!}">PHIM SẮP CHIẾU</a>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{!! url('theaters') !!}"><span class="fa fa-home fa-lg"></span> RẠP</a>
-                    </li>
-                    <li class="nav-item">
-                        @if (Auth::check())
-                        <a class="nav-link" href="{!! url('users/profile') !!}"><span class="fa fa-user fa-lg"></span> NGƯỜI DÙNG</a>                        @else
-                        <a class="nav-link" href="{!! url('login') !!}"><span class="fa fa-user fa-lg"></span> NGƯỜI DÙNG</a>                        @endif
-                    </li>
-                </ul>
-
-                <!-- Right Side Of Navbar -->
-                <ul class="nav navbar-nav navbar-right">
-                    <!-- Authentication Links -->
-                    @guest
-                    <li><a href="{{ route('login') }}">Login</a></li>
-                    <li><a href="{{ route('register') }}">Register</a></li>
-                    @else
-                    <li><a>{{ 'Welcome ' . Auth::user()->name }}</a></li>
-                    <li><a href="/" onclick="event.preventDefault();
-                                document.getElementById('logout-form').submit();">Logout</a>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                            {{ csrf_field() }}
-                        </form>
-                    </li>
-                    @endguest
-                </ul>
-            </div>
-        </div>
-    </nav> --}} {{-- Jumbotron --}}
     <header class="jumbotron">
         <div class="container">
             <div class="row row-header">
@@ -349,4 +294,5 @@
     </footer>
 </body>
 
+<script src="{{ asset('js/notify.js') }}"></script>
 </html>

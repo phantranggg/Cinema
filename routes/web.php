@@ -53,8 +53,6 @@ Route::namespace('Customer')->group(function(){
     Route::post('schedule/movie', 'ScheduleController@scheduleForOnlyOneMovie')->name('schedule.movie');
     Route::get('schedule/seatmap/{schedule_id}', 'ScheduleController@seatmap')->name('schedule.seatmap');
     Route::get('schedule/pair/{id}', 'ScheduleController@showPairList')->name('schedule.pair');
-    Route::post('schedule/join-pair', 'ScheduleController@joinPair')->name('schedule.join-pair');
-    Route::get('schedule/self-add', 'ScheduleController@selfAdd')->name('schedule.self-add');
     // Route::post('choose-seat', 'TheaterController@chooseSeat')->name('theater.choose-seet');
 
     Route::middleware('auth')->group(function(){
@@ -68,12 +66,14 @@ Route::namespace('Customer')->group(function(){
         Route::get('ticket/modify/{schedule_id}', 'TicketController@modify')->name('ticket.modify');
         Route::get('ticket/update', 'TicketController@update')->name('ticket.update');
         
-        Route::get('schedule/test-join', function(){
-            \App\User::find(28)->notify(new \App\Notifications\TaskCompleted);
-        });
+        Route::post('schedule/join-pair', 'ScheduleController@joinPair')->name('schedule.join-pair');
+        Route::get('schedule/self-add', 'ScheduleController@selfAdd')->name('schedule.self-add');
+        
+        Route::post('invitation/accept', 'UserController@acceptInvitation')->name('invitation.accept');
+        Route::post('invitation/decline', 'UserController@declineInvitation')->name('invitation.decline');
         Route::get('mark-read', function(){
             auth()->user()->unreadNotifications->markAsRead();
-            return redirect()->back();
+            // return redirect()->back();
         })->name('mark-read');
     });
 });

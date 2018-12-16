@@ -244,4 +244,16 @@ class UserRepository extends SAbstractRepository
         }
     }
 
+    public function acceptInvitation($invitationId) {
+        $userId2 = \App\Invitation::find($invitationId)->select('user_id2')->first();
+        \App\User::find($userId2->user_id2)->notify(new \App\Notifications\AcceptPairNotification($invitationId));
+        \App\Invitation::find($invitationId)->update(['status' => 'ACCEPT']);
+    }
+
+    public function declineInvitation($invitationId) {
+        $userId2 = \App\Invitation::find($invitationId)->select('user_id2')->first();
+        \App\User::find($userId2->user_id2)->notify(new \App\Notifications\DeclinePairNotification($invitationId));
+        \App\Invitation::find($invitationId)->update(['status' => 'WAIT', 'user_id2' => -1]);
+    }
+
 }

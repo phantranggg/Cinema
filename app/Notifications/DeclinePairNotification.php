@@ -7,9 +7,15 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShoudQueue;
 use Illuminate\Notifications\Notification;
 
-class JoinedPairNotification extends Notification {
+class DeclinePairNotification extends Notification {
     use Queueable;
 
+    protected $invitationId;
+
+    public function __construct($invitationId) {
+        $this->invitationId = $invitationId;
+    }
+    
     public function via($notifiable) {
         return ['database'];
     }
@@ -23,7 +29,9 @@ class JoinedPairNotification extends Notification {
     public function toArray($notifiable)
     {
         return [
-            'data' => 'My test'
+            'noti' => auth()->user()->name . ' đã từ chối mời bạn',
+            'invitationId' => $this->invitationId,
+            'hasButton' => false
         ];
     }
 
