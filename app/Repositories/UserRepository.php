@@ -249,12 +249,30 @@ class UserRepository extends SAbstractRepository
     }
 
     public function acceptInvitation($invitationId) {
+        $joinNotifications = \App\Notification::where('type','App\Notifications\JoinPairNotification')->get();
+        foreach ($joinNotifications as $joinNotification) {
+            if (json_decode($joinNotification->data)->invitationId == $invitationId) {
+                $tmp = str_replace('true', 'false', $joinNotification->data);
+                $joinNotification->data = $tmp;
+                $joinNotification->save();
+                break;
+            }
+        }
         $userId2 = \App\Invitation::find($invitationId)->select('user_id2')->first();
         \App\User::find($userId2->user_id2)->notify(new \App\Notifications\AcceptPairNotification($invitationId));
         \App\Invitation::find($invitationId)->update(['status' => 'ACCEPT']);
     }
 
     public function declineInvitation($invitationId) {
+        $joinNotifications = \App\Notification::where('type','App\Notifications\JoinPairNotification')->get();
+        foreach ($joinNotifications as $joinNotification) {
+            if (json_decode($joinNotification->data)->invitationId == $invitationId) {
+                $tmp = str_replace('true', 'false', $joinNotification->data);
+                $joinNotification->data = $tmp;
+                $joinNotification->save();
+                break;
+            }
+        }
         $userId2 = \App\Invitation::find($invitationId)->select('user_id2')->first();
         \App\User::find($userId2->user_id2)->notify(new \App\Notifications\DeclinePairNotification($invitationId));
         \App\Invitation::find($invitationId)->update(['status' => 'WAIT', 'user_id2' => -1]);

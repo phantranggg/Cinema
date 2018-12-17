@@ -74,7 +74,7 @@ Route::namespace('Customer')->group(function(){
         Route::post('invitation/decline', 'UserController@declineInvitation')->name('invitation.decline');
         Route::get('mark-read', function(){
             auth()->user()->unreadNotifications->markAsRead();
-            // return redirect()->back();
+            return redirect()->back();
         })->name('mark-read');
     });
 });

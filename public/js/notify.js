@@ -30,7 +30,7 @@ $('.accept-join').click(function () {
             invitation_id: invitationId
         },
         success: function (data) {
-            console.log("helll");
+            // $(".accept-decline-box-" + invitationId).children().toggle();
         },
         error: function () {
             alert("ERROR");
@@ -52,6 +52,7 @@ $('.decline-join').click(function () {
             invitation_id: invitationId
         },
         success: function (data) {
+            // $(".accept-decline-box-" + invitationId).children().toggle();
         },
         error: function () {
             alert("ERROR");
