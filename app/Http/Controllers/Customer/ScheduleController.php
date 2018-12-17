@@ -57,14 +57,26 @@ class ScheduleController extends Controller
     }
 
     public function showPairList($schedule_id) {
-        $users = $this->scheduleRepo->getPairList($schedule_id);
-        return view('customer.schedule.pair', compact('schedule_id', 'users'));
+        $scheduleId = $schedule_id;
+        $users = $this->scheduleRepo->getPairList($scheduleId);
+        $hasUserInPairList = $this->scheduleRepo->checkUserInPairList($scheduleId);;
+        return view('customer.schedule.pair', compact('scheduleId', 'users', 'hasUserInPairList'));
     }
 
-    public function joinPair(Request $request) {
-        $userId1 = $request->user_id1;
-        $scheduleId = $request->schedule_id;
+    // public function joinPair(Request $request) {
+    //     $userId1 = $request->user_id1;
+    //     $scheduleId = $request->schedule_id;
+    //     $this->scheduleRepo->joinPair($userId1, $scheduleId);
+    //     $this->showPairList($scheduleId);
+    // }
+
+    public function joinPair() {
+        $userId1 = $_GET['user_id1'];
+        $scheduleId = $_GET['schedule_id'];
         $this->scheduleRepo->joinPair($userId1, $scheduleId);
+        $users = $this->scheduleRepo->getPairList($scheduleId);
+        $hasUserInPairList = $this->scheduleRepo->checkUser2InPairList($userId1, $scheduleId);
+        return view('customer.schedule.pair', compact('scheduleId', 'users', 'hasUserInPairList'));
     }
 
     public function selfAdd() {
