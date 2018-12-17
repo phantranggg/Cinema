@@ -26,6 +26,8 @@ class CreateMoviesTable extends Migration
             $table->string('rating', 5)->nullable();
             $table->string('url', 200);
             $table->smallInteger('status');
+            $table->integer('like_num')->default(0);
+            $table->integer('ticket_num')->default(0);
             $table->timestamps();
         });
     }

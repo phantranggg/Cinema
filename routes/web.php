@@ -46,15 +46,12 @@ Route::namespace('Customer')->group(function(){
     Route::post('movie/recommend', 'MovieController@recommend')->name('movie.recommend');
     
     Route::get('theater', 'TheaterController@index')->name('theater.index');
-    Route::get('theater/{movie_id}', 'TheaterController@indexForOnlyOneMovie')->name('theater.index.{movie_id}');
+    Route::get('theater/{movie_id}', 'TheaterController@indexForOnlyOneMovie')->name('theater.{movie_id}');
     Route::post('theater/detail', 'TheaterController@detail')->name('theater.detail');
     
     Route::post('schedule', 'ScheduleController@schedule')->name('schedule');
     Route::post('schedule/movie', 'ScheduleController@scheduleForOnlyOneMovie')->name('schedule.movie');
     Route::get('schedule/seatmap/{schedule_id}', 'ScheduleController@seatmap')->name('schedule.seatmap');
-    Route::get('schedule/pair/{id}', 'ScheduleController@showPairList')->name('schedule.pair');
-    Route::get('schedule/join-pair', 'ScheduleController@joinPair')->name('schedule.join-pair');
-    Route::get('schedule/self-add', 'ScheduleController@selfAdd')->name('schedule.self-add');
     // Route::post('choose-seat', 'TheaterController@chooseSeat')->name('theater.choose-seet');
 
     Route::middleware('auth')->group(function(){
@@ -67,6 +64,17 @@ Route::namespace('Customer')->group(function(){
         Route::post('ticket/delete', 'TicketController@delete')->name('ticket.delete');
         Route::get('ticket/modify/{schedule_id}', 'TicketController@modify')->name('ticket.modify');
         Route::get('ticket/update', 'TicketController@update')->name('ticket.update');
+        
+        Route::get('schedule/pair/{id}', 'ScheduleController@showPairList')->name('schedule.pair');
+        Route::post('schedule/join-pair', 'ScheduleController@joinPair')->name('schedule.join-pair');
+        Route::get('schedule/self-add', 'ScheduleController@selfAdd')->name('schedule.self-add');
+        
+        Route::post('invitation/accept', 'UserController@acceptInvitation')->name('invitation.accept');
+        Route::post('invitation/decline', 'UserController@declineInvitation')->name('invitation.decline');
+        Route::get('mark-read', function(){
+            auth()->user()->unreadNotifications->markAsRead();
+            // return redirect()->back();
+        })->name('mark-read');
     });
 });
 

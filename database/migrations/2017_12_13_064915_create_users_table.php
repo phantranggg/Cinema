@@ -24,11 +24,12 @@ class CreateUsersTable extends Migration
             $table->string('role', 10)->nullable();
             $table->string('password');
             $table->smallInteger('status');
+            $table->bigInteger('total_amount');
             $table->rememberToken();
             $table->timestamps();
         });
     }
-
+    
     /**
      * Reverse the migrations.
      *

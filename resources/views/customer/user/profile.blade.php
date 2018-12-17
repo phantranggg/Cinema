@@ -127,7 +127,11 @@
                         <span class="movie-seats inline-block">{{ $ticket->chair_num }}</span>
                         @endforeach
                     </div>
+                    @if ($info->invitation)
+                    <button type="button" class="btn btn-success">VÉ ĐÔI</button>
+                    @else
                     <a href="{{ url('/ticket/modify/' . $info->id ) }}"><button class="btn btn-primary">THAY ĐỔI</button></a>
+                    @endif
                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal-{{ $info->id }}">XOÁ</button>
                     <!-- Modal -->
                     <div class="modal fade" id="myModal-{{ $info->id }}" role="dialog">

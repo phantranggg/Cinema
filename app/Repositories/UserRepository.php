@@ -197,6 +197,10 @@ class UserRepository extends SAbstractRepository
                         . 'AND show_date >= ? '
                         . 'GROUP BY schedules.id, movies.title, theaters.name, schedules.show_date, schedules.show_time', [Auth::id(), config('constant.today')]);
         foreach ($movies as $key => $value) {
+            $invitation = \App\Invitation::where('user_id1',Auth::id())->where('schedule_id',$movies[$key]->id)->first();
+            if ($invitation) {
+                $value->invitation = true;
+            } else $value->invitation = false;
             $tickets = DB::select('SELECT chair_num '
                             . 'FROM tickets '
                             . 'WHERE user_id = ? '
@@ -242,6 +246,18 @@ class UserRepository extends SAbstractRepository
                 DB::delete('DELETE FROM tickets WHERE schedule_id = ? AND chair_num = ?', [$scheduleId, $seat->chair_num]);
             }
         }
+    }
+
+    public function acceptInvitation($invitationId) {
+        $userId2 = \App\Invitation::find($invitationId)->select('user_id2')->first();
+        \App\User::find($userId2->user_id2)->notify(new \App\Notifications\AcceptPairNotification($invitationId));
+        \App\Invitation::find($invitationId)->update(['status' => 'ACCEPT']);
+    }
+
+    public function declineInvitation($invitationId) {
+        $userId2 = \App\Invitation::find($invitationId)->select('user_id2')->first();
+        \App\User::find($userId2->user_id2)->notify(new \App\Notifications\DeclinePairNotification($invitationId));
+        \App\Invitation::find($invitationId)->update(['status' => 'WAIT', 'user_id2' => -1]);
     }
 
 }
