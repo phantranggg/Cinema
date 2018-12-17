@@ -16,18 +16,30 @@ class ScheduleController extends Controller
         $this->scheduleRepo = $scheduleRepo;
     }
 
+    private function getMatchNumForSchedule($scheduleDetail){
+        foreach ($scheduleDetail as $movie){
+            foreach ($movie->schedule_detail as $scheduleInfo){
+                $matchNum = $this->scheduleRepo->getMatchNum($scheduleInfo -> id);
+                $scheduleInfo->matchNum = $matchNum;
+            }
+        }
+        return $scheduleDetail;
+    }
+
 
     protected function schedule(Request $request) {
         $scheduleDetail = $this->scheduleRepo->getScheduleDetail($request);
+        $this->getMatchNumForSchedule($scheduleDetail);
         return view('customer.schedule.schedule', [
-            'schedule' => $scheduleDetail
+            'schedule' => $scheduleDetail,
         ]);
     }
 
     protected function scheduleForOnlyOneMovie(Request $request) {
         $scheduleDetail = $this->scheduleRepo->getScheduleForOnlyOneMovie($request);
+        $this->getMatchNumForSchedule($scheduleDetail);
         return view('customer.schedule.schedule', [
-            'schedule' => $scheduleDetail
+            'schedule' => $scheduleDetail,
         ]);
     }
 

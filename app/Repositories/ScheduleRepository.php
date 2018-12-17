@@ -207,4 +207,9 @@ class ScheduleRepository extends SAbstractRepository
                         . 'WHERE schedules.id = ?', [$schedule_id]);
         return $seatmap;
     }
+
+    public function getMatchNum($schedule_id){
+        $matchNum = \App\Invitation::where(['status' => 'WAIT', 'schedule_id' => $schedule_id])->get()->count();
+        return $matchNum;
+    }
 }
