@@ -158,25 +158,30 @@ class UserRepository extends SAbstractRepository
      */
     public function create($request)
     {
-        $active = is_null($request->get('active')) ? User::INACTIVE : User::ACTIVE;
+        $active = User::ACTIVE;
         $user = User::create([
                     'name' => $request->get('name'),
                     'email' => $request->get('email'),
                     'password' => bcrypt($request->get('password')),
                     'role_id' => $request->get('role_id'),
-                    'active' => $active
+                    'status' => $active
         ]);
-        $avatar = $request->file('avatar');
-        if (isset($avatar)) {
-            $upload = $avatar->getClientOriginalName();
-            $filename = str_slug(pathinfo($upload, PATHINFO_FILENAME));
-            $fileExtension = str_slug(pathinfo($upload, PATHINFO_EXTENSION));
-            $changeName = time() . '_' . $filename . '.' . $fileExtension;
-            $avatar->move(User::PATH_AVATAR, $changeName);
-            $avatarPath = User::PATH_AVATAR . $changeName;
-            $user->avatar = $avatarPath;
-            $user->save();
-        }
+//        $avatar = $request->file('avatar');
+//        if (isset($avatar)) {
+//            $upload = $avatar->getClientOriginalName();
+//            $filename = str_slug(pathinfo($upload, PATHINFO_FILENAME));
+//            $fileExtension = str_slug(pathinfo($upload, PATHINFO_EXTENSION));
+//            $changeName = time() . '_' . $filename . '.' . $fileExtension;
+//            $avatar->move(User::PATH_AVATAR, $changeName);
+//            $avatarPath = User::PATH_AVATAR . $changeName;
+//            $user->avatar = $avatarPath;
+//            $user->save();
+//        }
+//        if ($request->password === $request->password_confirmation) {
+//            DB::insert('INSERT INTO users(name, date_of_birth, email, password, phone, address, account_type, role, status) '
+//                . 'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [$request->name, $request->date_of_birth, $request->email,
+//                bcrypt($request->password), $request->phone, $request->address, $request->account_type, $request->role, 1]);
+//        }
         return $user;
     }
 
@@ -186,8 +191,11 @@ class UserRepository extends SAbstractRepository
      */
     public function delete($id)
     {
-        $user = $this->find($id);
-        $user->delete();
+        $user =$this->model->find($id);
+        $user->status=User::INACTIVE;
+        $user->save();
+//        foreach()
+//        $user->delete();
     }
     
     /**

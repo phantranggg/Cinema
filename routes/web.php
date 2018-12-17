@@ -78,14 +78,19 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin'], fu
 
         Route::post('/movie/update', 'MovieController@update')->name('movie.update');
 
-        Route::get('/theaters/all', 'TheaterController@all');
-        Route::get('/theaters/addTheater', 'TheaterController@addTheater');
-        Route::post('/theaters/add', 'TheaterController@add')->name('addTheater');
-        Route::get('/theaters/delete/{id}', 'TheaterController@delete');
+        Route::get('/theater/index', 'TheaterController@index');
+        Route::get('/theater/create', 'TheaterController@create') -> name('theater.create');
+        Route::post('/theater/store', 'TheaterController@store')->name('theater.store');
+        Route::get('/theater/destroy/{id}', 'TheaterController@destroy');
+        Route::get('/theater/show/{theater_id}', 'TheaterController@show');
+        Route::post('/theater/update', 'TheaterController@update');
 
-        Route::get('/users', 'UserController@show');
-        Route::get('/users/info/{user_id}', 'UserController@modify');
-        Route::post('/users/update/', 'UserController@update')->name('updateUser');
+        Route::get('/user/index', 'UserController@index')->name('user.index');
+        Route::get('/user/show/{user_id}', 'UserController@show');
+        Route::post('/user/update/', 'UserController@update')->name('user.update');
+        Route::get('/user/create', 'UserController@create') -> name('user.create');
+        Route::post('/user/store', 'UserController@store')->name('user.store');
+        Route::get('/user/destroy/', 'UserController@destroy');
 
         Route::get('/schedule/index', 'ScheduleController@index')->name('schedule.index');
         Route::get('/schedule/show/{schedule_id}', 'ScheduleController@create')->name('schedule.create');
@@ -135,7 +140,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin'], fu
 //     Route::post('/admin/users/deactivate', 'UserController@adminDeactivate');
 //     Route::post('/admin/users/activate', 'UserController@adminActivate');
 //     Route::post('/admin/users/delete', 'UserController@adminDelete');
-//     Route::get('/admin/users/form', 'UserController@adminForm');
+//     Route::get('/admin/users/form', 'UsersController@adminForm');
 //     Route::post('/admin/users/insert', 'UserController@adminInsert');
 
 //     Route::get('/admin/all', 'TheaterController@adminAll');

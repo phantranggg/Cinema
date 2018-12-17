@@ -68,31 +68,14 @@ class TheaterRepository extends SAbstractRepository
      * @param int $id
      * @return bool
      */
-    public function update($request, $id)
+    public function update($request)
     {
-        $theater = Theater::find($id);
-        $theater->name = $request->get('name');
-        $theater->email = $request->get('email');
-        if (!empty($request->get('password'))) {
-            $theater->password = bcrypt($request->get('password'));
-        }
-        if (!is_null($request->get('active'))) {
-            $theater->active = Theater::ACTIVE;
-        } else {
-            $theater->active = Theater::INACTIVE;
-        }
-        $avatar = $request->file('avatar');
-        if (isset($avatar)) {
-            $upload = $avatar->getClientOriginalName();
-            $filename = str_slug(pathinfo($upload, PATHINFO_FILENAME));
-            $fileExtension = str_slug(pathinfo($upload, PATHINFO_EXTENSION));
-            $changeName = time() . '_' . $filename . '.' . $fileExtension;
-            $avatar->move(Theater::PATH_AVATAR, $changeName);
-            $avatarPath = Theater::PATH_AVATAR . $changeName;
-            $theater->avatar = $avatarPath;
-        }
-        $theater->save();
-        
+        DB::update('UPDATE theaters '
+            . 'SET name = ?, hotline = ?, row_num = ?, column_num = ?, fax = ?, '
+            . 'address = ?'
+            . 'WHERE id = ?', [$request->name, $request->hotline, $request->row_num, $request->column_num,
+            $request->fax, $request->address, $request->id]);
+        $theater = Theater::find($request->id);
         return $theater;
     }
 

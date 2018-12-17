@@ -26,8 +26,8 @@
                     <td>{{ $theater->column_num }}</td>
                     <td>{{ $theater->fax }}</td>
                     <td>{{ $theater->address }}</td>
-                    <td><a href="{{ url('admin/theaters/info/' . $theater->id) }}"><button class="btn btn-success">UPDATE</button></a></td>
-                    <td><a href="{{ url('admin/theaters/delete/' . $theater->id) }}"><button class="btn btn-danger">DELETE</button></a></td>
+                    <td><a href="{{ url('admin/theater/show/' . $theater->id) }}"><button class="btn btn-success">UPDATE</button></a></td>
+                    <td><a href="{{ url('admin/theater/destroy/' . $theater->id) }}"><button class="btn btn-danger">DELETE</button></a></td>
                 </tr>
                 @endforeach
             </tbody>
