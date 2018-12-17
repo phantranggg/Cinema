@@ -41,6 +41,8 @@
         crossorigin="anonymous"></script>
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('js/slick.min.js') }}"></script>
+    @yield('head')
+
 </head>
 
 <body>
