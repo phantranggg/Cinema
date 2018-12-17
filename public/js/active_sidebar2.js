@@ -12,15 +12,15 @@ $("#myInput").on("keyup", function () {
     });
 });
 
-$("#select-theater").change(function () {
+$(document).on('change', '#select-theater', function() {
+// $("#select-theater").change(function () {
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
-
     $.ajax({
-        method: "POST",
+        method: "GET",
         url: "/admin/schedule/filter/",
         data: {
             theater_id: $(this).val()

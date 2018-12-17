@@ -13,8 +13,8 @@
     <tbody id="myTable">
 @foreach ($schedules as $schedule)
 <tr>
-    <td>{{$schedule->movie }}</td>
-    <td>{{ 'b'}}</td>
+    <td>{{$schedule->movie->title }}</td>
+    <td>{{ $schedule->theater->name}}</td>
     <td>{{ $schedule->type }}</td>
     <td>{{ $schedule->show_time }}</td>
     <td>{{ $schedule->show_date }}</td>
@@ -25,6 +25,8 @@
 @endforeach
     </tbody>
 </table>
+{{--<h1>{{$theater_id}}</h1>--}}
 <div >
-{{--    {{$schedules->links()}}--}}
+    {{$schedules->appends(['theater_id'=>$theater_id])->links()}}
+
 </div>

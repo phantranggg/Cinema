@@ -97,7 +97,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin'], fu
         Route::get('/schedule/create', 'ScheduleController@create')->name('schedule.create');
         Route::post('/schedule/store', 'ScheduleController@store')->name('schedule.store');
         Route::get('/schedule/destroy/{id}', 'ScheduleController@destroy')->name('schedule.destroy');
-        Route::post('/schedule/filter/','ScheduleController@filter')->name('schedule.filter');
+//        Route::get('/schedule/filter/','ScheduleController@filter')->name('schedule.filter');
+        Route::get('/schedule/filter/','ScheduleController@filter')->name('schedule.filter');
 
     });
 });

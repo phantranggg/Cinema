@@ -113,21 +113,10 @@ class ScheduleRepository extends SAbstractRepository
     }
 
     public function filterTheater($theater_id){
-        if ($theater_id != -1) {
-//            $schedules = DB::select('SELECT schedules.*,title,name
-//                        FROM schedules JOIN theaters ON (theaters.id = schedules.theater_id)
-//                                    JOIN movies ON (movies.id = schedules.movie_id)
-//                        WHERE schedules.status = 1 AND theater_id = ?
-//                        ORDER BY show_date', [$theater_id]);
-            $schedules = Schedule::paginate(20);
+        if ($theater_id == -1) {
+            $schedules = Schedule::paginate(12)->setPath('/admin/schedule/index/');
         } else {
-//            $schedules = DB::select('SELECT schedules.id,title,name,type,show_time,show_date,price
-//                        FROM schedules JOIN theaters ON (theaters.id = schedules.theater_id)
-//                                    JOIN movies ON (movies.id = schedules.movie_id)
-//                        WHERE schedules.status = 1
-//                        ORDER BY show_date');
-            $schedules = Theater::find($theater_id)->schedules->paginate(20);
-            $schedules = Schedule::where('theater_id',$theater_id)->paginate(20);
+            $schedules = Schedule::where('theater_id',$theater_id)->paginate(12)->setPath('/admin/schedule/index/');
         }
         return $schedules;
     }

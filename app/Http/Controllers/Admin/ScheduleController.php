@@ -23,19 +23,29 @@ class ScheduleController extends Controller
 
 
     protected function index(Request $request) {
-        $schedules = $this->scheduleRepo->all($request,false);
+        if(!isset($request->theater_id)){
+            $theater_id=-1;
+        }
+        else{
+            $theater_id=$request->theater_id;
+        }
+        $schedules  =$this->scheduleRepo->filterTheater($theater_id);
         $theater_name= $this->theaterRepo->getAllName();
         return view('admin.schedule.index', [
             'schedules' => $schedules,
-            'theater_name' => $theater_name
+            'theater_name' => $theater_name,
+            'theater_id'=>$request->theater_id
         ]);
     }
     protected function filter(Request $request){
-            $theater_id = (int)$request->theater_id;
-            $schedules=$this->scheduleRepo->filterTheater($theater_id);
-            return view('admin.schedule.filter', [
-                'schedules' => $schedules
+            $schedules=$this->scheduleRepo->filterTheater($request->theater_id);
+            echo view('admin.schedule.filter', [
+                'schedules' => $schedules,
+                'theater_id'=>$request->theater_id
             ]);
+//            return view('admin.schedule.filter', [
+//                'schedules' => $schedules
+//            ]);
     }
 
 
