@@ -113,7 +113,7 @@
                     <h4 class="modal-title" id="myModalLabel">Bạn đã đặt vé thành công </h4>
                 </div>
                 <div class="modal-body">
-                    <div class="bill bill-check" style="display:none">
+                    <div class="bill bill-check">
                         <div class="bill-row">
                             <label>Tên phim: </label>{{ $info->title }}
                         </div>
@@ -137,12 +137,15 @@
                         </div>
                     </div>
                 </div>
+                <form action="{!! url('user/profile') !!}" style="display:none">
+                    <input id="redirect" type="submit" value="Go to profile" />
+                </form>  
                 <div class="modal-footer">
-                    <button type="button" href="" class="btn btn-primary" data-dismiss="modal">OK</button>
+                    <button href="{!! url('user/profile') !!}" id="close-btn" class="btn btn-primary" data-dismiss="modal">OK</button>
                 </div>
             </div>
         </div>
-    </div>
+    </div>  
 </div>
 
 <script src="{{ asset('js/seat_ticket.js') }}"></script>

@@ -22,7 +22,7 @@ function renderHTML(arr) {
 }
 
 function changeNextButtonStatus() {
-    if (totalmoney) {
+    if (totalmoney ) {
         $('.process-right-seatmap').prop('disabled', false);
         $('.process-right-seatmap').css("cursor", "pointer");
     } else {
@@ -32,7 +32,7 @@ function changeNextButtonStatus() {
 }
 
 $("#next").click(function () {
-    if ((typeof variable === "undefined") || (status=='pair-mode' && array.length==2)) {
+    if ((typeof status === "undefined") || (status=='pair-mode' && array.length==2)) {
         $(".bill").css("display", "block");
     }
     $(".process-right-seatmap").css("display", "block");
@@ -96,7 +96,7 @@ $('.process-right-seatmap').click(function () {
     if (status=='pair-mode' && array.length!=2) {
         alert('Bạn phải chọn đúng 2 vé');
     }   
-    if ((typeof variable === "undefined") || (status=='pair-mode' && array.length==2)) {
+    if ((status!='pair-mode') || (status=='pair-mode' && array.length==2)) {
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -111,39 +111,20 @@ $('.process-right-seatmap').click(function () {
                 schedule_id: scheduleId
             },
             success: function (data) {
-                $('#total-bill').html(totalmoney);
+                console.log(data);
+                $('#total-bill').html(totalmoney.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " VND");
+                $('#ticketModal').modal('show');
             },
             error: function () {
-                alert('error');
+                alert('Có lỗi đã xảy ra. Vui lòng thử lại');
             }
         });
     }
-
-    console.log(array);
-    console.log(scheduleId);
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-
-    $.ajax({
-        method: "POST",
-        url: "/user/bill",
-        data: {
-            seat_list: array,
-            schedule_id: scheduleId
-        },
-        success: function (data) {
-            console.log(data);
-            $('#total-bill').html(totalmoney.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " VND");
-            $('#ticketModal').modal('show');
-        },
-        error: function () {
-            alert('Có lỗi đã xảy ra. Vui lòng thử lại');
-        }
-    });
 });
+
+$('#close-btn').click(function() {
+    $('#redirect').trigger('click');
+})
 
 // $('#confirm-update-ticket').click(function(){
 //     $.ajaxSetup({
