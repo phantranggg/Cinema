@@ -206,4 +206,9 @@ class MovieRepository extends SAbstractRepository
         return $movies;
     }
 
+    public function findByKeyword($keyword) {
+        $result = $this->model->where('title', 'LIKE', '%' . $keyword . '%')->get();
+        return $result;
+    }
+
 }

@@ -44,7 +44,8 @@ Route::namespace('Customer')->group(function(){
     Route::get('movie/now-playing', 'MovieController@showNowPlayingList')->name('movie.now-playing');
     Route::get('movie/comming-soon', 'MovieController@showComingSoonList')->name('movie.comming-soon');
     Route::post('movie/recommend', 'MovieController@recommend')->name('movie.recommend');
-    
+    Route::get('movie/search', 'MovieController@search')->name('movie.search');
+
     Route::get('theater', 'TheaterController@index')->name('theater.index');
     Route::get('theater/{movie_id}', 'TheaterController@indexForOnlyOneMovie')->name('theater.{movie_id}');
     Route::post('theater/detail', 'TheaterController@detail')->name('theater.detail');
