@@ -14,7 +14,7 @@
                 <select id="select-theater">
                     <option value="-1">Tất cả</option>
                     @foreach ($theater_name as $name)
-                    <option value="{{ $name->id }}">{{ $name->name }}</option>
+                    <option value="{{ $name->id }}" <?php if(isset($theater_id) and $name->id==$theater_id) echo 'selected' ?>>{{ $name->name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -47,7 +47,7 @@
                 </tbody>
             </table>
             <div >
-                {{$schedules->links()}}
+                {{$schedules->appends(['theater_id'=>$theater_id])->links()}}
             </div>
         </div>
 
