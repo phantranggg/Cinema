@@ -19,8 +19,9 @@
                 </select>
             </div>
         </div>
-        <table class="table table-bordered table-striped">
-            <thead>
+        <div id="changeable_content">
+            <table class="table table-bordered table-striped">
+                <thead>
                 <tr>
                     <th>Tên phim</th>
                     <th>Tên rạp</th>
@@ -29,25 +30,27 @@
                     <th>Ngày chiếu</th>
                     <th>Giá</th>
                 </tr>
-            </thead>
-            <tbody id="myTable">
+                </thead>
+                <tbody id="myTable">
                 @foreach ($schedules as $schedule)
-                <tr>
-                    <td>{{ $schedule->title }}</td>
-                    <td>{{ $schedule->name }}</td>
-                    <td>{{ $schedule->type }}</td>
-                    <td>{{ $schedule->show_time }}</td>
-                    <td>{{ $schedule->show_date }}</td>
-                    <td>{{ $schedule->price }}</td>
-                    <td><a href="{{ url('admin/schedules/info/' . $schedule->id) }}"><button class="btn btn-success">UPDATE</button></a></td>
-                    <td><a href="{{ url('admin/schedules/delete/' . $schedule->id) }}"><button class="btn btn-danger">DELETE</button></a></td>
-                </tr>
+                    <tr>
+                        <td>{{ $schedule->movie->title }}</td>
+                        <td>{{ $schedule->theater->name }}</td>
+                        <td>{{ $schedule->type }}</td>
+                        <td>{{ $schedule->show_time }}</td>
+                        <td>{{ $schedule->show_date }}</td>
+                        <td>{{ $schedule->price }}</td>
+                        <td><a href="{{ url('admin/schedule/show/' . $schedule->id) }}"><button class="btn btn-success">UPDATE</button></a></td>
+                        <td><a href="{{ url('admin/schedule/destroy/' . $schedule->id) }}"><button class="btn btn-danger">DELETE</button></a></td>
+                    </tr>
                 @endforeach
-            </tbody>
-        </table>
-        <div >
-            {{$schedules->links()}}
+                </tbody>
+            </table>
+            <div >
+                {{$schedules->links()}}
+            </div>
         </div>
+
     </div>
 </div>
 

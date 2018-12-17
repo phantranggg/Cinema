@@ -7,7 +7,7 @@ $('.delete-button-movie').click(function() {
         });
         $.ajax({
             method: "POST",
-            url: "/admin/movies/delete",
+            url: "/admin/movie/destroy",
             data: {
                 movie_id: movieId
             },

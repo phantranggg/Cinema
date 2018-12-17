@@ -38,8 +38,8 @@
             <tbody id="myTable">
                 @foreach ($nowplay as $movie)
                 <tr id="movie-row-{{ $movie->id }}">
-                    <td><a href="{{ url('admin/movies/info/' . $movie->id) }}"><img class="img-allmovie" src="{{ '/img/' . $movie->url }}"></a></td>
-                    <td><a href="{{ url('admin/movies/info/' . $movie->id) }}">{{ $movie->title }}</a></td>
+                    <td><a href="{{ url('admin/movie/show/' . $movie->id) }}"><img class="img-allmovie" src="{{ '/img/' . $movie->url }}"></a></td>
+                    <td><a href="{{ url('admin/movie/show/' . $movie->id) }}">{{ $movie->title }}</a></td>
                     <td>{{ $movie->genres }}</td>
                     <td>{{ $movie->length }} phút</td>
                     <td>{{ $movie->release_date }}</td>
@@ -49,7 +49,7 @@
                     <td>{{ $movie->country }}</td>
                     <td>{{ $movie->like_num }}</td>
                     <td>{{ $movie->ticket_num }}</td>
-                    <td><a href="{{ url('admin/movies/info/' . $movie->id) }}"><button class="btn btn-success">UPDATE</button></a></td>
+                    <td><a href="{{ url('admin/movie/show/'.$movie->id) }}"><button class="btn btn-success">UPDATE</button></a></td>
                     <td><button class="btn btn-danger delete-button-movie" movieId = "{{ $movie->id}}">DELETE</button></td>
                 </tr>
                 @endforeach

@@ -138,45 +138,9 @@ class UserController extends Controller {
 //
 //    //dang chua update thanh cong
     protected function update(Request $request) {
-//        DB::update('UPDATE users '
-//                . 'SET date_of_birth = ?, phone = ?, address = ?, account_type = ?, role = ? '
-//                . 'WHERE id = ?', [$request->date_of_birth, $request->phone, $request->address, $request->account_type, $request->role, $user_id]);
-//        $this->userRepo->updateAdmin($request->user_id,['date_of_birth'=>$request->date_of_birth,'phone'=>$request->phone,
-//            'address'=>$request->address,'account_type'=> $request->account_type,'role'=>$request->role]);
         $this->userRepo->updateAdmin($request->user_id,$request);
         return redirect('/admin/users');
     }
-//
-//    protected function adminDelete() {
-//        $user_id = $_POST['user_id'];
-//        \DB::table('users')->where('id', '=', $user_id)->delete();
-//    }
-//
-//    protected function adminDeactivate() {
-//        $user_id = $_POST['user_id'];
-//        DB::update('UPDATE users SET status = 0 WHERE id = ?', [$user_id]);
-//    }
-//
-//    protected function adminActivate() {
-//        $user_id = $_POST['user_id'];
-//        DB::update('UPDATE users SET status = 1 WHERE id = ?', [$user_id]);
-//    }
-//
-//    protected function adminForm() {
-//        return view('users.admin_form');
-//    }
-//
-//    protected function adminInsert(Request $request) {
-//        if ($request->password === $request->password_confirmation) {
-//            DB::insert('INSERT INTO users(name, date_of_birth, email, password, phone, address, account_type, role, status) '
-//                    . 'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [$request->name, $request->date_of_birth, $request->email,
-//                bcrypt($request->password), $request->phone, $request->address, $request->account_type, $request->role, 1]);
-//        }
-//        return redirect('/admin/users');
-//    }
-//
-//    protected function adminAgeStatistic() {
-//
-//    }
+
 
 }

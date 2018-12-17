@@ -21,12 +21,12 @@ $("#select-theater").change(function () {
 
     $.ajax({
         method: "POST",
-        url: "/admin/schedules/filter",
+        url: "/admin/schedule/filter/",
         data: {
             theater_id: $(this).val()
         },
         success: function (data) {
-            $("#myTable").html(data);
+            $("#changeable_content").html(data);
         },
         error: function () {
             alert("FAIL");

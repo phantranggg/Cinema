@@ -1,7 +1,20 @@
+
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>Tên phim</th>
+        <th>Tên rạp</th>
+        <th>Loại vé</th>
+        <th>Giờ chiếu</th>
+        <th>Ngày chiếu</th>
+        <th>Giá</th>
+    </tr>
+    </thead>
+    <tbody id="myTable">
 @foreach ($schedules as $schedule)
 <tr>
-    <td>{{ $schedule->title }}</td>
-    <td>{{ $schedule->name }}</td>
+    <td>{{$schedule->movie }}</td>
+    <td>{{ 'b'}}</td>
     <td>{{ $schedule->type }}</td>
     <td>{{ $schedule->show_time }}</td>
     <td>{{ $schedule->show_date }}</td>
@@ -10,3 +23,8 @@
     <td><a href="{{ url('admin/schedules/delete/' . $schedule->id) }}"><button class="btn btn-danger">DELETE</button></a></td>
 </tr>
 @endforeach
+    </tbody>
+</table>
+<div >
+{{--    {{$schedules->links()}}--}}
+</div>

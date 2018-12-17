@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 
+use App\Theater;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
@@ -60,6 +61,9 @@ class ScheduleRepository extends SAbstractRepository
         return Schedule::find($scheduleId);
     }
 
+    public function all($request, $toArray =null){
+        return Schedule::paginate(20);
+    }
     /**
      * Update a schedule.
      * @param \Illuminate\Http\Request $request
@@ -108,6 +112,25 @@ class ScheduleRepository extends SAbstractRepository
         return $schedule;
     }
 
+    public function filterTheater($theater_id){
+        if ($theater_id != -1) {
+//            $schedules = DB::select('SELECT schedules.*,title,name
+//                        FROM schedules JOIN theaters ON (theaters.id = schedules.theater_id)
+//                                    JOIN movies ON (movies.id = schedules.movie_id)
+//                        WHERE schedules.status = 1 AND theater_id = ?
+//                        ORDER BY show_date', [$theater_id]);
+            $schedules = Schedule::paginate(20);
+        } else {
+//            $schedules = DB::select('SELECT schedules.id,title,name,type,show_time,show_date,price
+//                        FROM schedules JOIN theaters ON (theaters.id = schedules.theater_id)
+//                                    JOIN movies ON (movies.id = schedules.movie_id)
+//                        WHERE schedules.status = 1
+//                        ORDER BY show_date');
+            $schedules = Theater::find($theater_id)->schedules->paginate(20);
+            $schedules = Schedule::where('theater_id',$theater_id)->paginate(20);
+        }
+        return $schedules;
+    }
     /**
      * Delete a schedule.
      * @param int $id
