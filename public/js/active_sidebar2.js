@@ -12,21 +12,21 @@ $("#myInput").on("keyup", function () {
     });
 });
 
-$("#select-theater").change(function () {
+$(document).on('change', '#select-theater', function() {
+// $("#select-theater").change(function () {
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
-
     $.ajax({
-        method: "POST",
-        url: "/admin/schedules/filter",
+        method: "GET",
+        url: "/admin/schedule/filter/",
         data: {
             theater_id: $(this).val()
         },
         success: function (data) {
-            $("#myTable").html(data);
+            $("#changeable_content").html(data);
         },
         error: function () {
             alert("FAIL");

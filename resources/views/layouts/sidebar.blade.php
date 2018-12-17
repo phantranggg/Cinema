@@ -313,10 +313,10 @@
                                 </span>
                             </a>
                             <ul class="treeview-menu">
-                                <li class=""><a href="{{ url('admin/movies/nowplay') }}"><i class="fa fa-circle-o"></i>PHIM ĐANG CHIẾU</a></li>
-                                <li class=""><a href="{{ url('admin/movies/comesoon') }}"><i class="fa fa-circle-o"></i>PHIM SẮP CHIẾU</a></li>
-                                <li class=""><a href="{{ url('admin/movies/allmovies') }}"><i class="fa fa-circle-o"></i>TẤT CẢ PHIM</a></li>
-                                <li class=""><a href="{{ url('admin/movies/addMovie') }}"><i class="fa fa-circle-o"></i>THÊM PHIM MỚI</a></li>
+                                <li class=""><a href="{{ route('admin.movie.nowPlay')}}"><i class="fa fa-circle-o"></i>PHIM ĐANG CHIẾU</a></li>
+                                <li class=""><a href="{{ route('admin.movie.comeSoon') }}"><i class="fa fa-circle-o"></i>PHIM SẮP CHIẾU</a></li>
+                                <li class=""><a href="{{ route('admin.movie.index') }}"><i class="fa fa-circle-o"></i>TẤT CẢ PHIM</a></li>
+                                <li class=""><a href="{{ route('admin.movie.create') }}"><i class="fa fa-circle-o"></i>THÊM PHIM MỚI</a></li>
                             </ul>
                         </li>
 <!--                        <li>
@@ -337,13 +337,13 @@
                                 </span>
                             </a>
                             <ul class="treeview-menu">
-                                <li><a href="{{ url('admin/theaters/all') }}"><i class="fa fa-circle-o"></i> DANH SÁCH RẠP</a></li>
-                                <li><a href="{{ url('admin/theaters/addTheater') }}"><i class="fa fa-circle-o"></i> THÊM RẠP MỚI</a></li>
+                                <li><a href="{{ url('admin/theater/index') }}"><i class="fa fa-circle-o"></i> DANH SÁCH RẠP</a></li>
+                                <li><a href="{{ url('admin/theater/create') }}"><i class="fa fa-circle-o"></i> THÊM RẠP MỚI</a></li>
                             </ul>
                         </li>
 
                         <li>
-                            <a href="{{ url('admin/users') }}">
+                            <a href="{{ url('admin/user/index') }}">
                                 <i class="fa fa-user"></i> 
                                 <span>NGƯỜI DÙNG</span>
                                 <span class="pull-right-container">
@@ -360,8 +360,8 @@
                                 </span>
                             </a>
                             <ul class="treeview-menu">
-                                <li><a href="{{ url('admin/schedules/all') }}"><i class="fa fa-circle-o"></i> TẤT CẢ LỊCH CHIẾU</a></li>
-                                <li><a href="{{ url('admin/schedules/addSchedule') }}"><i class="fa fa-circle-o"></i> THÊM LỊCH CHIẾU</a></li>
+                                <li><a href="{{ route('admin.schedule.index') }}"><i class="fa fa-circle-o"></i> TẤT CẢ LỊCH CHIẾU</a></li>
+                                <li><a href="{{ route('admin.schedule.create') }}"><i class="fa fa-circle-o"></i> THÊM LỊCH CHIẾU</a></li>
                             </ul>
                         </li>
 

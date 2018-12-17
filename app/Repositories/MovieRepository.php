@@ -164,6 +164,7 @@ class MovieRepository extends SAbstractRepository
         $check = \DB::table('likes')->where('user_id', '=', $logged->id)
                 ->where('movie_id', '=', $movieId)
                 ->first();
+
         if (is_null($check)) {
             return FALSE;
         }

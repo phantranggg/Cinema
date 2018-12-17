@@ -14,7 +14,7 @@ $("#select-theater-nowplay").change(function () {
 
     $.ajax({
         method: "POST",
-        url: "/admin/movies/filterNowPlay",
+        url: "/admin/movie/filterNowPlay",
         data: {
             theater_id: $(this).val()
         },

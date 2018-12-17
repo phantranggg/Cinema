@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 
+use App\Theater;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
@@ -60,6 +61,9 @@ class ScheduleRepository extends SAbstractRepository
         return Schedule::find($scheduleId);
     }
 
+    public function all($request, $toArray =null){
+        return Schedule::paginate(20);
+    }
     /**
      * Update a schedule.
      * @param \Illuminate\Http\Request $request
@@ -108,6 +112,14 @@ class ScheduleRepository extends SAbstractRepository
         return $schedule;
     }
 
+    public function filterTheater($theater_id){
+        if ($theater_id == -1) {
+            $schedules = Schedule::paginate(12)->setPath('/admin/schedule/index/');
+        } else {
+            $schedules = Schedule::where('theater_id',$theater_id)->paginate(12)->setPath('/admin/schedule/index/');
+        }
+        return $schedules;
+    }
     /**
      * Delete a schedule.
      * @param int $id

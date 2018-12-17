@@ -66,29 +66,38 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin'], fu
     Route::middleware('admin')->group(function() {
         Route::get('/', 'IndexController@index')->name('home');
 
-        Route::get('/movies/nowplay', 'MovieController@nowPlay');
-        Route::get('/movies/comesoon', 'MovieController@comeSoon');
-        Route::get('/movies/allmovies', 'MovieController@allMovies');
-        Route::get('/movies/addMovie', 'MovieController@addMovie');
-        Route::post('/movies/delete/', 'MovieController@delete');
-        Route::post('/movies/add', 'MovieController@add');
-        Route::post('/movies/filterNowPlay','MovieController@filterNowPlay');
-        Route::get('/movies/info/{id}', 'MovieController@info');
-        Route::post('/movies/update', 'MovieController@update');
+        Route::get('/movie/nowplay', 'MovieController@nowPlay')->name('movie.nowPlay');
+        Route::get('/movie/comesoon', 'MovieController@comeSoon')->name('movie.comeSoon');
+        Route::post('/movie/filterNowPlay','MovieController@filterNowPlay');
+        Route::get('/movie/index', 'MovieController@index')->name('movie.index');
+        Route::get('/movie/show/{movie_id}', 'MovieController@show')->name('movie.show');
+        Route::get('/movie/create', 'MovieController@create')->name('movie.create');
+        Route::post('/movie/store', 'MovieController@store')->name('movie.store');
+        Route::post('/movie/destroy/', 'MovieController@destroy')->name('movie.destroy');
 
-        Route::get('/theaters/all', 'TheaterController@all');
-        Route::get('/theaters/addTheater', 'TheaterController@addTheater');
-        Route::post('/theaters/add', 'TheaterController@add')->name('addTheater');
-        Route::get('/theaters/delete/{id}', 'TheaterController@delete');
+        Route::post('/movie/update', 'MovieController@update')->name('movie.update');
 
-        Route::get('/users', 'UserController@show');
-        Route::get('/users/info/{user_id}', 'UserController@modify');
-        Route::post('/users/update/', 'UserController@update')->name('updateUser');
+        Route::get('/theater/index', 'TheaterController@index');
+        Route::get('/theater/create', 'TheaterController@create') -> name('theater.create');
+        Route::post('/theater/store', 'TheaterController@store')->name('theater.store');
+        Route::get('/theater/destroy/{id}', 'TheaterController@destroy');
+        Route::get('/theater/show/{theater_id}', 'TheaterController@show');
+        Route::post('/theater/update', 'TheaterController@update');
 
-        Route::get('/schedules/all', 'ScheduleController@scheduleAll')->name('AllSchedule');
-        Route::get('/schedules/addSchedule', 'ScheduleController@addSchedule');
-        Route::post('/schedules/addSche', 'ScheduleController@addSche')->name('addSchedule');
-        Route::get('/schedules/delete/{id}', 'ScheduleController@deleteSchedule');
+        Route::get('/user/index', 'UserController@index')->name('user.index');
+        Route::get('/user/show/{user_id}', 'UserController@show');
+        Route::post('/user/update/', 'UserController@update')->name('user.update');
+        Route::get('/user/create', 'UserController@create') -> name('user.create');
+        Route::post('/user/store', 'UserController@store')->name('user.store');
+        Route::get('/user/destroy/', 'UserController@destroy');
+
+        Route::get('/schedule/index', 'ScheduleController@index')->name('schedule.index');
+        Route::get('/schedule/show/{schedule_id}', 'ScheduleController@create')->name('schedule.create');
+        Route::get('/schedule/create', 'ScheduleController@create')->name('schedule.create');
+        Route::post('/schedule/store', 'ScheduleController@store')->name('schedule.store');
+        Route::get('/schedule/destroy/{id}', 'ScheduleController@destroy')->name('schedule.destroy');
+//        Route::get('/schedule/filter/','ScheduleController@filter')->name('schedule.filter');
+        Route::get('/schedule/filter/','ScheduleController@filter')->name('schedule.filter');
 
     });
 });
@@ -131,7 +140,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin'], fu
 //     Route::post('/admin/users/deactivate', 'UserController@adminDeactivate');
 //     Route::post('/admin/users/activate', 'UserController@adminActivate');
 //     Route::post('/admin/users/delete', 'UserController@adminDelete');
-//     Route::get('/admin/users/form', 'UserController@adminForm');
+//     Route::get('/admin/users/form', 'UsersController@adminForm');
 //     Route::post('/admin/users/insert', 'UserController@adminInsert');
 
 //     Route::get('/admin/all', 'TheaterController@adminAll');
