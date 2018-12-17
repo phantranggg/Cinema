@@ -31,6 +31,14 @@ $('.accept-join').click(function () {
         },
         success: function (data) {
             $(".accept-decline-box-" + invitationId).children().toggle();
+            console.log("count: " + data);
+            if (data-1) {
+                $("#noti-count").show();
+                $("#noti-count").html(data-1);
+            } else {
+                $("#noti-count").hide();
+            }
+            // $(".accept-decline-box-" + invitationId).children().toggle();
         },
         error: function () {
             alert("ERROR");
@@ -53,6 +61,13 @@ $('.decline-join').click(function () {
         },
         success: function (data) {
             $(".accept-decline-box-" + invitationId).children().toggle();
+            // $(".accept-decline-box-" + invitationId).children().toggle();
+            if (data-1) {
+                $("#noti-count").show();
+                $("#noti-count").html(data-1);
+            } else {
+                $("#noti-count").hide();
+            }
         },
         error: function () {
             alert("ERROR");

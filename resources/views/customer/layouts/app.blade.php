@@ -62,7 +62,7 @@
                         {{ csrf_field() }}
                         <h6>Thể loại phim</h6>
                         <div class="form-group">
-                            <select class="form-control" id="" name="genre">
+                            <select class="form-control" name="genre">
                                 <option value="">Thể loại phim</option>
                                 <option value="action">Hành động</option>
                                 <option value="romance">Tâm lý, tình cảm</option>
@@ -73,7 +73,7 @@
                         </div>
                         <h6>Năm phát hành</h6>
                         <div class="form-group">
-                            <select class="form-control" id="" name="year">
+                            <select class="form-control" name="year">
                                 <option value="">Năm phát hành</option>
                                 <option value="2018">2018</option>
                                 <option value="2017">2017</option>
@@ -83,7 +83,7 @@
                         </div>
                         <h6>Quốc gia</h6>
                         <div class="form-group">
-                            <select class="form-control" id="" name="country">
+                            <select class="form-control" name="country">
                                 <option value="">Quốc gia</option>
                                 <option value="usa">Mỹ</option>
                                 <option value="vie">Việt Nam</option>
@@ -152,7 +152,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-bell-o"></i>
                         @if (auth()->user()->unreadNotifications->count())
-                        <span class="label label-primary">{{ auth()->user()->unreadNotifications->count() }}</span>
+                        <span id="noti-count" class="label label-primary">{{ auth()->user()->unreadNotifications->count() }}</span>
                         @endif
                     </a>
                     <ul class="dropdown-menu">
