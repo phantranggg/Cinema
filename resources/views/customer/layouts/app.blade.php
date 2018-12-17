@@ -168,7 +168,7 @@
                                         <a href="#">
                                             <i class="fa fa-envelope text-aqua"></i> {{ $notification->data['noti'] }}
                                             @if ($notification->data['hasButton'])
-                                            <p>
+                                            <p class="accept-decline-box-{{ $notification->data['invitationId'] }}">
                                                 <button class="btn btn-sm btn-danger pull-right ml-1 decline-join" data="{{ $notification->data['invitationId'] }}">Từ chối</button>
                                                 <button class="btn btn-sm btn-primary pull-right accept-join" data="{{ $notification->data['invitationId'] }}">Đồng ý</button>
                                             </p>
@@ -181,7 +181,7 @@
                                         <a href="#">
                                             <i class="fa fa-envelope text-aqua"></i> {{ $notification->data['noti'] }}
                                             @if ($notification->data['hasButton'])
-                                            <p>
+                                            <p class="accept-decline-box-{{ $notification->data['invitationId'] }}">
                                                 <button class="btn btn-sm btn-danger pull-right ml-1 decline-join" data="{{ $notification->data['invitationId'] }}">Từ chối</button>
                                                 <button class="btn btn-sm btn-primary pull-right accept-join" data="{{ $notification->data['invitationId'] }}">Đồng ý</button>
                                             </p>
