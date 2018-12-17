@@ -20,9 +20,9 @@ class TicketRepository extends SAbstractRepository
     }
 
     public function getSeatMap($schedule_id) {
-        $seatmap = DB::select('SELECT movie.*, theaters.*, schedules.* '
+        $seatmap = DB::select('SELECT movies.*, theaters.*, schedules.* '
                         . 'FROM schedules '
-                        . 'INNER JOIN movie ON schedules.movie_id = movie.id '
+                        . 'INNER JOIN movies ON schedules.movie_id = movies.id '
                         . 'INNER JOIN theaters ON schedules.theater_id = theaters.id '
                         . 'WHERE schedules.id = ?', [$schedule_id]);
         return $seatmap;

@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="category-title">
-        <br /><h1>PHIM GỢI Ý</h1><br />
+        <br/><h1>{{ $pageTitle }}</h1><br />
     </div>
     @php $count = 0; @endphp
     @foreach ($movies as $movie)

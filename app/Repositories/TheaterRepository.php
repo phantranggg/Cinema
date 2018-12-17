@@ -98,17 +98,15 @@ class TheaterRepository extends SAbstractRepository
     public function delete($id)
     {
         $theater = $this->find($id);
-//        $theater->status=0;
         $theater->delete();
     }
-
 
     /**
      * Count theater
      * @return type
      */
     public function count(){
-        return $this->model->count();
+        return $this->model->where('active',Theater::ACTIVE)->count();
     }
     public function getAllName(){
         return DB::select('SELECT id,name FROM theaters');
