@@ -67,7 +67,7 @@ Route::namespace('Customer')->group(function(){
         Route::get('ticket/update', 'TicketController@update')->name('ticket.update');
         
         Route::get('schedule/pair/{id}', 'ScheduleController@showPairList')->name('schedule.pair');
-        Route::post('schedule/join-pair', 'ScheduleController@joinPair')->name('schedule.join-pair');
+        Route::get('schedule/join-pair', 'ScheduleController@joinPair')->name('schedule.join-pair');
         Route::get('schedule/self-add', 'ScheduleController@selfAdd')->name('schedule.self-add');
         
         Route::post('invitation/accept', 'UserController@acceptInvitation')->name('invitation.accept');
