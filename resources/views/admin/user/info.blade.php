@@ -4,15 +4,15 @@
 <div class="content-wrapper">
     <div class="container">
         <div class="row">
-            <div class="col-md-3">
-                <img class="img-movie-update" src="{{ '/img/user-logo.png' }}">
-            </div>
+            {{--<div class="col-md-3">--}}
+                {{--<img class="img-movie-update" src="{{ '/img/user-logo.png' }}">--}}
+            {{--</div>--}}
             <div class="col-md-9">
                 <div class="panel panel-default">
                     <div class="panel-heading">THÔNG TIN NGƯỜI DÙNG</div>
 
                     <div class="panel-body user-info">
-                        <form class="form-horizontal" method="POST" action="{{ route('admin.updateUser') }}">
+                        <form class="form-horizontal" method="POST" action="{{ route('admin.user.update') }}">
                             <input type='hidden' value="{!! csrf_token() !!}" name='_token' />
                             <input name="user_id" type="hidden" value="{{ $user->id }}">
                             <div class="form-group user-info-detail">

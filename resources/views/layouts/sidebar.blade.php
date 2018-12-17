@@ -337,13 +337,13 @@
                                 </span>
                             </a>
                             <ul class="treeview-menu">
-                                <li><a href="{{ url('admin/theaters/all') }}"><i class="fa fa-circle-o"></i> DANH SÁCH RẠP</a></li>
-                                <li><a href="{{ url('admin/theaters/addTheater') }}"><i class="fa fa-circle-o"></i> THÊM RẠP MỚI</a></li>
+                                <li><a href="{{ url('admin/theater/index') }}"><i class="fa fa-circle-o"></i> DANH SÁCH RẠP</a></li>
+                                <li><a href="{{ url('admin/theater/create') }}"><i class="fa fa-circle-o"></i> THÊM RẠP MỚI</a></li>
                             </ul>
                         </li>
 
                         <li>
-                            <a href="{{ url('admin/users') }}">
+                            <a href="{{ url('admin/user/index') }}">
                                 <i class="fa fa-user"></i> 
                                 <span>NGƯỜI DÙNG</span>
                                 <span class="pull-right-container">

@@ -23,15 +23,15 @@ $('.delete-button-movie').click(function() {
 });
 
 $('.delete-button-user').click(function() {
-    var userId = $(this).attr('userId');
+    var userId = $(this).attr('userid');
     $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
         $.ajax({
-            method: "POST",
-            url: "/admin/users/delete",
+            method: "GET",
+            url: "/admin/user/destroy/",
             data: {
                 user_id: userId
             },
