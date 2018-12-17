@@ -169,10 +169,8 @@ class ScheduleRepository extends SAbstractRepository
     
     public function getScheduleDetail(Request $request) {
         $theater_id = $request->theater_id;
-        $movieTitle = DB::select('SELECT DISTINCT movies.id, title, url '
-                        . 'FROM movies INNER JOIN schedules '
-                        . 'ON movies.id = schedules.movie_id '
-                        . 'WHERE theater_id = ?', [$theater_id]);
+        $movieTitle = \App\Movie::join('schedules', 'movies.id', '=', 'schedules.movie_id')
+            ->where('theater_id', $theater_id)->select('movies.id', 'title', 'url')->distinct()->get();
         foreach ($movieTitle as $key => $value) {
             $schedule_detail = DB::select('WITH seatnum AS 
                                 (SELECT id, row_num * column_num AS totalseat FROM theaters WHERE status = 1)
@@ -194,11 +192,8 @@ class ScheduleRepository extends SAbstractRepository
     public function getScheduleForOnlyOneMovie(Request $request) {
         $theater_id = $request->theater_id;
         $movie_id = $request->movie_id;
-        $movieTitle = DB::select('SELECT DISTINCT movies.id, title, url '
-                        . 'FROM movies INNER JOIN schedules '
-                        . 'ON movies.id = schedules.movie_id '
-                        . 'WHERE theater_id = ? '
-                        . 'AND movie_id = ?', [$theater_id, $movie_id]);
+        $movieTitle = \App\Movie::join('schedules', 'movies.id', '=', 'schedules.movie_id')->where('theater_id', $theater_id)
+            ->where('movie_id', $movie_id)->select('movies.id', 'title', 'url')->distinct()->get();
         foreach ($movieTitle as $key => $value) {
             $scheduleDetail = DB::select('WITH seatnum AS 
                                 (SELECT id, row_num * column_num AS totalseat FROM theaters WHERE status = 1)
@@ -218,11 +213,13 @@ class ScheduleRepository extends SAbstractRepository
     }
 
     public function getSeatMap($schedule_id) {
-        $seatmap = DB::select('SELECT movies.*, theaters.*, schedules.* '
-                        . 'FROM schedules '
-                        . 'INNER JOIN movies ON schedules.movie_id = movies.id '
-                        . 'INNER JOIN theaters ON schedules.theater_id = theaters.id '
-                        . 'WHERE schedules.id = ?', [$schedule_id]);
+        // $seatmap = DB::select('SELECT movies.*, theaters.*, schedules.* '
+        //                 . 'FROM schedules '
+        //                 . 'INNER JOIN movies ON schedules.movie_id = movies.id '
+        //                 . 'INNER JOIN theaters ON schedules.theater_id = theaters.id '
+        //                 . 'WHERE schedules.id = ?', [$schedule_id]);
+        $seatmap = \App\Schedule::join('movies', 'schedules.movie_id', '=', 'movies.id')->join('theaters', 'schedules.theater_id', '=', 'theaters.id')
+            ->where('schedules.id', $schedule_id)->select('movies.*', 'theaters.*', 'schedules.*')->get();
         return $seatmap;
     }
 
