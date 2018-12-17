@@ -20,4 +20,5 @@ $('#join-pair').click(function(){
             alert("ERROR");
         }
     });
-})
+    // $('#join-pair').attr("disabled", "disabled");
+});

@@ -26,8 +26,16 @@ class ScheduleController extends Controller
 
     protected function scheduleForOnlyOneMovie(Request $request) {
         $scheduleDetail = $this->scheduleRepo->getScheduleForOnlyOneMovie($request);
+        $matchNumArray = [];
+        foreach ($scheduleDetail as $movie){
+            foreach ($movie->schedule_detail as $scheduleInfo){
+                $matchNum = \App\Invitation::where(['status' => 'WAIT', 'schedule_id' => $scheduleInfo->id ])->get()->count();
+                array_push($matchNumArray, $matchNum);
+            }
+        }
         return view('customer.schedule.schedule', [
-            'schedule' => $scheduleDetail
+            'schedule' => $scheduleDetail,
+            'matchNumArray' => $matchNumArray,
         ]);
     }
 
