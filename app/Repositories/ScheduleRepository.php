@@ -183,14 +183,32 @@ class ScheduleRepository extends SAbstractRepository
         return $this->model->where('status','=',1)->get();
     }
 
-    public function getPairList($schedule_id) {
-        $users = \App\Invitation::where('schedule_id', $schedule_id)->select('user_id1')->get();
+    public function getPairList($scheduleId) {
+        $users = \App\Invitation::where('schedule_id', $scheduleId)
+                        ->where('status', 'WAIT')
+                        ->orWhere('status', 'JOINED')->get();
         foreach ($users as $key => $value) {
             $user_info = \App\User::find($value->user_id1);
             $value->user_info = $user_info;
             $users[$key] = $value;
         }
         return $users;
+    }
+
+    public function checkUserInPairList($scheduleId) {
+        $users = \App\Invitation::where('schedule_id', $scheduleId)->get();
+        foreach ($users as $user) {
+            if ($user->user_id1 == Auth::id() || $user->user_id2 == Auth::id())
+                return true;
+        }
+        return false;
+    }
+
+    public function checkUser2InPairList($userId1, $scheduleId) {
+        $users = \App\Invitation::where('schedule_id', $scheduleId)->where('user_id1', $userId1)->first();
+        if ($users->user_id2 === Auth::id())
+            return true;
+        return false;
     }
 
     public function joinPair($userId1, $scheduleId) {
@@ -265,5 +283,10 @@ class ScheduleRepository extends SAbstractRepository
                         . 'INNER JOIN theaters ON schedules.theater_id = theaters.id '
                         . 'WHERE schedules.id = ?', [$schedule_id]);
         return $seatmap;
+    }
+
+    public function getMatchNum($schedule_id){
+        $matchNum = \App\Invitation::where(['status' => 'WAIT', 'schedule_id' => $schedule_id])->get()->count();
+        return $matchNum;
     }
 }
