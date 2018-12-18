@@ -1,3 +1,8 @@
+@php
+ $i=0;
+@endphp
+{{--{{ var_dump($schedule) }}--}}
+{{--{{ var_dump($matchNumArray) }}--}}
 @foreach ($schedule as $movie)
     <div class="row schedule-item">
         <div class="col-md-2 left-side inline-left">
@@ -16,11 +21,10 @@
                         <div class="show_time">Giờ chiếu: {{ $scheduleInfo->show_time }}</div>
                         <div class="type_schedule">Định dạng: {{ $scheduleInfo->type }}</div>
                         <div class="chair_num">Số ghế trống: {{ $scheduleInfo->totalseat }} ghế</div>
-<<<<<<< HEAD:resources/views/customer/schedule/schedule.blade.php
-                        <a href="{{ url('schedule/pair/' . $scheduleInfo->id) }}"><button class="btn btn-sm btn-success pull-right mt-2">Match</button></a>
-=======
-                        <a href="{{ url('schedule/pair/' . $scheduleInfo->id) }}">Match</a>
->>>>>>> 096dd71c6e7b9ac71ffc2a116846949d23baca3d:resources/views/customer/schedule/schedule.blade.php
+                        <a href="{{ url('schedule/pair/' . $scheduleInfo->id) }}">
+                            {{--<button class="btn btn-sm btn-default pull-right mt-2 match-btn">Match<span class="label label-primary ml-1">{{$matchNumArray[$i++]}}</span></button>--}}
+                            <button class="btn btn-sm btn-default pull-right mt-2 match-btn">Match<span class="label label-primary ml-1"> {{$scheduleInfo->matchNum}}</span></button>
+                        </a>
                     </div>
                 </a>
             @endforeach

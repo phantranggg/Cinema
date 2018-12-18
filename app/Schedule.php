@@ -20,4 +20,7 @@ class Schedule extends Model
     public function theater() {
         return $this->belongsTo('\App\Theater');
     }
+//    public function invitations(){
+//        return $this->hasMany('\App\Invitation','schedule_id','id');
+//    }
 }

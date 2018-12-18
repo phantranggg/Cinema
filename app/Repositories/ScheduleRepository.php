@@ -5,8 +5,9 @@ namespace App\Repositories;
 
 use App\Theater;
 use Illuminate\Http\Request;
-
+use App\Http\Requests;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Repositories\Support\SAbstractRepository;
 use App\Schedule;
 
@@ -127,9 +128,6 @@ class ScheduleRepository extends SAbstractRepository
     public function delete($id)
     {
         $schedule = $this->find($id);
-        DB::update('UPDATE schedules '
-            . 'SET status = 0'
-            . 'WHERE id = ?', [$id]);
         $schedule->delete();
     }
     /**
@@ -185,14 +183,38 @@ class ScheduleRepository extends SAbstractRepository
         return $this->model->where('status','=',1)->get();
     }
 
-    public function getPairList($schedule_id) {
-        $users = \App\Invitation::where('schedule_id', $schedule_id)->select('user_id1')->get();
+    public function getPairList($scheduleId) {
+        $users = \App\Invitation::where('schedule_id', $scheduleId)
+                        ->where('status', 'WAIT')
+                        ->orWhere('status', 'JOINED')->get();
         foreach ($users as $key => $value) {
             $user_info = \App\User::find($value->user_id1);
             $value->user_info = $user_info;
             $users[$key] = $value;
         }
         return $users;
+    }
+
+    public function checkUserInPairList($scheduleId) {
+        $users = \App\Invitation::where('schedule_id', $scheduleId)->get();
+        foreach ($users as $user) {
+            if ($user->user_id1 == Auth::id() || $user->user_id2 == Auth::id())
+                return true;
+        }
+        return false;
+    }
+
+    public function checkUser2InPairList($userId1, $scheduleId) {
+        $users = \App\Invitation::where('schedule_id', $scheduleId)->where('user_id1', $userId1)->first();
+        if ($users->user_id2 === Auth::id())
+            return true;
+        return false;
+    }
+
+    public function joinPair($userId1, $scheduleId) {
+        \App\Invitation::where('schedule_id',$scheduleId)->where('user_id1', $userId1)->update(['user_id2' => Auth::id(), 'status' => 'JOINED']);
+        $invitationId = \App\Invitation::where('schedule_id',$scheduleId)->where('user_id1', $userId1)->select('id')->first();
+        \App\User::find($userId1)->notify(new \App\Notifications\JoinPairNotification($invitationId->id));
     }
 
     public function selfAdd($userId1, $scheduleId) {
@@ -203,7 +225,7 @@ class ScheduleRepository extends SAbstractRepository
         $invitation->status = 'WAIT';
         $invitation->save();
     }
-    
+
     public function getScheduleDetail(Request $request) {
         $theater_id = $request->theater_id;
         $movieTitle = DB::select('SELECT DISTINCT movies.id, title, url '
@@ -261,5 +283,10 @@ class ScheduleRepository extends SAbstractRepository
                         . 'INNER JOIN theaters ON schedules.theater_id = theaters.id '
                         . 'WHERE schedules.id = ?', [$schedule_id]);
         return $seatmap;
+    }
+
+    public function getMatchNum($schedule_id){
+        $matchNum = \App\Invitation::where(['status' => 'WAIT', 'schedule_id' => $schedule_id])->get()->count();
+        return $matchNum;
     }
 }

@@ -4,9 +4,9 @@
 }
 
 .seatmap {
+    background: rgba(255, 255, 255, 0.8);
     border: 1px solid #D9E5D6;
     margin-top: 50px;
-    background-color: white;
 }
 
 .seatmap-screen {
@@ -54,14 +54,16 @@
     margin-bottom: 2px;
     cursor: pointer;
 }
+
 /*
 .seat:hover {
     background-color: #E94F37;
 }*/
 
 .seatmap-bottom {
-    border-top: 1px solid #D9E5D6;
+    /* border-top: 1px solid #D9E5D6; */
     position: relative;
+    padding: 20px;
 }
 
 .type-icon {
@@ -115,7 +117,7 @@
 }
 
 .ticket-movie-info {
-    max-width: 270px;
+    max-width: 240px;
 }
 
 /*.ticket-image {
@@ -162,7 +164,7 @@
 
 .process-right-seatmap {
     position: absolute;
-    right: 0;
+    right: 20px;
     margin-top: 25px;
     width: 100px;
     height: 100px;
@@ -174,7 +176,7 @@
 }
 
 .bill {
-/*    display: none;*/
+    /*    display: none;*/
     background-image: url('/img/ticket-background.png');
     background-repeat: no-repeat;
     height: 350px;
@@ -183,22 +185,14 @@
 }
 
 .bill-check {
-    margin-left: 200px;
-    margin-top: 100px;
-}
-
-.checked {
-    
-}
-
-.uncheck {
-    background-color: white;
-}
-
-.chosen {
-    background-color: #D9E5D6;
+    margin-left: 100px;
 }
 
 .myseat {
     background-color: #AAAFAD;
+}
+
+.spacer {
+    padding-top: 20px;
+    padding-bottom: 20px
 }

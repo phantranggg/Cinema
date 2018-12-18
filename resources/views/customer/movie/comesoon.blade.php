@@ -58,7 +58,7 @@
                         <span>Like</span>
                     </button>
                     @endif
-                    <a href="{{ url('theaters/' . $movie->id) }}">
+                    <a href="{{ url('theater/' . $movie->id) }}">
                         <button class="buy-ticket-button">
                             <span>Mua vé</span>
                         </button>

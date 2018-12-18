@@ -94,15 +94,9 @@ class UserRepository extends SAbstractRepository
         return $query->where('role_id', '=', User::ROLE_USER)->paginate(self::PAGE_SIZE);
     }
     public function updateAdmin($user_id,$request){
-//        $user=User::find($user_id);
-//        foreach ($data as $key=>$value){
-//            if($key=='date_of_birth'){
-//                $user->date_of_birth=$value;
-//            }
-//        }
-                DB::update('UPDATE users '
-                . 'SET date_of_birth = ?, phone = ?, address = ?, account_type = ?, role = ? '
-                . 'WHERE id = ?', [$request->date_of_birth, $request->phone, $request->address, $request->account_type, $request->role, $user_id]);
+        DB::update('UPDATE users '
+        . 'SET date_of_birth = ?, phone = ?, address = ?, account_type = ?, role = ? '
+        . 'WHERE id = ?', [$request->date_of_birth, $request->phone, $request->address, $request->account_type, $request->role, $user_id]);
     }
     /**
      * Update a user.
@@ -110,7 +104,6 @@ class UserRepository extends SAbstractRepository
      * @param int $id
      * @return bool
      */
-
     public function update($request) {
         if ($request->password === $request->password_confirmation) {
             DB::update('UPDATE users '
@@ -118,38 +111,6 @@ class UserRepository extends SAbstractRepository
                     . 'WHERE id = ?', [bcrypt($request->password), $request->date_of_birth, $request->phone, $request->address, Auth::id()]);
         }
     }
-    // public function update($request, $id)
-    // {
-    //     $user = User::find($id);
-    //     $user->name = $request->get('name');
-    //     $user->email = $request->get('email');
-    //     if (!empty($request->get('password'))) {
-    //         $user->password = bcrypt($request->get('password'));
-    //     }
-    //     if (!is_null($request->get('active'))) {
-    //         $user->active = User::ACTIVE;
-    //     } else {
-    //         $user->active = User::INACTIVE;
-    //     }
-    //     $user->role_id = $request->get('role_id');
-    //     if ($user->id == User::CAN_NOT_DELETE) {
-    //         $user->active = User::ACTIVE;
-    //         $user->role_id = User::ROLE_ADMIN;
-    //     }
-    //     $avatar = $request->file('avatar');
-    //     if (isset($avatar)) {
-    //         $upload = $avatar->getClientOriginalName();
-    //         $filename = str_slug(pathinfo($upload, PATHINFO_FILENAME));
-    //         $fileExtension = str_slug(pathinfo($upload, PATHINFO_EXTENSION));
-    //         $changeName = time() . '_' . $filename . '.' . $fileExtension;
-    //         $avatar->move(User::PATH_AVATAR, $changeName);
-    //         $avatarPath = User::PATH_AVATAR . $changeName;
-    //         $user->avatar = $avatarPath;
-    //     }
-    //     $user->save();
-        
-    //     return $user;
-    // }
 
     /**
      * Create a user.
@@ -166,22 +127,6 @@ class UserRepository extends SAbstractRepository
                     'role_id' => $request->get('role_id'),
                     'status' => $active
         ]);
-//        $avatar = $request->file('avatar');
-//        if (isset($avatar)) {
-//            $upload = $avatar->getClientOriginalName();
-//            $filename = str_slug(pathinfo($upload, PATHINFO_FILENAME));
-//            $fileExtension = str_slug(pathinfo($upload, PATHINFO_EXTENSION));
-//            $changeName = time() . '_' . $filename . '.' . $fileExtension;
-//            $avatar->move(User::PATH_AVATAR, $changeName);
-//            $avatarPath = User::PATH_AVATAR . $changeName;
-//            $user->avatar = $avatarPath;
-//            $user->save();
-//        }
-//        if ($request->password === $request->password_confirmation) {
-//            DB::insert('INSERT INTO users(name, date_of_birth, email, password, phone, address, account_type, role, status) '
-//                . 'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [$request->name, $request->date_of_birth, $request->email,
-//                bcrypt($request->password), $request->phone, $request->address, $request->account_type, $request->role, 1]);
-//        }
         return $user;
     }
 
@@ -194,8 +139,6 @@ class UserRepository extends SAbstractRepository
         $user =$this->model->find($id);
         $user->status=User::INACTIVE;
         $user->save();
-//        foreach()
-//        $user->delete();
     }
     
     /**
@@ -247,6 +190,10 @@ class UserRepository extends SAbstractRepository
                         . 'AND show_date >= ? '
                         . 'GROUP BY schedules.id, movies.title, theaters.name, schedules.show_date, schedules.show_time', [Auth::id(), config('constant.today')]);
         foreach ($movies as $key => $value) {
+            $invitation = \App\Invitation::where('user_id1',Auth::id())->where('schedule_id',$movies[$key]->id)->first();
+            if ($invitation) {
+                $value->invitation = true;
+            } else $value->invitation = false;
             $tickets = DB::select('SELECT chair_num '
                             . 'FROM tickets '
                             . 'WHERE user_id = ? '
@@ -292,6 +239,36 @@ class UserRepository extends SAbstractRepository
                 DB::delete('DELETE FROM tickets WHERE schedule_id = ? AND chair_num = ?', [$scheduleId, $seat->chair_num]);
             }
         }
+    }
+
+    public function acceptInvitation($invitationId) {
+        $joinNotifications = \App\Notification::where('type','App\Notifications\JoinPairNotification')->get();
+        foreach ($joinNotifications as $joinNotification) {
+            if (json_decode($joinNotification->data)->invitationId == $invitationId) {
+                $tmp = str_replace('true', 'false', $joinNotification->data);
+                $joinNotification->data = $tmp;
+                $joinNotification->save();
+                break;
+            }
+        }
+        $userId2 = \App\Invitation::find($invitationId)->select('user_id2')->first();
+        \App\User::find($userId2->user_id2)->notify(new \App\Notifications\AcceptPairNotification($invitationId));
+        \App\Invitation::find($invitationId)->update(['status' => 'ACCEPT']);
+    }
+
+    public function declineInvitation($invitationId) {
+        $joinNotifications = \App\Notification::where('type','App\Notifications\JoinPairNotification')->get();
+        foreach ($joinNotifications as $joinNotification) {
+            if (json_decode($joinNotification->data)->invitationId == $invitationId) {
+                $tmp = str_replace('true', 'false', $joinNotification->data);
+                $joinNotification->data = $tmp;
+                $joinNotification->save();
+                break;
+            }
+        }
+        $userId2 = \App\Invitation::find($invitationId)->select('user_id2')->first();
+        \App\User::find($userId2->user_id2)->notify(new \App\Notifications\DeclinePairNotification($invitationId));
+        \App\Invitation::find($invitationId)->update(['status' => 'WAIT', 'user_id2' => -1]);
     }
 
 }

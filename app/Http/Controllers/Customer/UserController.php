@@ -54,15 +54,16 @@ class UserController extends Controller
         $this->userRepo->getBill($request);
     }
 
-    protected function ticketDelete(Request $request) {
+    protected function ticketDelete(Request $request)
+    {
         $scheduleId = $request->schedule_id;
         $seats = DB::select('SELECT chair_num '
-                        . 'FROM tickets '
-                        . 'WHERE schedule_id = ? '
-                        . 'AND user_id = ?', [$scheduleId, Auth::id()]);
+            . 'FROM tickets '
+            . 'WHERE schedule_id = ? '
+            . 'AND user_id = ?', [$scheduleId, Auth::id()]);
         $user = \App\User::find(Auth::id());
         $schedule = \DB::table('schedules')->find($scheduleId);
-        $tmp = (int) $user->total_amount;
+        $tmp = (int)$user->total_amount;
         foreach ($seats as $seat) {
             // DB::delete('DELETE FROM tickets WHERE schedule_id = ? AND chair_num = ? AND user_id = ?', [$scheduleId, $seat->chair_num, Auth::id()]);
             $tmp = $tmp - $schedule->price;
@@ -73,5 +74,14 @@ class UserController extends Controller
         } else {
             \App\User::where('id', Auth::id())->update(['total_amount' => $tmp, 'account_type' => 'normal']);
         }
+    }
+    public function acceptInvitation(Request $request) {
+        $invitationId = $request->invitation_id;
+        $this->userRepo->acceptInvitation($invitationId);
+    }
+
+    public function declineInvitation(Request $request) {
+        $invitationId = $request->invitation_id;
+        $this->userRepo->declineInvitation($invitationId);
     }
 }

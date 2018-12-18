@@ -12,7 +12,6 @@ class Movie extends Model
 
     protected $fillable = ['title', 'release_date', 'genres', 'score', 'director', 'country', 'length', 'subtitle', 'rating', 'status','url'];
 
-
     public function likes() {
         return $this->hasMany('\App\Like');
     }
