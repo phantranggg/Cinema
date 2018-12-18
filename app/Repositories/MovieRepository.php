@@ -62,29 +62,41 @@ class MovieRepository extends SAbstractRepository
      * @param int $id
      * @return bool
      */
+    public function update_array($id,$data){
+        $movie = Movie::find($id);
+        foreach($data as $key=>$value){
+            if($key=='title'){
+                $movie->title=$value;
+            }
+            elseif($key=='status'){
+                $movie->status=$value;
+            }
+        }
+//        $movie->title=$request->title;
+//        $movie->release_date=$request->release_date;
+//        $movie->genres=$request->genres;
+//        $movie->score=$request->score;
+//        $movie->director=$request->director;
+//        $movie->country=$request->country;
+//        $movie->length=$request->length;
+//        $movie->subtitle=$request->subtitle;
+//        $movie->rating=$request->rating;
+        $movie->save();
+
+        return $movie;
+    }
     public function update($request, $id)
     {
         $movie = Movie::find($id);
-        $movie->name = $request->get('name');
-        $movie->email = $request->get('email');
-        if (!empty($request->get('password'))) {
-            $movie->password = bcrypt($request->get('password'));
-        }
-        if (!is_null($request->get('active'))) {
-            $movie->active = Movie::ACTIVE;
-        } else {
-            $movie->active = Movie::INACTIVE;
-        }
-        $avatar = $request->file('avatar');
-        if (isset($avatar)) {
-            $upload = $avatar->getClientOriginalName();
-            $filename = str_slug(pathinfo($upload, PATHINFO_FILENAME));
-            $fileExtension = str_slug(pathinfo($upload, PATHINFO_EXTENSION));
-            $changeName = time() . '_' . $filename . '.' . $fileExtension;
-            $avatar->move(Movie::PATH_AVATAR, $changeName);
-            $avatarPath = Movie::PATH_AVATAR . $changeName;
-            $movie->avatar = $avatarPath;
-        }
+        $movie->title=$request->title;
+        $movie->release_date=$request->release_date;
+        $movie->genres=$request->genres;
+        $movie->score=$request->score;
+        $movie->director=$request->director;
+        $movie->country=$request->country;
+        $movie->length=$request->length;
+        $movie->subtitle=$request->subtitle;
+        $movie->rating=$request->rating;
         $movie->save();
         
         return $movie;
@@ -97,25 +109,30 @@ class MovieRepository extends SAbstractRepository
      */
     public function create($request)
     {
-        $active = is_null($request->get('active')) ? Movie::INACTIVE : Movie::ACTIVE;
         $movie = Movie::create([
-                    'name' => $request->get('name'),
-                    'email' => $request->get('email'),
-                    'password' => bcrypt($request->get('password')),
-                    'role_id' => $request->get('role_id'),
-                    'active' => $active
+            'title'=>$request->get('title'),
+            'release_date'=>$request->get('release_date'),
+            'genres'=>$request->get('genres'),
+            'score'=>$request->get('score'),
+            'director'=>$request->get('director'),
+            'country'=>$request->get('country'),
+            'length'=>$request->get('length'),
+            'subtitle'=>$request->get('subtitle'),
+            'rating'=>$request->get('rating'),
+            'status'=> Movie::ACTIVE,
+            'url'=>'some url in here, change it in movie repository'
         ]);
-        $avatar = $request->file('avatar');
-        if (isset($avatar)) {
-            $upload = $avatar->getClientOriginalName();
-            $filename = str_slug(pathinfo($upload, PATHINFO_FILENAME));
-            $fileExtension = str_slug(pathinfo($upload, PATHINFO_EXTENSION));
-            $changeName = time() . '_' . $filename . '.' . $fileExtension;
-            $avatar->move(Movie::PATH_AVATAR, $changeName);
-            $avatarPath = Movie::PATH_AVATAR . $changeName;
-            $movie->avatar = $avatarPath;
-            $movie->save();
-        }
+//        $avatar = $request->file('file');
+//        if (isset($avatar)) {
+//            $upload = $avatar->getClientOriginalName();
+//            $filename = str_slug(pathinfo($upload, PATHINFO_FILENAME));
+//            $fileExtension = str_slug(pathinfo($upload, PATHINFO_EXTENSION));
+//            $changeName = time() . '_' . $filename . '.' . $fileExtension;
+//            $avatar->move(Movie::PATH_AVATAR, $changeName);
+//            $avatarPath = Movie::PATH_AVATAR . $changeName;
+//            $movie->avatar = $avatarPath;
+//            $movie->save();
+//        }
         return $movie;
     }
 
@@ -134,7 +151,7 @@ class MovieRepository extends SAbstractRepository
      * @return type
      */
     public function count(){
-        return $this->model->where('active',Movie::ACTIVE)->count();
+        return $this->model->where('status',Movie::ACTIVE)->count();
     }
 
     public function checkLike($movieId) 
@@ -153,27 +170,20 @@ class MovieRepository extends SAbstractRepository
     }
 
     public function getNowPlayingList($limit) {
-        $nowPlayingMovies = \DB::select("SELECT m.* FROM movies m
-                        WHERE ?::date >= release_date::date 
-                        AND 14 >= (select ?::date - release_date::date from movies where movies.id = m.id)
-                        AND status = 1
-                        ORDER BY ticket_num DESC, like_num DESC
-                        LIMIT ?", [config('constant.today'), config('constant.today'), $limit]);
+        $nowPlayingMovies=Movie::where('status',1)->orderBy('id','desc')->where('release_date','>=',config('constant.today'));
+        $nowPlayingMovies=$nowPlayingMovies->paginate($limit);
         return $nowPlayingMovies;
     }
     
     public function getCommingSoonList($limit) {
-        $commingSoonMovies = \DB::select("SELECT m.* FROM movies m
-                        WHERE release_date::date > ?::date
-                        AND 14 > (select release_date::date - ?::date from movies where movies.id = m.id)
-                        AND status = 1
-                        ORDER BY ticket_num DESC, like_num DESC
-                        LIMIT ?", [config('constant.today'), config('constant.today'), $limit]);
+        $commingSoonMovies = Movie::where('release_date','>',config('constant.today'))
+        ->where('release_date','<=',date('Y-m-d',strtotime(config('constant.today').' + 14 days')))
+        ->paginate($limit);
         return $commingSoonMovies;
     }
     
     public function getAllMoviesInOrder() {
-        $allmovies = $this->model->where('status', 1)->orderBy('ticket_num', 'desc')->orderBy('like_num', 'desc')->get();
+        $allmovies = $this->model->where('status', 1)->orderBy('ticket_num', 'desc')->orderBy('like_num', 'desc')->paginate(30);
         return $allmovies;
         //$allmovies = \App\Movie::where('status', '=', 1)->orderBy('ticket_num', 'desc')->orderBy('like_num', 'desc')->get();
     }
@@ -192,7 +202,7 @@ class MovieRepository extends SAbstractRepository
         return $movies;
     }
     
-    public function getCommingSoonFilter($thearterId) {
+    public function getCommingSoonFilter($theaterId) {
         $movies = \DB::select('select m.*, count(tickets.id) as count_ticket
                                 from movies m
                                 left join schedules on m.id = schedules.movie_id

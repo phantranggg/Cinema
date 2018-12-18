@@ -95,7 +95,7 @@ $('.seats').click(function () {
 $('.process-right-seatmap').click(function () {
     if (status=='pair-mode' && array.length!=2) {
         alert('Bạn phải chọn đúng 2 vé');
-    }   
+    }
     if ((status!='pair-mode') || (status=='pair-mode' && array.length==2)) {
         $.ajaxSetup({
             headers: {

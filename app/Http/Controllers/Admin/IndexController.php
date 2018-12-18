@@ -2,25 +2,30 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Repositories\ScheduleRepository;
+use App\Repositories\TheaterRepository;
+use App\Repositories\TicketRepository;
+use App\Repositories\MovieRepository;
+use App\Repositories\UserRepository;
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Services\UserServiceInterface;
-use App\Services\ProductServiceInterface;
-use App\Services\InvoiceServiceInterface;
-use App\Services\InvoiceItemServiceInterface;
+use Illuminate\Support\Facades\DB;
 
 class IndexController extends Controller
 {
-    protected $userService;
-    protected $productService;
-    protected $invoiceService;
-    protected $invoiceItemService;
+    protected $movieRepo;
+    protected $scheduleRepo;
+    protected $theaterRepo;
+    protected $ticketRepo;
+    protected $userRepo;
 
-    public function __construct(UserServiceInterface $userService, ProductServiceInterface $productService, InvoiceServiceInterface $invoiceService, InvoiceItemServiceInterface $invoiceItemService) {
-        $this->userService = $userService;
-        $this->productService = $productService;
-        $this->invoiceService = $invoiceService;
-        $this->invoiceItemService = $invoiceItemService;
+    public function __construct() {
+        $this->movieRepo=new MovieRepository(app());
+        $this->scheduleRepo = new ScheduleRepository(app());
+        $this->theaterRepo = new TheaterRepository(app());
+        $this->ticketRepo = new TicketRepository(app());
+        $this->userRepo = new UserRepository(app());
     }
 
     /**
@@ -30,17 +35,30 @@ class IndexController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $userNum = $this->userService->count();
-        $productNum = $this->productService->count();
-        $invoiceNum = $this->invoiceService->count();
-        $latestInvoices = $this->invoiceService->getLatestInvoices(7);
-        $monthlyOrderedInvoiceNum = $this->invoiceService->getMonthlyOrderedInvoiceNum();
-        $monthlyPaidInvoiceNum = $this->invoiceService->getMonthlyPaidInvoiceNum();
-        $bestSellerProductList = $this->invoiceItemService->getBestSellerProductList(10);
-        $monthlyRevenue = $this->invoiceService->getMonthlyRevenue();
-        // echo $monthlyPaidInvoiceNum;
-        return view('admin/index', compact('userNum', 'productNum', 'invoiceNum','latestInvoices', 
-        'monthlyOrderedInvoiceNum', 'monthlyPaidInvoiceNum', 'bestSellerProductList', 'monthlyRevenue'));
+        $ticketNum = $this->ticketRepo->count();
+        $movieNum = $this->movieRepo->count();
+        $theaterNum = $this->theaterRepo->count();
+        $userNum = $this->userRepo->count();
+
+
+
+
+        $theaters = $this->theaterRepo->countNumberTicket();
+        $schedules = $this->scheduleRepo->statistic();
+        $ticketCountByDay = $this->ticketRepo->countByDay();
+        $users= $this->userRepo->statitic();
+
+        return view('admin.admin', [
+            'theaters' => $theaters,
+            'schedules' => $schedules,
+            'users' => $users,
+            'ticketNum' => $ticketNum,
+            'movieNum' => $movieNum,
+            'theaterNum' => $theaterNum,
+            'userNum' => $userNum,
+            'ticketCountByDay' => $ticketCountByDay,
+        ]);
     }
+
     
 }

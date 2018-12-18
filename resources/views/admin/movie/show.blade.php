@@ -1,4 +1,4 @@
-@extends('layouts.sidebar')
+@extends('admin.layouts.sidebar')
 
 @section('content')
 <div class="content-wrapper">
@@ -11,7 +11,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">THÔNG TIN PHIM</div>
                     <div class="panel-body user-info">
-                        <form class="form-horizontal" method="POST" action="{{ url('admin/movies/update') }}">
+                        <form class="form-horizontal" method="POST" action="{{ url('admin/movie/update') }}">
                             <input type='hidden' value="{!! csrf_token() !!}" name='_token' />
                             <div class="form-group user-info-detail" style="display: none">
                                 <label for="id" class="col-md-4 control-label">ID</label>

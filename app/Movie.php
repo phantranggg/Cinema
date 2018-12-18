@@ -7,9 +7,10 @@ use Illuminate\Support\Facades\DB;
 
 class Movie extends Model
 {
+    const ACTIVE = 1;
     protected $table = 'movies';
 
-    protected $fillable = ['title', 'release_date', 'genres', 'score', 'director', 'country', 'length', 'subtitle', 'rating', 'status'];
+    protected $fillable = ['title', 'release_date', 'genres', 'score', 'director', 'country', 'length', 'subtitle', 'rating', 'status','url'];
 
     public function likes() {
         return $this->hasMany('\App\Like');

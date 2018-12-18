@@ -1,4 +1,4 @@
-@extends('layouts.sidebar')
+@extends('admin.layouts.sidebar')
 
 @section('content')
 <div class="content-wrapper">
@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">THÊM PHIM MỚI</div>
                 <div class="panel-body user-info">
-                    <form class="form-horizontal" enctype="multipart/form-data" method="POST" action="{{ url('admin/movies/add') }}">
+                    <form class="form-horizontal" enctype="multipart/form-data" method="POST" action="{{ route('admin.movie.store') }}">
                         <input type='hidden' value="{!! csrf_token() !!}" name='_token' />
                         <div class="form-group user-info-detail">
                             <label for="title" class="col-md-4 control-label">Tên phim</label>

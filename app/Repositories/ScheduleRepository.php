@@ -2,6 +2,8 @@
 
 namespace App\Repositories;
 
+
+use App\Theater;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\DB;
@@ -60,6 +62,9 @@ class ScheduleRepository extends SAbstractRepository
         return Schedule::find($scheduleId);
     }
 
+    public function all($request, $toArray =null){
+        return Schedule::paginate(20);
+    }
     /**
      * Update a schedule.
      * @param \Illuminate\Http\Request $request
@@ -91,17 +96,31 @@ class ScheduleRepository extends SAbstractRepository
      */
     public function create($request)
     {
-        $active = is_null($request->get('active')) ? Schedule::INACTIVE : Schedule::ACTIVE;
-        $schedule = Schedule::create([
-                    'name' => $request->get('name'),
-                    'email' => $request->get('email'),
-                    'password' => bcrypt($request->get('password')),
-                    'role_id' => $request->get('role_id'),
-                    'active' => $active
-        ]);
+//        $active = is_null($request->get('active')) ? Schedule::INACTIVE : Schedule::ACTIVE;
+        $schedule = Schedule::create(
+            [
+                'type'=>$request->get('type'),
+                'show_time'=>$request->get('show_time'),
+                'show_date'=>$request->get('show_date'),
+                'price'=>$request->get('price'),
+                'movie_id' =>$request->get('movie_id'),
+                'theater_id' =>$request->get('theater_id'),
+                'status'=>Schedule::ACTIVE
+            ]
+
+        );
+        $schedule->save();
         return $schedule;
     }
 
+    public function filterTheater($theater_id){
+        if ($theater_id == -1) {
+            $schedules = Schedule::paginate(12)->setPath('/admin/schedule/index/');
+        } else {
+            $schedules = Schedule::where('theater_id',$theater_id)->paginate(12)->setPath('/admin/schedule/index/');
+        }
+        return $schedules;
+    }
     /**
      * Delete a schedule.
      * @param int $id
@@ -111,7 +130,6 @@ class ScheduleRepository extends SAbstractRepository
         $schedule = $this->find($id);
         $schedule->delete();
     }
-    
     /**
      * Count schedule
      * @return type
@@ -119,7 +137,48 @@ class ScheduleRepository extends SAbstractRepository
     public function count(){
         return $this->model->where('active',Schedule::ACTIVE)->count();
     }
+    public function statistic(){
+        return DB::select("SELECT count(schedule_id),  
+                case	
+                    when date_part('hour', show_time) = 8 then 1
+                    when date_part('hour', show_time) = 9 then 1
+                    when date_part('hour', show_time) = 10 then 1
+                    when date_part('hour', show_time) = 11 then 1
+                    when date_part('hour', show_time) = 12 then 2
+                    when date_part('hour', show_time) = 13 then 2
+                    when date_part('hour', show_time) = 14 then 2
+                    when date_part('hour', show_time) = 15 then 2
+                    when date_part('hour', show_time) = 16 then 3
+                    when date_part('hour', show_time) = 17 then 3
+                    when date_part('hour', show_time) = 18 then 3
+                    when date_part('hour', show_time) = 19 then 3
+                    when date_part('hour', show_time) = 20 then 4
+                    when date_part('hour', show_time) = 21 then 4
+                    when date_part('hour', show_time) = 22 then 4
+                    when date_part('hour', show_time) = 23 then 4
+                end
+            from tickets, schedules
+            where schedule_id = schedules.id
+            group by case 	when date_part('hour', show_time) = 8 then 1
+                    when date_part('hour', show_time) = 9 then 1
+                    when date_part('hour', show_time) = 10 then 1
+                    when date_part('hour', show_time) = 11 then 1
+                    when date_part('hour', show_time) = 12 then 2
+                    when date_part('hour', show_time) = 13 then 2
+                    when date_part('hour', show_time) = 14 then 2
+                    when date_part('hour', show_time) = 15 then 2
+                    when date_part('hour', show_time) = 16 then 3
+                    when date_part('hour', show_time) = 17 then 3
+                    when date_part('hour', show_time) = 18 then 3
+                    when date_part('hour', show_time) = 19 then 3
+                    when date_part('hour', show_time) = 20 then 4
+                    when date_part('hour', show_time) = 21 then 4
+                    when date_part('hour', show_time) = 22 then 4
+                    when date_part('hour', show_time) = 23 then 4
+                end
 
+            order by (count(schedule_id)) DESC");
+    }
     public function getActiveList() {
         return $this->model->where('status','=',1)->get();
     }
@@ -166,7 +225,7 @@ class ScheduleRepository extends SAbstractRepository
         $invitation->status = 'WAIT';
         $invitation->save();
     }
-    
+
     public function getScheduleDetail(Request $request) {
         $theater_id = $request->theater_id;
         $movieTitle = \App\Movie::join('schedules', 'movies.id', '=', 'schedules.movie_id')

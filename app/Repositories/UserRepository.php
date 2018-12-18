@@ -93,7 +93,11 @@ class UserRepository extends SAbstractRepository
         $query = $this->all($request, null);
         return $query->where('role_id', '=', User::ROLE_USER)->paginate(self::PAGE_SIZE);
     }
-
+    public function updateAdmin($user_id,$request){
+        DB::update('UPDATE users '
+        . 'SET date_of_birth = ?, phone = ?, address = ?, account_type = ?, role = ? '
+        . 'WHERE id = ?', [$request->date_of_birth, $request->phone, $request->address, $request->account_type, $request->role, $user_id]);
+    }
     /**
      * Update a user.
      * @param \Illuminate\Http\Request $request
@@ -107,38 +111,6 @@ class UserRepository extends SAbstractRepository
                     . 'WHERE id = ?', [bcrypt($request->password), $request->date_of_birth, $request->phone, $request->address, Auth::id()]);
         }
     }
-    // public function update($request, $id)
-    // {
-    //     $user = User::find($id);
-    //     $user->name = $request->get('name');
-    //     $user->email = $request->get('email');
-    //     if (!empty($request->get('password'))) {
-    //         $user->password = bcrypt($request->get('password'));
-    //     }
-    //     if (!is_null($request->get('active'))) {
-    //         $user->active = User::ACTIVE;
-    //     } else {
-    //         $user->active = User::INACTIVE;
-    //     }
-    //     $user->role_id = $request->get('role_id');
-    //     if ($user->id == User::CAN_NOT_DELETE) {
-    //         $user->active = User::ACTIVE;
-    //         $user->role_id = User::ROLE_ADMIN;
-    //     }
-    //     $avatar = $request->file('avatar');
-    //     if (isset($avatar)) {
-    //         $upload = $avatar->getClientOriginalName();
-    //         $filename = str_slug(pathinfo($upload, PATHINFO_FILENAME));
-    //         $fileExtension = str_slug(pathinfo($upload, PATHINFO_EXTENSION));
-    //         $changeName = time() . '_' . $filename . '.' . $fileExtension;
-    //         $avatar->move(User::PATH_AVATAR, $changeName);
-    //         $avatarPath = User::PATH_AVATAR . $changeName;
-    //         $user->avatar = $avatarPath;
-    //     }
-    //     $user->save();
-        
-    //     return $user;
-    // }
 
     /**
      * Create a user.
@@ -147,25 +119,14 @@ class UserRepository extends SAbstractRepository
      */
     public function create($request)
     {
-        $active = is_null($request->get('active')) ? User::INACTIVE : User::ACTIVE;
+        $active = User::ACTIVE;
         $user = User::create([
                     'name' => $request->get('name'),
                     'email' => $request->get('email'),
                     'password' => bcrypt($request->get('password')),
                     'role_id' => $request->get('role_id'),
-                    'active' => $active
+                    'status' => $active
         ]);
-        $avatar = $request->file('avatar');
-        if (isset($avatar)) {
-            $upload = $avatar->getClientOriginalName();
-            $filename = str_slug(pathinfo($upload, PATHINFO_FILENAME));
-            $fileExtension = str_slug(pathinfo($upload, PATHINFO_EXTENSION));
-            $changeName = time() . '_' . $filename . '.' . $fileExtension;
-            $avatar->move(User::PATH_AVATAR, $changeName);
-            $avatarPath = User::PATH_AVATAR . $changeName;
-            $user->avatar = $avatarPath;
-            $user->save();
-        }
         return $user;
     }
 
@@ -175,8 +136,9 @@ class UserRepository extends SAbstractRepository
      */
     public function delete($id)
     {
-        $user = $this->find($id);
-        $user->delete();
+        $user =$this->model->find($id);
+        $user->status=User::INACTIVE;
+        $user->save();
     }
     
     /**
@@ -184,9 +146,40 @@ class UserRepository extends SAbstractRepository
      * @return type
      */
     public function count(){
-        return $this->model->where('active',User::ACTIVE)->count();
+        return $this->model->where('status',User::ACTIVE)->count();
     }
+    public function statitic(){
+        return DB::select("SELECT count(id),  
+                case    when (2017 - date_part('year', date_of_birth)) < 13 then 1	
+                    when (2017 - date_part('year', date_of_birth)) between 13 and 18 then 2
+                    when (2017 - date_part('year', date_of_birth)) between 19 and 30 then 3
+                    when (2017 - date_part('year', date_of_birth)) between 31 and 50 then 4
+                    when (2017 - date_part('year', date_of_birth)) > 50 then 5
+                end
+            from users
+            group by case    when (2017 - date_part('year', date_of_birth)) < 13 then 1	
+                when (2017 - date_part('year', date_of_birth)) between 13 and 18 then 2
+                when (2017 - date_part('year', date_of_birth)) between 19 and 30 then 3
+                when (2017 - date_part('year', date_of_birth)) between 31 and 50 then 4
+                when (2017 - date_part('year', date_of_birth)) > 50 then 5
+            end
 
+            order by (count(id)) DESC");
+    }
+    public function getShow(){
+        $users = DB::select('WITH ticketnum AS
+                            (SELECT tickets.user_id, schedule_id, count(tickets.id) AS num
+                            FROM tickets
+                            GROUP BY tickets.user_id, schedule_id)
+                    SELECT users.*, sum(ticketnum.num * price) AS totalamount
+                    FROM users 
+                    LEFT JOIN ticketnum ON users.id = ticketnum.user_id
+                    LEFT JOIN schedules ON schedules.id = ticketnum.schedule_id
+                    WHERE users.status = 1
+                    GROUP BY users.id
+                    ORDER BY totalamount DESC NULLS LAST');
+        return $users;
+    }
     public function getOrderedTicketList() {
         $movies = DB::select('SELECT schedules.id, movies.title, theaters.name, schedules.type, schedules.show_date, schedules.show_time '
                         . 'FROM schedules '
