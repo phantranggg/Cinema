@@ -246,6 +246,7 @@ class UserRepository extends SAbstractRepository
         foreach ($joinNotifications as $joinNotification) {
             if (json_decode($joinNotification->data)->invitationId == $invitationId) {
                 $tmp = str_replace('true', 'false', $joinNotification->data);
+                auth()->user()->unreadNotifications->where('notifiable_id', $joinNotification->notifiable_id)->markAsRead();
                 $joinNotification->data = $tmp;
                 $joinNotification->save();
                 break;
@@ -261,6 +262,7 @@ class UserRepository extends SAbstractRepository
         foreach ($joinNotifications as $joinNotification) {
             if (json_decode($joinNotification->data)->invitationId == $invitationId) {
                 $tmp = str_replace('true', 'false', $joinNotification->data);
+                auth()->user()->unreadNotifications->where('notifiable_id', $joinNotification->notifiable_id)->markAsRead();
                 $joinNotification->data = $tmp;
                 $joinNotification->save();
                 break;
@@ -270,5 +272,4 @@ class UserRepository extends SAbstractRepository
         \App\User::find($userId2->user_id2)->notify(new \App\Notifications\DeclinePairNotification($invitationId));
         \App\Invitation::find($invitationId)->update(['status' => 'WAIT', 'user_id2' => -1]);
     }
-
 }

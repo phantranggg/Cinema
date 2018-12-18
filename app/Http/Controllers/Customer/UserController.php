@@ -78,10 +78,12 @@ class UserController extends Controller
     public function acceptInvitation(Request $request) {
         $invitationId = $request->invitation_id;
         $this->userRepo->acceptInvitation($invitationId);
+        return auth()->user()->unreadNotifications->count();
     }
 
     public function declineInvitation(Request $request) {
         $invitationId = $request->invitation_id;
         $this->userRepo->declineInvitation($invitationId);
+        return auth()->user()->unreadNotifications->count();
     }
 }
