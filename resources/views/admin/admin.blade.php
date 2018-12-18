@@ -1,5 +1,5 @@
 
-@extends('layouts.sidebar')
+@extends('admin.layouts.sidebar')
 
 @section('content')
 <!-- Content Wrapper. Contains page content -->
