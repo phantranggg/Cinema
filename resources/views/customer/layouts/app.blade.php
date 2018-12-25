@@ -41,6 +41,7 @@
         crossorigin="anonymous"></script>
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('js/slick.min.js') }}"></script>
+
     @yield('head')
 
 </head>
@@ -151,6 +152,7 @@
                 <li class="dropdown notifications-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-bell-o"></i>
+
                         @if (auth()->user()->unreadNotifications->count())
                         <span id="noti-count" class="label label-primary">{{ auth()->user()->unreadNotifications->count() }}</span>
                         @endif

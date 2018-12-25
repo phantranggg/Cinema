@@ -20,6 +20,7 @@ class TicketRepository extends SAbstractRepository
     }
 
     public function getSeatMap($schedule_id) {
+
         $seatmap = DB::select('SELECT movies.*, theaters.*, schedules.* '
                         . 'FROM schedules '
                         . 'INNER JOIN movies ON schedules.movie_id = movies.id '
@@ -28,5 +29,14 @@ class TicketRepository extends SAbstractRepository
         return $seatmap;
     }
 
-
+    public function count(){
+        return $this->model->count();
+    }
+    
+    public function countByDay(){
+        return DB::select('select show_date, count(tickets.id) as count
+                                from tickets right join schedules on tickets.schedule_id = schedules.id 
+                                group by show_date
+                                order by show_date;');
+    }
 }

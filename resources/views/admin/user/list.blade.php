@@ -1,4 +1,4 @@
-@extends('layouts.sidebar')
+    @extends('layouts.sidebar')
 
 @section('content')
 <div class="content-wrapper">
@@ -11,7 +11,7 @@
                 <br>
             </div>
             <div class="col-md-6">
-                <a href="/admin/users/form"><button class="btn btn-basic insert-user">INSERT</button></a>
+                <a href="/admin/user/create"><button class="btn btn-basic insert-user">INSERT</button></a>
             </div>
         </div>
         <table class="table table-bordered table-striped">
@@ -42,15 +42,15 @@
                     </td>
                     <td>{{ $user->account_type }}</td>
                     <td>{{ $user->total_amount }}</td>
-                    <td><a href="{{ url('admin/users/info/' . $user->id) }}"><button class="btn btn-success">UPDATE</button></a></td>
-                    <td>
-                        @if ($user->status)
-                            <button class="btn btn-warning deactivate-button-user" userId = "{{ $user->id}}">DEACTIVATE</button>
-                        @else
-                            <button class="btn btn-primary activate-button-user" userId = "{{ $user->id}}">ACTIVATE</button>
-                        @endif
-                    </td>
-                    <td><button class="btn btn-danger delete-button-user" userId = "{{ $user->id}}">DELETE</button></td>
+                    <td><a href="{{ url('admin/user/show/' . $user->id) }}"><button class="btn btn-success">UPDATE</button></a></td>
+                    {{--<td>--}}
+                        {{--@if ($user->status)--}}
+                            {{--<button class="btn btn-warning deactivate-button-user" userId = "{{ $user->id }}">DEACTIVATE</button>--}}
+                        {{--@else--}}
+                            {{--<button class="btn btn-primary activate-button-user" userId = "{{ $user->id }}">ACTIVATE</button>--}}
+                        {{--@endif--}}
+                    {{--</td>--}}
+                    <td><button class="btn btn-danger delete-button-user" userId = "{{ $user->id }}">DELETE</button></td>
                 </tr>
                 @endforeach
             </tbody>

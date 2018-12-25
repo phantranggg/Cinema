@@ -1,152 +1,70 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Repositories\UserRepository;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use App\Repositories\ScheduleRepository;
+use App\Repositories\TheaterRepository;
+use App\Repositories\TicketRepository;
+use App\Repositories\MovieRepository;
+use App\Repositories\UserRepository;
+class UserController extends Controller {
 
-class UserController extends Controller
-{
-
+    protected $movieRepo;
+    protected $scheduleRepo;
+    protected $theaterRepo;
+    protected $ticketRepo;
     protected $userRepo;
 
-    public function __construct(UserRepository $userRepo)
-    {
-        $this->userRepo = $userRepo;
+    public function __construct() {
+        $this->movieRepo=new MovieRepository(app());
+        $this->scheduleRepo = new ScheduleRepository(app());
+        $this->theaterRepo = new TheaterRepository(app());
+        $this->ticketRepo = new TicketRepository(app());
+        $this->userRepo = new UserRepository(app());
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
-    {
-        $users = $this->userRepo->all($request, false);
-        return view('backend/user/index', compact('users'));
+    protected function index() {
+        $users = $this->userRepo->getShow();
+//        $users = \App\User::orderBy('total_amount', 'desc')->get();
+        return view('admin.user.list', [
+            'users' => $users,
+        ]);
     }
 
-    /**
-     * Display all user has role ADMIN.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function roleAdmin(Request $request)
-    {
-        $users = $this->userRepo->roleAdmin($request);
-        return view('backend/user/index', compact('users'));
+    protected function show($user_id) {
+        $user = $this->userRepo->find($user_id);
+        return view('admin.user.info', [
+            'user' => $user,
+        ]);
     }
 
-    /**
-     * Display all user has role USER.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function roleUser(Request $request)
-    {
-        $users = $this->userRepo->roleUser($request);
-        return view('backend/user/index', compact('users'));
+    protected function update(Request $request) {
+        $this->userRepo->updateAdmin($request->user_id, $request);
+        return redirect()->route('admin.user.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        $roleArr = $this->userRepo->roleArr();
-        return view('backend/user/create', compact('roleArr'));
+    protected function destroy(Request $request) {
+        $user_id = $request->user_id;
+        $this->userRepo->delete($user_id);
+        return 'haha';
+        return redirect()->route('admin.user.index');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $validator = \Validator::make($request->all(), $this->userRepo->rulesCreate());
-        if ($validator->fails()) {
-            $this->toastrError($validator->errors()->toArray());
-            return redirect()->back()->withInput();
-        }
+    protected function create() {
+        return view('admin.user.form');
+    }
+
+    protected function store(Request $request) {
         $this->userRepo->create($request);
-        $this->toastrSuccess(trans('backend/base.msg_susscess'));
-        return redirect()->route('backend.setting.user.index');
+
+        return redirect('/admin/user/index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $user = $this->userRepo->find($id);
-        if (is_null($user)) {
-            abort(404);
-        }
-        $roleArr = $this->userRepo->roleArr();
-        return view('backend/user/show', compact('user', 'roleArr'));
-    }
+    protected function adminAgeStatistic() {
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $user = $this->userRepo->find($id);
-        if (is_null($user)) {
-            abort(404);
-        } else {
-            $roleArr = $this->userRepo->roleArr();
-        }
-        return view('backend/user/edit', compact('user', 'roleArr'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        $validator = \Validator::make($request->all(), $this->userRepo->rulesUpdate($id));
-        if ($validator->fails()) {
-            $this->toastrError($validator->errors()->toArray());
-            return redirect()->back()->withInput();
-        } else {
-            $this->userRepo->update($request, $id);
-            $this->toastrSuccess(trans('backend/base.msg_susscess'));
-            return redirect()->route('backend.setting.user.edit', $id);
-        }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        $user = $this->userRepo->find($id);
-        $employee = $user->employee;
-        if (!is_null($employee)) {
-            $this->employeeRepo->delete($employee->id);
-        }
-        $this->userRepo->delete($id);
-        $this->toastrSuccess(trans('backend/base.msg_susscess_delete'));
-        return redirect()->back();
     }
 
 }

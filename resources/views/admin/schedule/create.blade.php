@@ -7,13 +7,13 @@
             <div class="panel panel-default">
                 <div class="panel-heading">THÊM LỊCH CHIẾU</div>
                 <div class="panel-body user-info">
-                    <form class="form-horizontal" method="POST" action="{{ url('admin/schedules/addSche') }}">
+                    <form class="form-horizontal" method="POST" action="{{route('admin.schedule.store') }}">
                         <input type='hidden' value="{!! csrf_token() !!}" name='_token' />
                         <div class="form-group user-info-detail">
                             <label for="select-theater" class="col-md-4 control-label">Tên rạp</label>
 
                             <div class="col-md-6">
-                                <select name="name" id="select-theater" class="form-control">
+                                <select name="theater_id" id="select-theater" class="form-control">
                                     @foreach ($theaters as $name)
                                     <option value="{{$name->id}}">{{ $name->name }}</option>
                                     @endforeach
@@ -25,7 +25,7 @@
                             <label for="select-movie" class="col-md-4 control-label">Tên phim</label>
 
                             <div class="col-md-6">
-                                <select name="title" id="select-movie" class="form-control">
+                                <select name="movie_id" id="select-movie" class="form-control">
                                     @foreach ($movies as $title)
                                     <option value="{{$title->id}}">{{ $title->title }}</option>
                                     @endforeach

@@ -125,27 +125,3 @@ $('.process-right-seatmap').click(function () {
 $('#close-btn').click(function() {
     $('#redirect').trigger('click');
 })
-
-// $('#confirm-update-ticket').click(function(){
-//     $.ajaxSetup({
-//         headers: {
-//             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//         }
-//     });
-
-//     $.ajax({
-//         method: "POST",
-//         url: "/ticket/update",
-//         data: {
-//             seat_list: array,
-//             schedule_id: scheduleId
-//         },
-//         success: function (data) {
-//             console.log(array);
-//             // $('#total-bill').html(totalmoney);
-//         },
-//         error: function () {
-//             alert('error');
-//         }
-//     });
-// })

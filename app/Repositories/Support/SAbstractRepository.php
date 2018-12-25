@@ -48,7 +48,7 @@ abstract class SAbstractRepository
      * @param Boolean $toArray
      * @return mixed
      */
-    public function all($request, $toArray = true)
+    public function all($request, $toArray =null)
     {
         $orderBy = is_null($request->get('order_by')) ? 'id' : $request->get('order_by');
         $orderArr = explode(',', $orderBy);
@@ -63,7 +63,7 @@ abstract class SAbstractRepository
             $data = $data->where($searchBy, 'LIKE', "%$searchText%");
         }
         if ($toArray === null) {
-            return $data;
+            return $data->get();
         }
         if ($toArray) {
             return $data->paginate(self::PAGE_SIZE)->getCollection()->toArray();
