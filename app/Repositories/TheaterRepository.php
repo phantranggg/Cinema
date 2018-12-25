@@ -125,6 +125,7 @@ class TheaterRepository extends SAbstractRepository
                         . 'AND schedules.status = 1', [$movieId]);
         return $theaters;
     }
+    
     public function countNumberTicket(){
         return DB::select('SELECT name,count(*)
         FROM theaters LEFT JOIN schedules ON (theaters.id = schedules.theater_id) 

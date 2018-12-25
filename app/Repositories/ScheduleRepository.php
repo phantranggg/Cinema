@@ -7,6 +7,7 @@ use App\Theater;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Repositories\Support\SAbstractRepository;
 use App\Schedule;
 
@@ -195,6 +196,28 @@ class ScheduleRepository extends SAbstractRepository
         return $users;
     }
 
+    public function checkUserInPairList($scheduleId) {
+        $users = \App\Invitation::where('schedule_id', $scheduleId)->get();
+        foreach ($users as $user) {
+            if ($user->user_id1 == Auth::id() || $user->user_id2 == Auth::id())
+                return true;
+        }
+        return false;
+    }
+
+    public function checkUser2InPairList($userId1, $scheduleId) {
+        $users = \App\Invitation::where('schedule_id', $scheduleId)->where('user_id1', $userId1)->first();
+        if ($users->user_id2 === Auth::id())
+            return true;
+        return false;
+    }
+
+    public function joinPair($userId1, $scheduleId) {
+        \App\Invitation::where('schedule_id',$scheduleId)->where('user_id1', $userId1)->update(['user_id2' => Auth::id(), 'status' => 'JOINED']);
+        $invitationId = \App\Invitation::where('schedule_id',$scheduleId)->where('user_id1', $userId1)->select('id')->first();
+        \App\User::find($userId1)->notify(new \App\Notifications\JoinPairNotification($invitationId->id));
+    }
+
     public function selfAdd($userId1, $scheduleId) {
         $invitation = new \App\Invitation;
         $invitation->user_id1 = $userId1;
@@ -206,10 +229,8 @@ class ScheduleRepository extends SAbstractRepository
     
     public function getScheduleDetail(Request $request) {
         $theater_id = $request->theater_id;
-        $movieTitle = DB::select('SELECT DISTINCT movies.id, title, url '
-                        . 'FROM movies INNER JOIN schedules '
-                        . 'ON movies.id = schedules.movie_id '
-                        . 'WHERE theater_id = ?', [$theater_id]);
+        $movieTitle = \App\Movie::join('schedules', 'movies.id', '=', 'schedules.movie_id')
+            ->where('theater_id', $theater_id)->select('movies.id', 'title', 'url')->distinct()->get();
         foreach ($movieTitle as $key => $value) {
             $schedule_detail = DB::select('WITH seatnum AS 
                                 (SELECT id, row_num * column_num AS totalseat FROM theaters WHERE status = 1)
@@ -231,11 +252,8 @@ class ScheduleRepository extends SAbstractRepository
     public function getScheduleForOnlyOneMovie(Request $request) {
         $theater_id = $request->theater_id;
         $movie_id = $request->movie_id;
-        $movieTitle = DB::select('SELECT DISTINCT movies.id, title, url '
-                        . 'FROM movies INNER JOIN schedules '
-                        . 'ON movies.id = schedules.movie_id '
-                        . 'WHERE theater_id = ? '
-                        . 'AND movie_id = ?', [$theater_id, $movie_id]);
+        $movieTitle = \App\Movie::join('schedules', 'movies.id', '=', 'schedules.movie_id')->where('theater_id', $theater_id)
+            ->where('movie_id', $movie_id)->select('movies.id', 'title', 'url')->distinct()->get();
         foreach ($movieTitle as $key => $value) {
             $scheduleDetail = DB::select('WITH seatnum AS 
                                 (SELECT id, row_num * column_num AS totalseat FROM theaters WHERE status = 1)
@@ -255,11 +273,18 @@ class ScheduleRepository extends SAbstractRepository
     }
 
     public function getSeatMap($schedule_id) {
-        $seatmap = DB::select('SELECT movies.*, theaters.*, schedules.* '
-                        . 'FROM schedules '
-                        . 'INNER JOIN movies ON schedules.movie_id = movies.id '
-                        . 'INNER JOIN theaters ON schedules.theater_id = theaters.id '
-                        . 'WHERE schedules.id = ?', [$schedule_id]);
+        // $seatmap = DB::select('SELECT movies.*, theaters.*, schedules.* '
+        //                 . 'FROM schedules '
+        //                 . 'INNER JOIN movies ON schedules.movie_id = movies.id '
+        //                 . 'INNER JOIN theaters ON schedules.theater_id = theaters.id '
+        //                 . 'WHERE schedules.id = ?', [$schedule_id]);
+        $seatmap = \App\Schedule::join('movies', 'schedules.movie_id', '=', 'movies.id')->join('theaters', 'schedules.theater_id', '=', 'theaters.id')
+            ->where('schedules.id', $schedule_id)->select('movies.*', 'theaters.*', 'schedules.*')->get();
         return $seatmap;
+    }
+
+    public function getMatchNum($schedule_id){
+        $matchNum = \App\Invitation::where(['status' => 'WAIT', 'schedule_id' => $schedule_id])->get()->count();
+        return $matchNum;
     }
 }

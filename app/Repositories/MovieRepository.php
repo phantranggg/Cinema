@@ -178,7 +178,7 @@ class MovieRepository extends SAbstractRepository
 //                        AND status = 1
 //                        ORDER BY ticket_num DESC, like_num DESC
 //                        LIMIT ?", [config('constant.today'), config('constant.today'), $limit]);
-        $nowPlayingMovies=Movie::where('release_date','>=',config('constant.today'));
+        $nowPlayingMovies=Movie::where('release_date','>=',config('constant.today'))->orderBy('like_num', 'desc');
         $nowPlayingMovies=$nowPlayingMovies->paginate($limit);
         return $nowPlayingMovies;
     }
@@ -191,7 +191,6 @@ class MovieRepository extends SAbstractRepository
 //                        ORDER BY ticket_num DESC, like_num DESC
 //                        LIMIT ?", [config('constant.today'), config('constant.today'), $limit]);
         $commingSoonMovies = Movie::where('release_date','>=',config('constant.today'))->where('release_date','<=',date('Y-m-d',strtotime(config('constant.today').' + 14 days')))->paginate($limit);
-
         return $commingSoonMovies;
     }
     
@@ -227,6 +226,11 @@ class MovieRepository extends SAbstractRepository
                                 group by m.id
                                 order by like_num desc, count_ticket desc', [$theaterId, config('constant.today'), config('constant.today')]);
         return $movies;
+    }
+
+    public function findByKeyword($keyword) {
+        $result = $this->model->where('title', 'LIKE', '%' . $keyword . '%')->get();
+        return $result;
     }
 
 }

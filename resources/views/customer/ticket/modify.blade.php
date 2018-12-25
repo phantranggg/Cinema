@@ -1,61 +1,67 @@
 @extends('customer.layouts.app')
 
+@section('head')
+    <link href="{{ asset('css/seat-style.css') }}" rel="stylesheet">
+@endsection
+
 @section('content')
 @php $info = $seatmap[0] @endphp
 <div class="container">
-    <div class="seatmap">
-        <div class="row seatmap-show">
-            <div class="seatmap-mid inline-left">
-                <div class="seatmap-screen">
-                    -----------------------MAN HINH------------------------
-                </div>
-                @for ($row = 1, $c = 'A'; $row <= (int) $info->row_num; $row++, $c++)
-                <div class="seatmap-row">
-                    @for ($col = 1; $col <= (int) $info->column_num; $col++)
-                    @php $status = 'uncheck' @endphp
-                    @foreach ($chosenSeat as $chosen)
-                    @if ($c.$col == $chosen->chair_num)
-                    @php $status = 'chosen' @endphp
-                    @endif
-                    @endforeach
-                    @foreach ($mySeat as $seat)
-                    @if ($c.$col == $seat->chair_num)
-                    @php $status = 'myseat' @endphp
-                    @endif
-                    @endforeach
-                    <div class="seat {{ $status }}" data-id1="{{ $c . $col }}" data-id2="{{ $info->id }}">
-                        {{ $c . $col }}
-                    </div>
-                    @endfor
-                </div>
-                @endfor
-            </div>
-            <div class="seatmap-legend inline-right">
-                <div class="seat-type-icon">
-                    <span class="type-icon selected">
-                        <span class="icon-box"></span>
-                        <span>Đang chọn</span>
-                    </span>
-                    <span class="type-icon reserved">
-                        <span class="icon-box"></span>
-                        <span>Đã chọn</span>
-                    </span>
-                    <span class="type-icon change">
-                        <span class="icon-box"></span>
-                        <span>Ghế bạn đặt</span>
-                    </span>
-                    <span class="type-icon notavail">
-                        <span class="icon-box"></span>
-                        <span>Không thể chọn</span>
-                    </span>
-                </div>
-            </div>
-            <div class="clear"></div>
-        </div>
-        <div class="row seatmap-bottom">
+    {{-- New seat map --}}
+    <div class="w3ls-reg">
+            <!-- seat availabilty list -->
+            <ul class="seat_w3ls">
+                <li class="smallBox greenBox">Ghế đã chọn</li>
 
-            <a href="{{ url('users/profile') }}">
-                <button class="process-left-seatmap inline-left">Previous</button>
+                <li class="smallBox grayBox">Ghế đã bán</li>
+
+                <li class="smallBox emptyBox">Ghế trống</li>
+            </ul>
+            <!-- seat availabilty list -->
+            <!-- seat layout -->
+            <div class="seatStructure txt-center">
+                <div class="screen">
+                    <h2 class="wthree">MÀN HÌNH</h2>
+                </div>
+                <table id="seatsBlock">
+                    <p id="notification"></p>
+                    <tr>
+                        <td></td>
+                    @for ($col = 1; $col <= (int) $info->column_num; $col++)
+                        <td>{{ $col }}</td>
+                    @endfor
+                    </tr>
+                    {{-- Seat code --}}
+                    @for ($row = 1, $c = 'A'; $row <= (int) $info->row_num; $row++, $c++)
+                        <tr>
+                            <td>{{ $c }}</td>
+                            @for ($col = 1; $col <= (int) $info->column_num; $col++)
+                                @php $status = '' @endphp
+                                @foreach ($chosenSeat as $chosen)
+                                    @if ($c.$col == $chosen->chair_num)
+                                        @php $status = 'disabled' @endphp
+                                    @endif
+                                @endforeach
+                                <td>
+                                    <input type="checkbox" class="seats" value="{{ $c . $col }}" data-id1="{{ $c . $col }}" 
+                                        data-id2="{{ $info->id }}" {{ $status }}/>
+                                </td>
+                            @endfor
+                        </tr>
+                    @endfor
+                    {{-- End seat code --}}
+                </table>
+
+               
+            </div>
+            <!-- //seat layout -->
+        </div>
+    {{-- New seat map --}}
+
+    <div class="seatmap">
+        <div class="row seatmap-bottom">
+            <a href="javascript:history.back()">
+                <button class="process-left-seatmap inline-left btn btn-default">Quay lại</button>
             </a>
             <div class="movie-cart-info inline-left">
                 <div class="ticket-movie-image inline-block">
@@ -83,43 +89,63 @@
                 <div class="selected-seat inline-block">
                     <div>
                         <label id="chair-num">Số ghế: </label>
-                        <div class="movie-seats">
-                            @php $i = 0 @endphp
-                            @foreach ($mySeat as $seat)
-                            @if ($i++ < count($mySeat) - 1)
-                            <span class="inline-block">{{ $seat->chair_num . ', ' }}</span>
-                            @else
-                            <span class="inline-block">{{ $seat->chair_num }}</span>
-                            @endif
-                            @endforeach
-                            <div class="string-chair" data-id3 = "{{ $stringChair }}"></div>
-                        </div>
+                        <span class="movie-seats inline-block"></span>
                     </div>
                     <div>
                         <label>Tổng tiền: </label>
-                        <span id="total" data-id4 = "{{ $price }}">{{ $nowBill }}</span>
+                        <span id="total" data-id4 = "{{ $price }}"></span>
                     </div>
                 </div>
             </div>
-            <button type="button" class="process-right-seatmap inline-right" data-toggle="modal" data-target="#myModal">
-                Confirm
+            {{-- <button type="button" id="next" class="process-right-seatmap inline-right" data="{{ session('status') }}" disabled>
+                Next --}}
+            <button type="button" id="next" class="process-right-seatmap inline-right btn btn-primary" data="{{ session('status') }}" disabled>
+                Đặt vé
             </button>
-            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="myModalLabel">Bạn đã thay đổi vé thành công </h4>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div class="clear"></div>
         </div>
     </div>
+
+    <div class="modal fade bd-example-modal-lg" id="ticketModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Bạn đã đặt vé thành công </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="bill bill-check">
+                        <div class="bill-row">
+                            <label>Tên phim: </label>{{ $info->title }}
+                        </div>
+                        <div class="bill-row">
+                            <label>Rạp chiếu: </label>{{ $info->name }}
+                        </div>
+                        <div class="bill-row">
+                            <label>Định dạng: </label>{{ $info->type }}
+                        </div>
+                        <div class="bill-row">
+                            <label>Ngày chiếu: </label>{{ $info->show_date }}
+                        </div>
+                        <div class="bill-row">
+                            <label>Giờ chiếu: </label>{{ $info->show_time }}
+                        </div>
+                        <div class="bill-row">
+                            <label>Số ghế: </label><span class="movie-seats inline-block"></span>
+                        </div>
+                        <div class="bill-row">
+                            <label>Tổng tiền: </label><span id="total-bill"></span>
+                        </div>
+                    </div>
+                </div>
+                <form action="{!! url('user/profile') !!}" style="display:none">
+                    <input id="redirect" type="submit" value="Go to profile" />
+                </form>  
+                <div class="modal-footer">
+                    <button href="{!! url('user/profile') !!}" id="close-btn" class="btn btn-primary" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>  
 </div>
 
 <script src="{{ asset('js/seat_ticket.js') }}"></script>

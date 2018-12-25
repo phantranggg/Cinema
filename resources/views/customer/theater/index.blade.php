@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-md-12 theater">
             <?php foreach ($theaters as $theater): ?>
-                <button class="theater-name" data-id="<?php echo $theater->id ?>"><?php echo $theater->name; ?></button>
+                <button class="theater-name" data-id="{{ $theater->id }}">{{ $theater->name }}</button>
             <?php endforeach; ?>
         </div>
         <div class="col-md-12 theater-info-detail"></div>

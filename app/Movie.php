@@ -36,12 +36,13 @@ class Movie extends Model
     }
     
     public function nowPlaying($limit) {
-        $movies = DB::select("SELECT m.* FROM movies m
-                        WHERE ?::date >= release_date::date 
-                        AND 14 >= (select ?::date - release_date::date from movies where movies.id = m.id)
-                        AND status = 1
-                        ORDER BY ticket_num DESC, like_num DESC
-                        LIMIT ?", [config('constant.today'), config('constant.today'), $limit]);
+        // $movies = DB::select("SELECT m.* FROM movies m
+        //                 WHERE ?::date >= release_date::date 
+        //                 AND 14 >= (select ?::date - release_date::date from movies where movies.id = m.id)
+        //                 AND status = 1
+        //                 ORDER BY ticket_num DESC, like_num DESC
+        //                 LIMIT ?", [config('constant.today'), config('constant.today'), $limit]);
+        $movies = Movie::where('release_date','>=',config('constant.today'))->orderBy('like_num', 'desc')->get($limit);
         return $movies;
     }
     

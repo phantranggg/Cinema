@@ -1,3 +1,4 @@
+var status = ($('.process-right-seatmap')).attr('data');
 var totalmoney = document.getElementById("total").innerHTML;
 var array;
 var delete_chairs = [];
@@ -21,7 +22,7 @@ function renderHTML(arr) {
 }
 
 function changeNextButtonStatus() {
-    if (totalmoney) {
+    if (totalmoney ) {
         $('.process-right-seatmap').prop('disabled', false);
         $('.process-right-seatmap').css("cursor", "pointer");
     } else {
@@ -31,7 +32,9 @@ function changeNextButtonStatus() {
 }
 
 $("#next").click(function () {
-    $(".bill").css("display", "block");
+    if ((typeof status === "undefined") || (status=='pair-mode' && array.length==2)) {
+        $(".bill").css("display", "block");
+    }
     $(".process-right-seatmap").css("display", "block");
 })
 
@@ -42,132 +45,83 @@ if (hadSeat != null) {
 }
 
 var price = $('#total').attr('data-id4');
-console.log(price);
 
-var scheduleId = $('.seat').attr('data-id2');
-$('.seat').click(function () {
+var scheduleId = $('.seats').attr('data-id2');
+$('.seats').click(function () {
     var seatNum = ($(this).attr('data-id1'));
-    if (!$(this).hasClass('chosen')) {
-        if ($(this).hasClass('uncheck')) {
-            $(this).css('background-color', '#FF7E75');
-            $(this).removeClass('uncheck');
-            $(this).addClass('checked');
-            delete_chairs.push();
+    if ($(this).is(':checked')) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
 
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
+        $.ajax({
+            success: function (data) {
+                array.push(seatNum);
+                $('.movie-seats').html(renderHTML(array));
+                totalmoney = price * array.length;
+                $('#total').html(totalmoney.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " VND");
+                $('#total-bill').html(totalmoney.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " VND");
+                changeNextButtonStatus()
+            },
+            error: function () {
+                alert('error');
+            }
+        });
+    } else {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
 
-            $.ajax({
-                success: function (data) {
-                    array.push(seatNum);
-                    $('.movie-seats').html(renderHTML(array));
-                    totalmoney = price * array.length;
-                    $('#total').html(totalmoney);
-                    $('#total-bill').html(totalmoney);
-                    changeNextButtonStatus()
-                },
-                error: function () {
-                    alert('error');
-                }
-            });
-        } else if ($(this).hasClass('checked')) {
-            $(this).css('background-color', '#FFFFFF');
-            $(this).removeClass('checked');
-            $(this).addClass('uncheck');
-
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
-            $.ajax({
-                success: function (data) {
-                    array.splice(array.indexOf(seatNum), 1);
-                    $('.movie-seats').html(renderHTML(array));
-                    totalmoney = price * array.length;
-                    $('#total').html(totalmoney);
-                    $('#total-bill').html(totalmoney);
-                    changeNextButtonStatus()
-                },
-                error: function () {
-                    alert('error');
-                }
-            });
-        } else if ($(this).hasClass('myseat')) {
-            $(this).css('background-color', '#FFFFFF');
-            $(this).removeClass('myseat');
-            $(this).addClass('uncheck');
-
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
-            $.ajax({
-                success: function (data) {
-                    array.splice(array.indexOf(seatNum), 1);
-                    $('.movie-seats').html(renderHTML(array));
-                    totalmoney = price * array.length;
-                    $('#total').html(totalmoney);
-                    $('#total-bill').html(totalmoney);
-                    changeNextButtonStatus()
-                },
-                error: function () {
-                    alert('error');
-                }
-            });
-        };
+        $.ajax({
+            success: function (data) {
+                array.splice(array.indexOf(seatNum), 1);
+                $('.movie-seats').html(renderHTML(array));
+                totalmoney = price * array.length;
+                $('#total').html(totalmoney.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " VND");
+                $('#total-bill').html(totalmoney.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " VND");
+                changeNextButtonStatus()
+            },
+            error: function () {
+                alert('error');
+            }
+        });
     }
 });
 
 $('.process-right-seatmap').click(function () {
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
+    if (status=='pair-mode' && array.length!=2) {
+        alert('Bạn phải chọn đúng 2 vé');
+    }   
+    if ((status!='pair-mode') || (status=='pair-mode' && array.length==2)) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
 
-    $.ajax({
-        method: "POST",
-        url: "/user/bill",
-        data: {
-            seat_list: array,
-            schedule_id: scheduleId
-        },
-        success: function (data) {
-            $('#total-bill').html(totalmoney);
-        },
-        error: function () {
-            alert('error');
-        }
-    });
+        $.ajax({
+            method: "POST",
+            url: "/user/bill",
+            data: {
+                seat_list: array,
+                schedule_id: scheduleId
+            },
+            success: function (data) {
+                console.log(data);
+                $('#total-bill').html(totalmoney.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " VND");
+                $('#ticketModal').modal('show');
+            },
+            error: function () {
+                alert('Có lỗi đã xảy ra. Vui lòng thử lại');
+            }
+        });
+    }
 });
 
-// $('#confirm-update-ticket').click(function(){
-//     $.ajaxSetup({
-//         headers: {
-//             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//         }
-//     });
-
-//     $.ajax({
-//         method: "POST",
-//         url: "/ticket/update",
-//         data: {
-//             seat_list: array,
-//             schedule_id: scheduleId
-//         },
-//         success: function (data) {
-//             console.log(array);
-//             // $('#total-bill').html(totalmoney);
-//         },
-//         error: function () {
-//             alert('error');
-//         }
-//     });
-// })
+$('#close-btn').click(function() {
+    $('#redirect').trigger('click');
+})

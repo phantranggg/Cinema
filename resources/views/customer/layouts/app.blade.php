@@ -41,6 +41,9 @@
         crossorigin="anonymous"></script>
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('js/slick.min.js') }}"></script>
+
+    @yield('head')
+
 </head>
 
 <body>
@@ -60,7 +63,7 @@
                         {{ csrf_field() }}
                         <h6>Thể loại phim</h6>
                         <div class="form-group">
-                            <select class="form-control" id="" name="genre">
+                            <select class="form-control" name="genre">
                                 <option value="">Thể loại phim</option>
                                 <option value="action">Hành động</option>
                                 <option value="romance">Tâm lý, tình cảm</option>
@@ -71,7 +74,7 @@
                         </div>
                         <h6>Năm phát hành</h6>
                         <div class="form-group">
-                            <select class="form-control" id="" name="year">
+                            <select class="form-control" name="year">
                                 <option value="">Năm phát hành</option>
                                 <option value="2018">2018</option>
                                 <option value="2017">2017</option>
@@ -81,7 +84,7 @@
                         </div>
                         <h6>Quốc gia</h6>
                         <div class="form-group">
-                            <select class="form-control" id="" name="country">
+                            <select class="form-control" name="country">
                                 <option value="">Quốc gia</option>
                                 <option value="usa">Mỹ</option>
                                 <option value="vie">Việt Nam</option>
@@ -107,7 +110,6 @@
 
     {{-- Navbar --}}
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        {{-- <a class="navbar-brand" href="#">Cinema</a> --}}
         <a class="navbar-brand" href="{{ url('/') }}">
             {{ config('app.name', 'Laravel') }}
         </a>
@@ -132,36 +134,13 @@
                         <a class="dropdown-item" href="{!! url('movie/comming-soon') !!}">PHIM SẮP CHIẾU</a>
                     </div>
                 </li>
-                {{--
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
-                </li> --}} {{--
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false">Dropdown</a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                </li> --}}
                 <li class="nav-item {{ (\Request::is('theater')) ? " active " : " " }}">
                     <a class="nav-link" href="{!! url('theater') !!}"><span class="fa fa-home fa-lg"></span> RẠP</a>
                 </li>
-                {{--
-                <li class="nav-item">
-                    @if (Auth::check())
-                    <a class="nav-link" href="{!! url('users/profile') !!}"><span class="fa fa-user fa-lg"></span> NGƯỜI DÙNG</a>                    @else
-                    <a class="nav-link" href="{!! url('login') !!}"><span class="fa fa-user fa-lg"></span> NGƯỜI DÙNG</a>                    @endif
-                </li> --}} {{--
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#">Disabled</a>
-                </li> --}}
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <form class="form-inline my-2 my-lg-0" action="{{ route('movie.search') }}" method="GET">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="keyword">
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                 </form>
                 <!-- Authentication Links -->
@@ -173,31 +152,45 @@
                 <li class="dropdown notifications-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-bell-o"></i>
-                        <span class="label label-primary">2</span>
+
+                        @if (auth()->user()->unreadNotifications->count())
+                        <span id="noti-count" class="label label-primary">{{ auth()->user()->unreadNotifications->count() }}</span>
+                        @endif
                     </a>
                     <ul class="dropdown-menu">
-                        <li class="header">Bạn có 2 thông báo</li>
+                        @if (auth()->user()->unreadNotifications->count())
+                        {{-- <li class="header"><a style="color:green" href="{{ route('mark-read') }}">Mark all as Read</a></li> --}}
+                        <li class="header"><a style="color:green" id="mark-read">Mark all as Read</a></li>
+                        @endif
                         <li>
                         <!-- inner menu: contains the actual data -->
                             <ul class="menu">
-                                <li>
-                                    <a href="#">
-                                        <i class="fa fa-envelope text-aqua"></i> Bạn có lời mời ... 
-                                        <p>
-                                            <button class="btn btn-sm btn-danger pull-right ml-1">Từ chối</button>
-                                            <button class="btn btn-sm btn-primary pull-right">Đồng ý</button>
-                                        </p>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="fa fa-envelope text-aqua"></i> Bạn có lời mời ... 
-                                        <p>
-                                            <button class="btn btn-sm btn-danger pull-right ml-1">Từ chối</button>
-                                            <button class="btn btn-sm btn-primary pull-right">Đồng ý</button>
-                                        </p>
-                                    </a>
-                                </li>
+                                @foreach (auth()->user()->unreadNotifications as $notification)
+                                    <li class="unread-noti" style="background-color: lightgray">
+                                        <a href="#">
+                                            <i class="fa fa-envelope text-aqua"></i> {{ $notification->data['noti'] }}
+                                            @if ($notification->data['hasButton'])
+                                            <p class="accept-decline-box-{{ $notification->data['invitationId'] }}">
+                                                <button class="btn btn-sm btn-danger pull-right ml-1 decline-join" data="{{ $notification->data['invitationId'] }}">Từ chối</button>
+                                                <button class="btn btn-sm btn-primary pull-right accept-join" data="{{ $notification->data['invitationId'] }}">Đồng ý</button>
+                                            </p>
+                                            @endif
+                                        </a>
+                                    </li>
+                                @endforeach
+                                @foreach (auth()->user()->readNotifications as $notification)
+                                    <li class="read-noti">
+                                        <a href="#">
+                                            <i class="fa fa-envelope text-aqua"></i> {{ $notification->data['noti'] }}
+                                            @if ($notification->data['hasButton'])
+                                            <p class="accept-decline-box-{{ $notification->data['invitationId'] }}">
+                                                <button class="btn btn-sm btn-danger pull-right ml-1 decline-join" data="{{ $notification->data['invitationId'] }}">Từ chối</button>
+                                                <button class="btn btn-sm btn-primary pull-right accept-join" data="{{ $notification->data['invitationId'] }}">Đồng ý</button>
+                                            </p>
+                                            @endif
+                                        </a>
+                                    </li>
+                                @endforeach
                             </ul>
                         </li>
                     </ul>
@@ -213,66 +206,6 @@
         </div>
     </nav>
 
-    {{-- Old Navbar --}} {{--
-    <nav class="navbar navbar-default navbar-static-top navbar-inverse">
-        <div class="container">
-            <div class="navbar-header">
-
-                <!-- Collapsed Hamburger -->
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse" aria-expanded="false">
-                        <span class="sr-only">Toggle Navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-
-                <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
-                    </a>
-            </div>
-
-            <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                <!-- Left Side Of Navbar -->
-                <ul class="nav navbar-nav mr-auto">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="fa fa-film fa-lg"></span> PHIM
-                            </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="{!! url('movies/nowplay') !!}">PHIM ĐANG CHIẾU</a>
-                            <a class="dropdown-item" href="{!! url('movies/comesoon') !!}">PHIM SẮP CHIẾU</a>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{!! url('theaters') !!}"><span class="fa fa-home fa-lg"></span> RẠP</a>
-                    </li>
-                    <li class="nav-item">
-                        @if (Auth::check())
-                        <a class="nav-link" href="{!! url('users/profile') !!}"><span class="fa fa-user fa-lg"></span> NGƯỜI DÙNG</a>                        @else
-                        <a class="nav-link" href="{!! url('login') !!}"><span class="fa fa-user fa-lg"></span> NGƯỜI DÙNG</a>                        @endif
-                    </li>
-                </ul>
-
-                <!-- Right Side Of Navbar -->
-                <ul class="nav navbar-nav navbar-right">
-                    <!-- Authentication Links -->
-                    @guest
-                    <li><a href="{{ route('login') }}">Login</a></li>
-                    <li><a href="{{ route('register') }}">Register</a></li>
-                    @else
-                    <li><a>{{ 'Welcome ' . Auth::user()->name }}</a></li>
-                    <li><a href="/" onclick="event.preventDefault();
-                                document.getElementById('logout-form').submit();">Logout</a>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                            {{ csrf_field() }}
-                        </form>
-                    </li>
-                    @endguest
-                </ul>
-            </div>
-        </div>
-    </nav> --}} {{-- Jumbotron --}}
     <header class="jumbotron">
         <div class="container">
             <div class="row row-header">
@@ -341,4 +274,5 @@
     </footer>
 </body>
 
+<script src="{{ asset('js/notify.js') }}"></script>
 </html>
