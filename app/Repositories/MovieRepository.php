@@ -172,14 +172,17 @@ class MovieRepository extends SAbstractRepository
     }
 
     public function getNowPlayingList($limit) {
-//        $nowPlayingMovies = \DB::select("SELECT m.* FROM movies m
-//                        WHERE ?::date >= release_date::date
-//                        AND 14 >= (select ?::date - release_date::date from movies where movies.id = m.id)
-//                        AND status = 1
-//                        ORDER BY ticket_num DESC, like_num DESC
-//                        LIMIT ?", [config('constant.today'), config('constant.today'), $limit]);
-        $nowPlayingMovies=Movie::where('release_date','>=',config('constant.today'))->orderBy('like_num', 'desc');
-        $nowPlayingMovies=$nowPlayingMovies->paginate($limit);
+       $nowPlayingMovies = \DB::select("SELECT m.* FROM movies m
+                       WHERE ?::date >= release_date::date
+                       AND 14 >= (select ?::date - release_date::date from movies where movies.id = m.id)
+                       AND status = 1
+                       AND 1 <= (select count(*) from schedules, movies where schedules.movie_id = movies.id and movies.id = m.id)
+                       ORDER BY ticket_num DESC, like_num DESC
+                       LIMIT ?", [config('constant.today'), config('constant.today'), $limit]);
+        // $nowPlayingMovies=Movie::join('schedules', 'movies.id', '=', 'schedules.movie_id')->where('release_date','>=',config('constant.today'))->orderBy('like_num', 'desc');
+        // $nowPlayingMovies=$nowPlayingMovies->get();
+        // paginate($limit);
+        // dd($nowPlayingMovies);
         return $nowPlayingMovies;
     }
     
