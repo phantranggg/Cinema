@@ -7,7 +7,7 @@
             <h5 class="w3-bar-item">Menu</h5>
             <!--        <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Left')">Left</button>-->
             <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Right1')">Thông tin</button>
-            <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Right2')">Vé đã đặt</button>
+            <button class="w3-bar-item w3-button tablink" id="bought-ticket" onclick="openLink(event, 'Right2')">Vé đã đặt</button>
         </div>
         <div class="user-right-sidebar col-md-8">
             <div id="Right1" class="w3-container city w3-animate-right" style="display:none">

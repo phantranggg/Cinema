@@ -35,3 +35,7 @@ $('.delete-button-ticket').click(function() {
         }
     });
 });
+
+$(document).ready(function() {
+    $('#bought-ticket').trigger('click');
+})

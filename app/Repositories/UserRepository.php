@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\User;
+use App\Ticket;
 use App\Repositories\Support\SAbstractRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -237,14 +238,16 @@ class UserRepository extends SAbstractRepository
         return $users;
     }
     public function getOrderedTicketList() {
-        $movies = DB::select('SELECT schedules.id, movies.title, theaters.name, schedules.type, schedules.show_date, schedules.show_time '
+        $movies = DB::select('SELECT schedules.id, movies.title, theaters.name, schedules.type, schedules.show_date, schedules.show_time, tickets.updated_at '
                         . 'FROM schedules '
                         . 'INNER JOIN movies ON schedules.movie_id = movies.id '
                         . 'INNER JOIN theaters ON schedules.theater_id = theaters.id '
                         . 'INNER JOIN tickets ON schedules.id = tickets.schedule_id '
                         . 'WHERE tickets.user_id = ? '
                         . 'AND show_date >= ? '
-                        . 'GROUP BY schedules.id, movies.title, theaters.name, schedules.show_date, schedules.show_time', [Auth::id(), config('constant.today')]);
+                        . 'AND tickets.updated_at IS NOT NULL '
+                        . 'GROUP BY tickets.updated_at, schedules.id, movies.title, theaters.name, schedules.show_date, schedules.show_time '
+                        . 'ORDER BY tickets.updated_at DESC ', [Auth::id(), config('constant.today')]);
         foreach ($movies as $key => $value) {
             $invitation = \App\Invitation::where('user_id1',Auth::id())->where('schedule_id',$movies[$key]->id)->first();
             if ($invitation) {
@@ -282,11 +285,14 @@ class UserRepository extends SAbstractRepository
         foreach ($seatList as $seat) {
             //$exist = \DB::table('tickets')->where('schedule_id', $scheduleId)->where('chair_num', $seat);
             $exist = DB::select('SELECT id FROM tickets WHERE schedule_id = ? AND chair_num = ?', [$scheduleId, $seat]);
+            $exist = Ticket::where('schedule_id', $scheduleId)->where('chair_num', $seat)->first();
             // $exist = \App\Ticket::where('schedule_id', $scheduleId)->where('chair_num', $seat)->get();
             if (!$exist) {
-                DB::table('tickets')->insert(
-                        ['schedule_id' => $scheduleId, 'user_id' => Auth::id(), 'chair_num' => $seat]
-                );
+                $ticket = new Ticket;
+                $ticket->schedule_id = $scheduleId;
+                $ticket->user_id = Auth::id();
+                $ticket->chair_num = $seat;
+                $ticket->save();
             }
         }
         foreach ($mySeatList as $seat) {
