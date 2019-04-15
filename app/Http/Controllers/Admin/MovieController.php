@@ -41,7 +41,7 @@ class MovieController extends Controller {
     }
 
     protected function index() {
-        $allmovies = $this->movieRepo->getAllMoviesInOrder();
+        $allmovies = $this->movieRepo->getAllMoviesInOrder(12);
         return view('admin.movie.index', [
             'allmovies' => $allmovies
         ]);

@@ -1,9 +1,9 @@
 $(document).ready(function () {
     $('.slide').slick({
         centerMode: true,
-        centerPadding: '60px',
+        centerPadding: '0px',
         slidesToShow: 3,
-        arrows: false,
+        arrows: true,
         slidesToScroll: 1,
         autoplay: true,
         autoplaySpeed: 5000,

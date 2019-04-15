@@ -172,14 +172,12 @@ class MovieRepository extends SAbstractRepository
     }
 
     public function getNowPlayingList($limit) {
-       $nowPlayingMovies = \DB::select("SELECT m.* FROM movies m
-                       WHERE ?::date >= release_date::date
-                       AND 14 >= (select ?::date - release_date::date from movies where movies.id = m.id)
-                       AND status = 1
-                       AND 1 <= (select count(*) from schedules, movies where schedules.movie_id = movies.id and movies.id = m.id)
-                       ORDER BY ticket_num DESC, like_num DESC
-                       LIMIT ?", [config('constant.today'), config('constant.today'), $limit]);
-        // $nowPlayingMovies=Movie::join('schedules', 'movies.id', '=', 'schedules.movie_id')->where('release_date','>=',config('constant.today'))->orderBy('like_num', 'desc');
+    //    $nowPlayingMovies = \DB::select("SELECT m.* FROM movies m
+    //                    WHERE status = 1
+    //                    AND 1 <= (select count(*) from schedules, movies where schedules.movie_id = movies.id and movies.id = m.id)
+    //                    ORDER BY ticket_num DESC, like_num DESC
+    //                    LIMIT ?", [$limit]);
+        $nowPlayingMovies=Movie::where('release_date','>=',config('constant.today'))->orderBy('like_num', 'desc')->paginate($limit);
         // $nowPlayingMovies=$nowPlayingMovies->get();
         // paginate($limit);
         // dd($nowPlayingMovies);
@@ -187,18 +185,17 @@ class MovieRepository extends SAbstractRepository
     }
     
     public function getCommingSoonList($limit) {
-//        $commingSoonMovies = \DB::select("SELECT m.* FROM movies m
-//                        WHERE release_date::date > ?::date
-//                        AND 14 > (select release_date::date - ?::date from movies where movies.id = m.id)
-//                        AND status = 1
-//                        ORDER BY ticket_num DESC, like_num DESC
-//                        LIMIT ?", [config('constant.today'), config('constant.today'), $limit]);
+    //    $commingSoonMovies = \DB::select("SELECT m.* FROM movies m
+    //                    WHERE status = 1
+    //                    AND 1 > (select count(*) from schedules, movies where schedules.movie_id = movies.id and movies.id = m.id)
+    //                    ORDER BY ticket_num DESC, like_num DESC
+    //                    LIMIT ?", [$limit]);
         $commingSoonMovies = Movie::where('release_date','>=',config('constant.today'))->where('release_date','<=',date('Y-m-d',strtotime(config('constant.today').' + 14 days')))->paginate($limit);
         return $commingSoonMovies;
     }
     
-    public function getAllMoviesInOrder() {
-        $allmovies = $this->model->where('status', 1)->orderBy('ticket_num', 'desc')->orderBy('like_num', 'desc')->paginate(30);
+    public function getAllMoviesInOrder($limit) {
+        $allmovies = $this->model->where('status', 1)->orderBy('ticket_num', 'desc')->orderBy('like_num', 'desc')->paginate($limit);
         return $allmovies;
         //$allmovies = \App\Movie::where('status', '=', 1)->orderBy('ticket_num', 'desc')->orderBy('like_num', 'desc')->get();
     }
